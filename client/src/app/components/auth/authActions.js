@@ -1,5 +1,4 @@
 import { SubmissionError, reset } from "redux-form";
-import { toastr } from "react-redux-toastr";
 import axios from "axios";
 
 // login actions for staff, customer, delivery rider, restaurant manager
@@ -24,7 +23,7 @@ export const login = creds => {
 export const register = user => {
   return async (dispatch, getState) => {
     await axios
-      .get("/api/post/registerUser", creds)
+      .get("/api/post/registerUser", user)
       .then(data => {
         console.log(data);
       })
@@ -41,11 +40,10 @@ export const register = user => {
 export const updateProfile = user => {
   return async (dispatch, getState) => {
     await axios
-      .get("/api/get/updateUser", creds)
+      .get("/api/get/updateUser", user)
       .then(data => {
         console.log(data);
-        await dispatch(reset("account"));
-        toastr.success("Success", "Your account has been updated")
+        dispatch(reset("account"));
       })
       .catch(error => {
         throw new SubmissionError({

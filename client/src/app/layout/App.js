@@ -1,12 +1,15 @@
 import React, { Component, Fragment } from "react";
 import { Route } from "react-router-dom";
-//import axios from "axios";
+import LoginPage from "../components/auth/Login/LoginPage";
+import { Container } from "semantic-ui-react"
 
 class App extends Component {
   render() {
     return (
       <Fragment>
-        <Route exact path="/" component={} />
+        <Container className="main">
+          <Route exact path="/" component={LoginPage} />
+        </Container>
       </Fragment>
     );
   }

@@ -6,8 +6,6 @@ import * as serviceWorker from "./serviceWorker";
 import { configureStore } from "./app/reduxstore/configureStore";
 import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
-import ReduxToastr from "react-redux-toastr";
-import "react-redux-toastr/lib/css/react-redux-toastr.min.css";
 
 const store = configureStore();
 const rootEl = document.getElementById("root");
@@ -16,11 +14,6 @@ let render = () => {
   ReactDOM.render(
     <Provider store={store}>
       <BrowserRouter>
-        <ReduxToastr
-          position="bottom-right"
-          transitionIn="fadeIn"
-          transitionOut="fadeOut"
-        />
         <App />
       </BrowserRouter>
     </Provider>,
