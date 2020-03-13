@@ -1,13 +1,15 @@
 import React from "react";
-import logo from "./logo.svg";
+import logo from "../../logo.svg";
 import "./App.css";
-import axios from "axios";
+//import axios from "axios";
+
+const axios = require('axios');
 
 function App() {
   axios
   .get("/api/get/test")
-  .then(data =>
-    console.log(data.data)
+  .then(res =>
+    console.log(res.data)
   );
 
   return (

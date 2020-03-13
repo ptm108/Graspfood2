@@ -1,6 +1,6 @@
 var express = require('express')
 var router = express.Router()
-var client = require('../main/elephantsql')
+var client = require('./elephantsql')
 
 router.get('/api/get/test', (req, res) => {
     client.query(`SELECT * FROM test`, 
