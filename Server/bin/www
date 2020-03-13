@@ -5,7 +5,7 @@
  */
 
 var app = require('../main/app');
-var debug = require('debug')('cs2102-project:server');
+var debug = require('../node_modules/debug/src')('cs2102-project:server');
 var http = require('http');
 
 /**
