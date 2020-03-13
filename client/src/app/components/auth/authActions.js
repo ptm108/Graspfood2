@@ -6,14 +6,16 @@ import axios from "axios";
 
 export const login = creds => {
   return async (dispatch, getState) => {
-    try {
-      await axios.get("/api/get/login", creds);
-    } catch (error) {
-      console.log(error);
-      throw new SubmissionError({
-        _error: error.message
+    await axios
+      .get("/api/get/loginUser", creds)
+      .then(data => {
+        console.log(data);
+      })
+      .catch(error => {
+        throw new SubmissionError({
+          _error: error.message
+        });
       });
-    }
   };
 };
 
@@ -21,30 +23,34 @@ export const login = creds => {
 
 export const register = user => {
   return async (dispatch, getState) => {
-    try {
-      await axios.get("/api/put/register", user);
-    } catch (error) {
-      console.log(error);
-      throw new SubmissionError({
-        _error: error.message
+    await axios
+      .get("/api/post/registerUser", creds)
+      .then(data => {
+        console.log(data);
+      })
+      .catch(error => {
+        throw new SubmissionError({
+          _error: error.message
+        });
       });
-    }
   };
 };
 
 // update profiles
 
 export const updateProfile = user => {
-    return async (dispatch, getState) => {
-        try {
-          await axios.get("/api/put/update", user);
-          await dispatch(reset("account"));
-          toastr.success("Success", "Your account has been updated")
-        } catch (error) {
-          console.log(error);
-          throw new SubmissionError({
-            _error: error.message
-          });
-        }
-      };
+  return async (dispatch, getState) => {
+    await axios
+      .get("/api/get/updateUser", creds)
+      .then(data => {
+        console.log(data);
+        await dispatch(reset("account"));
+        toastr.success("Success", "Your account has been updated")
+      })
+      .catch(error => {
+        throw new SubmissionError({
+          _error: error.message
+        });
+      });
+  };
 };
