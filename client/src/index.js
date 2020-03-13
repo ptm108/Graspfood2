@@ -24,12 +24,12 @@ let render = () => {
 // adding this hot module allows changes to be seen immediately on the local
 // host without the page having to be refreshed entirely for changes to be seen
 if (module.hot) {
-    module.hot.accept("./app/layout/App", () => {
-      setTimeout(render);
-    });
-  }
+  module.hot.accept("./app/layout/App", () => {
+    setTimeout(render);
+  });
+}
 
-  render();
+render();
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

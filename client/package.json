@@ -11,9 +11,14 @@
     "react": "^16.13.0",
     "react-dom": "^16.13.0",
     "react-redux": "^7.2.0",
+    "react-redux-toastr": "^7.6.4",
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.4.0",
     "redux": "^4.0.5",
+<<<<<<< HEAD
+=======
+    "redux-form": "^8.3.1",
+>>>>>>> 5b8321b2eb71a03a4a88f7f7fc97720afc5bd123
     "semantic-ui-react": "^0.88.2"
   },
   "scripts": {
