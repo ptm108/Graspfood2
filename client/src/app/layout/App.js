@@ -1,35 +1,21 @@
-import React from "react";
-import logo from "../../logo.svg";
-import "./App.css";
+import React, { Component, Fragment } from "react";
+import { Route } from "react-router-dom";
 //import axios from "axios";
 
-const axios = require('axios');
-
-function App() {
-  axios
-  .get("/api/get/test")
-  .then(res =>
-    console.log(res.data)
-  );
-
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component {
+  render() {
+    return (
+      <Fragment>
+        <Route exact path="/" component={} />
+      </Fragment>
+    );
+  }
 }
 
 export default App;
+
+/* axios
+  .get("/api/get/test")
+  .then(res =>
+    console.log(res.data)
+  ); */
