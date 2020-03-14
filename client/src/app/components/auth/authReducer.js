@@ -9,7 +9,7 @@ const initialState = {
 const loginUser = (state, payload) => {
   return {
     authenticated: true,
-    currentUser: payload.creds.username
+    currentUser: null
   };
 };
 
