@@ -1,18 +1,24 @@
 import React, { Component, Fragment } from "react";
 import { Route } from "react-router-dom";
-import DashBoard from "../components/home/Dashboard";
+import CustomerDashBoard from "../components/home/customer/CustomerDashboard";
 import NavBar from "../components/home/NavBar";
 //import axios from "axios";
 import LoginPage from "../components/auth/Login/LoginPage";
-import { Container } from "semantic-ui-react"
+import { Container } from "semantic-ui-react";
+import AccountPage from "../components/home/customer/AccountPage";
+import ChangePassword from "../components/home/ChangePassword";
 
 class App extends Component {
   render() {
     return (
       <Fragment>
         <NavBar />
-        <Route exact path="/dashboard" component={DashBoard} />{" "}
         <Container className="main">
+          <Route exact path="/custdashboard" component={CustomerDashBoard} />
+          <Route exact path="/about" component={AccountPage} />
+          <Route exact path="/changepassword" component={ChangePassword} />
+          <Route exact path="/fdsdashboard" />
+          <Route exact path="/riderdashboard" />
           <Route exact path="/" component={LoginPage} />
         </Container>
       </Fragment>
