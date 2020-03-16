@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from "react";
 import { Route } from "react-router-dom";
 import CustomerDashBoard from "../components/home/customer/CustomerDashboard";
+import DashBoard from "../components/home/DashBoard";
 import NavBar from "../components/home/NavBar";
 //import axios from "axios";
 import LoginPage from "../components/auth/Login/LoginPage";
@@ -9,6 +10,9 @@ import AccountPage from "../components/home/customer/AccountPage";
 import ChangePassword from "../components/home/ChangePassword";
 import RestaurantDetailedPage from "../components/home/customer/RestaurantDetailedPage";
 import CreditCard from "../components/home/customer/CreditCard";
+import FDSDashboard from "../components/home/fds/FDSDashboard";
+import RiderDashboard from "../components/home/rider/RiderDashboard";
+import RestaurantStaffDashboard from "../components/home/restaurantstaff/RestaurantStaffDashboard";
 
 class App extends Component {
   render() {
@@ -20,8 +24,14 @@ class App extends Component {
           <Route exact path="/about" component={AccountPage} />
           <Route exact path="/changepassword" component={ChangePassword} />
           <Route exact path="/creditcard" component={CreditCard} />
-          <Route exact path="/fdsdashboard" />
-          <Route exact path="/riderdashboard" />
+          <Route exact path="/fdsdashboard" component={FDSDashboard} />
+          <Route exact path="/riderdashboard" component={RiderDashboard} />
+          <Route
+            exact
+            path="/restaurantstaffdashboard"
+            component={RestaurantStaffDashboard}
+          />
+          <Route exact path="/dashboard" component={DashBoard} />
           <Route exact path="/" component={LoginPage} />
           <Route path="/restaurant/:id" component={RestaurantDetailedPage} />
         </Container>
