@@ -15,6 +15,9 @@ const AccountNav = () => {
           <Menu.Item as={NavLink} to="/changepassword">
             Change Password
           </Menu.Item>
+          <Menu.Item as={NavLink} to="/creditcard">
+            Add/Remove Credit Card
+          </Menu.Item>
         </Menu>
       </Grid.Column>
     </Fragment>
