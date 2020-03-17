@@ -1,11 +1,11 @@
 import React from "react";
 import { Label, Form, Segment, Button, Divider } from "semantic-ui-react";
 import { Field, reduxForm } from "redux-form";
-import TextInput from "../../../app/common/form/TextInput";
+import TextInput from "../../../util/form/TextInput";
 import { connect } from "react-redux";
 import { registerUser } from "../authActions";
 import { combineValidators, isRequired } from "revalidate";
-import RadioInput from "../../form/RadioInput";
+import RadioInput from "../../../util/form/RadioInput";
 
 const mapDispatchToProps = {
   registerUser

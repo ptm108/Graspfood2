@@ -18,7 +18,7 @@ router.get("/api/get/loginUser", (req, res, next) => {
       if (q_err) {
         return next(q_err);
       }
-      res.send(q_err);
+      res.json(q_res);
     }
   );
 });
