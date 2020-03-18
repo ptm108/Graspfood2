@@ -3,33 +3,30 @@ import { Label, Form, Segment, Button, Divider } from "semantic-ui-react";
 import { Field, reduxForm } from "redux-form";
 import TextInput from "../../../util/form/TextInput";
 import { connect } from "react-redux";
-import { registerUser } from "../authActions";
+import { register } from "../authActions";
 import { combineValidators, isRequired } from "revalidate";
 import RadioInput from "../../../util/form/RadioInput";
+import { Link } from "react-router-dom";
 
 const mapDispatchToProps = {
-  registerUser
+  register
 };
 
 const validate = combineValidators({
-  displayUserName: isRequired("username"),
-  password: isRequired("password")
+  displayUserName: isRequired("Username"),
+  password: isRequired("Password")
 });
 
 const RegisterForm = ({
   handleSubmit,
-  registerUser,
+  register,
   error,
   invalid,
   submitting
 }) => {
   return (
     <div>
-      <Form
-        size="large"
-        onSubmit={handleSubmit(registerUser)}
-        autoComplete="off"
-      >
+      <Form size="large" onSubmit={handleSubmit(register)} autoComplete="off">
         <Segment>
           <Field
             name="username"
@@ -89,6 +86,9 @@ const RegisterForm = ({
             Register
           </Button>
           <Divider horizontal>Or</Divider>
+          <Button as={Link} to="/login" size="large" color="teal" fluid>
+            Login
+          </Button>
         </Segment>
       </Form>
     </div>
@@ -99,4 +99,3 @@ export default connect(
   null,
   mapDispatchToProps
 )(reduxForm({ form: "registerForm", validate })(RegisterForm));
-
