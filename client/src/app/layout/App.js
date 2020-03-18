@@ -21,6 +21,9 @@ class App extends Component {
     return (
       <Fragment>
         <NavBar />
+        <Container className="main">
+          <Route exact path="/" component={DashBoard} />
+        </Container>
 
         <Route
           path="/(.+)"
@@ -52,14 +55,14 @@ class App extends Component {
                     path="/restaurantstaffdashboard"
                     component={RestaurantStaffDashboard}
                   />
-                  <Route exact path="/dashboard" component={DashBoard} />
-                  <Route exact path="/" component={LoginPage} />
+
+                  <Route exact path="/login" component={LoginPage} />
                   <Route
                     path="/restaurant/:id"
                     component={RestaurantDetailedPage}
                   />
-                  <Route exact path="/login" component={LoginPage} />
-                  <Route component={NotFound}/>
+
+                  <Route component={NotFound} />
                 </Switch>
               </Container>
             </Fragment>

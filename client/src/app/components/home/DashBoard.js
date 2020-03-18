@@ -4,6 +4,7 @@ import CustomerDashboard from "./customer/CustomerDashboard";
 import RestaurantStaffDashboard from "./restaurantstaff/RestaurantStaffDashboard";
 import FDSDashboard from "./fds/FDSDashboard";
 import RiderDashboard from "./rider/RiderDashboard";
+import LoginPage from "../auth/Login/LoginPage";
 
 const mapStateToProps = state => ({
   auth: state.auth.authenticated
@@ -14,15 +15,19 @@ class DashBoard extends Component {
     const { auth } = this.props;
     const authenticated = auth.authenticated;
 
-    return (
-      // to add the checks for the access right
-      <Fragment>
-        <CustomerDashboard />
-        <RestaurantStaffDashboard />
-        <FDSDashboard />
-        <RiderDashboard />
-      </Fragment>
-    );
+    if (!authenticated) {
+      return <LoginPage />;
+    } else {
+      return (
+        // to add the checks for the access right
+        <Fragment>
+          <CustomerDashboard />
+          <RestaurantStaffDashboard />
+          <FDSDashboard />
+          <RiderDashboard />
+        </Fragment>
+      );
+    }
   }
 }
 
