@@ -58,6 +58,7 @@ class App extends Component {
                     path="/restaurant/:id"
                     component={RestaurantDetailedPage}
                   />
+                  <Route exact path="/login" component={LoginPage} />
                   <Route component={NotFound}/>
                 </Switch>
               </Container>

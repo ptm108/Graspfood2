@@ -80,13 +80,13 @@ const RegisterForm = ({
             disabled={invalid || submitting}
             fluid
             size="large"
-            color="teal"
+            color="grey"
             loading={submitting}
           >
             Register
           </Button>
           <Divider horizontal>Or</Divider>
-          <Button as={Link} to="/login" size="large" color="teal" fluid>
+          <Button as={Link} to="/login" size="large" color="black" fluid>
             Login
           </Button>
         </Segment>
