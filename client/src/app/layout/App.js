@@ -22,7 +22,7 @@ class App extends Component {
       <Fragment>
         <NavBar />
         <Container className="main">
-          <Route exact path="/" component={DashBoard} />
+          <Route exact path="/dashboard" component={DashBoard} />
         </Container>
 
         <Route

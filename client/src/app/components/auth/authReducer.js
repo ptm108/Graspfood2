@@ -10,14 +10,16 @@ const login = (state, payload) => {
   console.log(payload);
   return {
     authenticated: true,
-    currentUser: payload.username
+    currentUser: payload.username,
+    userAccessRight: payload.accessRight
   };
 };
 
 const signOutUser = () => {
   return {
     authenticated: false,
-    currentUser: null
+    currentUser: null,
+    userAccessRight: null
   };
 };
 

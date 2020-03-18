@@ -11,6 +11,7 @@ const mapDispatchToProps = {
 };
 
 const LoginForm = ({ login, handleSubmit, error, submitting }) => {
+
   return (
     <Form size="large" onSubmit={handleSubmit(login)} autoComplete="off">
       <Segment>

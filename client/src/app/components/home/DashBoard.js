@@ -13,7 +13,8 @@ const mapStateToProps = state => ({
 class DashBoard extends Component {
   render() {
     const { auth } = this.props;
-    const authenticated = auth.authenticated;
+    const authenticated = auth;
+    console.log(authenticated);
 
     if (!authenticated) {
       return <LoginPage />;
