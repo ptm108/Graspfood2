@@ -21,9 +21,6 @@ class App extends Component {
     return (
       <Fragment>
         <NavBar />
-        <Container className="main">
-          <Route exact path="/dashboard" component={DashBoard} />
-        </Container>
 
         <Route
           path="/(.+)"
@@ -31,6 +28,7 @@ class App extends Component {
             <Fragment>
               <Container className="main">
                 <Switch key={this.props.location.key}>
+                  <Route exact path="/dashboard" component={DashBoard} />
                   <Route exact path="/register" component={RegisterPage} />
                   <Route
                     exact
@@ -55,8 +53,6 @@ class App extends Component {
                     path="/restaurantstaffdashboard"
                     component={RestaurantStaffDashboard}
                   />
-
-                  <Route exact path="/login" component={LoginPage} />
                   <Route
                     path="/restaurant/:id"
                     component={RestaurantDetailedPage}

@@ -22,7 +22,7 @@ router.get("/api/get/loginUser", (req, res, next) => {
       if (q_err) {
         return next(q_err);
       }
-      if (q_res.rows) {
+      if (q_res.rows[0]) {
         res.json(q_res);
       }
       //console.log(q_res);
