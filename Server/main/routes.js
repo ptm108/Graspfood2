@@ -1,6 +1,9 @@
-var express = require("express");
-var router = express.Router();
+// var express = require("express");
+// var router = express.Router();
+var Router = require("express-promise-router");
 var client = require("./elephantsql");
+
+const router = new Router();
 
 router.get("/api/get/test", (req, res) => {
   client.query(`SELECT * FROM test`, (q_err, q_res) => {
@@ -12,7 +15,7 @@ router.get("/api/get/test", (req, res) => {
 router.get("/api/get/loginUser", (req, res, next) => {
   const creds = [req.query.username, req.query.password];
   client.query(
-    `SELECT * FROM User WHERE username=$1 AND password=$2`,
+    `SELECT * FROM Actor WHERE username=$1 AND password=$2`,
     creds,
     (q_err, q_res) => {
       if (q_err) {
@@ -26,7 +29,7 @@ router.get("/api/get/loginUser", (req, res, next) => {
 router.post("/api/post/registerUser", (req, res, next) => {
   const user = [req.body.username, req.body.password, req.body.accessRight];
   client.query(
-    `INSERT into User(username, password, accessRight)
+    `INSERT into Actor(username, password, accessRight)
         VALUES($1, $2, $3)`,
     user,
     (q_err, q_res) => {
@@ -46,7 +49,7 @@ router.put("/api/put/updateUser", (req, res, next) => {
     req.body.userid
   ];
   client.query(
-    `UPDATE User SET(username=$1, password=$2, accessRight=$3) WHERE userid=$4`,
+    `UPDATE Actor SET(username=$1, password=$2, accessRight=$3) WHERE userid=$4`,
     user,
     (q_err, q_res) => {
       if (q_err) {

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Container, Grid, GridColumn } from "semantic-ui-react";
+import { Container, Grid } from "semantic-ui-react";
 import LoginForm from "./LoginForm";
 
 class LoginPage extends Component {

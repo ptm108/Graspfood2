@@ -32,7 +32,7 @@ const RegisterForm = ({
             name="username"
             type="text"
             component={TextInput}
-            placeholder="UserName"
+            placeholder="Username"
           />
           <Field
             name="password"

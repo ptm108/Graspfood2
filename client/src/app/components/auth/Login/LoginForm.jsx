@@ -15,10 +15,10 @@ const LoginForm = ({ login, handleSubmit, error, submitting }) => {
     <Form size="large" onSubmit={handleSubmit(login)} autoComplete="off">
       <Segment>
         <Field
-          name="email"
+          name="username"
           component={TextInput}
           type="text"
-          placeholder="Email Address"
+          placeholder="Username"
         />
         <Field
           name="password"
