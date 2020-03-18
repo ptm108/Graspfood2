@@ -6,10 +6,11 @@ const initialState = {
   currentUser: null
 };
 
-const loginUser = (state, payload) => {
+const login = (state, payload) => {
+  console.log(payload);
   return {
     authenticated: true,
-    currentUser: payload.creds.username
+    currentUser: payload.username
   };
 };
 
@@ -21,6 +22,6 @@ const signOutUser = () => {
 };
 
 export default createReducer(initialState, {
-  [LOGIN_USER]: loginUser,
+  [LOGIN_USER]: login,
   [SIGN_OUT_USER]: signOutUser
 });
