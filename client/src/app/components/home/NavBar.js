@@ -8,7 +8,7 @@ class NavBar extends Component {
       <Fragment>
         <Menu inverted fixed="top" borderless>
           <Container>
-            <Menu.Item as={Link} to="/custdashboard" header>
+            <Menu.Item as={Link} to="/dashboard" header>
               GraspFood
             </Menu.Item>
           </Container>
