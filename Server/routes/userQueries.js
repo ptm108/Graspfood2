@@ -39,9 +39,12 @@ router.post("/api/post/registerUser", (req, res, next) => {
     user,
     (q_err, q_res) => {
       if (q_err) {
-        return next(q_err);
+        console.log(q_err);
+        res.send(q_err.detail);
+      } else {
+        console.log(q_res);
+        res.json(q_res);
       }
-      res.send(q_res);
     }
   );
 });

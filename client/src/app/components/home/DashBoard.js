@@ -23,10 +23,10 @@ class DashBoard extends Component {
       return (
         // to add the checks for the access right
         <Fragment>
-          {userAccessRight == 4 && <CustomerDashboard />}
-          {userAccessRight == 1 && <RestaurantStaffDashboard />}
-          {userAccessRight == 2 && <FDSDashboard />}
-          {userAccessRight == 3 && <RiderDashboard />}
+          {userAccessRight === 4 && <CustomerDashboard />}
+          {userAccessRight === 1 && <RestaurantStaffDashboard />}
+          {userAccessRight === 2 && <FDSDashboard />}
+          {userAccessRight === 3 && <RiderDashboard />}
         </Fragment>
       );
     }

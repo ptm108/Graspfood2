@@ -6,7 +6,7 @@ var logger = require('../node_modules/morgan');
 
 var app = express();
 
-var indexRouter = require('../routes/testroutes')
+var indexRouter = require('../routes/userQueries')
 
 app.use(logger('dev'));
 app.use(express.json());

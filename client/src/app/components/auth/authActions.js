@@ -1,6 +1,7 @@
 import { SubmissionError, reset, dispatch } from "redux-form";
 import axios from "axios";
 import { LOGIN_USER } from "./authConstants";
+import { toastr } from "react-redux-toastr";
 
 // login actions for staff, customer, delivery rider, restaurant manager
 
@@ -13,6 +14,7 @@ export const login = creds => {
         if (res.data.rows) {
           console.log(res.data.rows);
           dispatch({ type: LOGIN_USER, payload: res.data.rows[0]})
+          toastr.success("Success", "Logged in as " + creds.username)
         }
       })
       .catch(error => {
@@ -27,15 +29,16 @@ export const login = creds => {
 
 export const register = user => {
   return async (dispatch, getState) => {
+    console.log(user);
     await axios
-      .get("/api/post/registerUser", user)
-      .then(data => {
-        console.log(data);
+      .post("/api/post/registerUser", user)
+      .then(res => {
+        toastr.success("Success!", "Welcome, <name>")
+        console.log(res);
       })
       .catch(error => {
-        throw new SubmissionError({
-          _error: error.message
-        });
+        console.log(error);
+        toastr.error("Error", error.message);
       });
   };
 };

@@ -1,5 +1,5 @@
 import React from "react";
-import { Label, Form, Segment, Button, Divider } from "semantic-ui-react";
+import { Label, Form, Segment, Button, Divider, Icon } from "semantic-ui-react";
 import { Field, reduxForm } from "redux-form";
 import TextInput from "../../../util/form/TextInput";
 import { connect } from "react-redux";
@@ -42,36 +42,37 @@ const RegisterForm = ({
           />
           {error && (
             <Label basic color="red">
+              <Icon name="x"/>
               {error}
             </Label>
           )}
           <Form.Group inline>
             <label>Sign Up As: </label>
             <Field
-              name="userType"
+              name="accessRight"
               type="radio"
-              value="customer"
+              value="4"
               label="Customer"
               component={RadioInput}
             />
             <Field
-              name="userType"
+              name="accessRight"
               type="radio"
-              value="deliveryRider"
+              value="3"
               label="DeliveryRider"
               component={RadioInput}
             />
             <Field
-              name="userType"
+              name="accessRight"
               type="radio"
-              value="restaurantStaff"
+              value="1"
               label="RestaurantStaff"
               component={RadioInput}
             />
             <Field
-              name="userType"
+              name="accessRight"
               type="radio"
-              value="fdsStaff"
+              value="2"
               label="FDSStaff"
               component={RadioInput}
             />
@@ -86,7 +87,7 @@ const RegisterForm = ({
             Register
           </Button>
           <Divider horizontal>Or</Divider>
-          <Button as={Link} to="/login" size="large" color="black" fluid>
+          <Button as={Link} to="/dashboard" size="large" color="black" fluid>
             Login
           </Button>
         </Segment>
