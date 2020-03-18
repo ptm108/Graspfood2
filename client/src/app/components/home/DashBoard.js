@@ -7,14 +7,15 @@ import RiderDashboard from "./rider/RiderDashboard";
 import LoginPage from "../auth/Login/LoginPage";
 
 const mapStateToProps = state => ({
-  auth: state.auth.authenticated
+  auth: state.auth.authenticated,
+  userAccessRight: state.auth.userAccessRight
 });
 
 class DashBoard extends Component {
   render() {
-    const { auth } = this.props;
+    const { auth, userAccessRight } = this.props;
     const authenticated = auth;
-    console.log(authenticated);
+    console.log(userAccessRight);
 
     if (!authenticated) {
       return <LoginPage />;
@@ -22,10 +23,10 @@ class DashBoard extends Component {
       return (
         // to add the checks for the access right
         <Fragment>
-          <CustomerDashboard />
-          <RestaurantStaffDashboard />
-          <FDSDashboard />
-          <RiderDashboard />
+          {userAccessRight == 4 && <CustomerDashboard />}
+          {userAccessRight == 1 && <RestaurantStaffDashboard />}
+          {userAccessRight == 2 && <FDSDashboard />}
+          {userAccessRight == 3 && <RiderDashboard />}
         </Fragment>
       );
     }

@@ -3,7 +3,8 @@ import { LOGIN_USER, SIGN_OUT_USER } from "./authConstants";
 
 const initialState = {
   authenticated: false,
-  currentUser: null
+  currentUser: null,
+  userAccessRight: 0
 };
 
 const login = (state, payload) => {
@@ -11,7 +12,7 @@ const login = (state, payload) => {
   return {
     authenticated: true,
     currentUser: payload.username,
-    userAccessRight: payload.accessRight
+    userAccessRight: payload.accessright
   };
 };
 
