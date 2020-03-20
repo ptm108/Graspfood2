@@ -1,18 +1,18 @@
 import React, { Component, Fragment } from "react";
 import { Route, Switch, withRouter } from "react-router-dom";
-import CustomerDashBoard from "../components/home/customer/CustomerDashboard";
-import DashBoard from "../components/home/DashBoard";
-import NavBar from "../components/home/NavBar";
+import CustomerDashBoard from "../components/dashboard/CustomerDashboard";
+import DashBoard from "../components/dashboard/DashBoard";
+import NavBar from "./NavBar";
 //import axios from "axios";
 import LoginPage from "../components/auth/Login/LoginPage";
 import { Container } from "semantic-ui-react";
 import AccountPage from "../components/home/customer/AccountPage";
-import ChangePassword from "../components/home/ChangePassword";
+import ChangePassword from "../components/user/ChangePassword";
 import RestaurantDetailedPage from "../components/home/customer/RestaurantDetailedPage";
 import CreditCard from "../components/home/customer/CreditCard";
-import FDSDashboard from "../components/home/fds/FDSDashboard";
-import RiderDashboard from "../components/home/rider/RiderDashboard";
-import RestaurantStaffDashboard from "../components/home/restaurantstaff/RestaurantStaffDashboard";
+import FDSDashboard from "../components/dashboard/FDSDashboard";
+import RiderDashboard from "../components/dashboard/RiderDashboard";
+import RestaurantStaffDashboard from "../components/dashboard/RestaurantStaffDashboard";
 import RegisterPage from "../components/auth/Register/RegisterPage";
 import NotFound from "../layout/NotFound";
 

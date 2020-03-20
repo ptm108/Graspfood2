@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import PastOrders from "./PastOrders";
-import ReviewPostings from "./ReviewPostings";
+import PastOrders from "../customer/PastOrders";
+import ReviewPostings from "../customer/ReviewPostings";
 import { Grid, Header } from "semantic-ui-react";
 import AccountNav from "../AccountNav";
 

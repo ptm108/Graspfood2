@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from "react";
 import { Grid, Menu, Header } from "semantic-ui-react";
 import { NavLink } from "react-router-dom";
-import ChangePassword from "./ChangePassword";
+import ChangePassword from "../user/ChangePassword";
 
 const AccountNav = () => {
   return (

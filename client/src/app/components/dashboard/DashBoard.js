@@ -1,9 +1,9 @@
 import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
-import CustomerDashboard from "./customer/CustomerDashboard";
-import RestaurantStaffDashboard from "./restaurantstaff/RestaurantStaffDashboard";
-import FDSDashboard from "./fds/FDSDashboard";
-import RiderDashboard from "./rider/RiderDashboard";
+import CustomerDashboard from "./CustomerDashboard";
+import RestaurantStaffDashboard from "./RestaurantStaffDashboard";
+import FDSDashboard from "./FDSDashboard";
+import RiderDashboard from "./RiderDashboard";
 import LoginPage from "../auth/Login/LoginPage";
 
 const mapStateToProps = state => ({

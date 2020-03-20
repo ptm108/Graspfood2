@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Grid } from "semantic-ui-react";
-import AccountNav from "./AccountNav";
+import AccountNav from "../customer/AccountNav";
 
 class ChangePassword extends Component {
   render() {
