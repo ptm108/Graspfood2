@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import AccountNav from "../AccountNav";
+import AccountNav from "../customer/AccountNav";
 import { Grid } from "semantic-ui-react";
 
 class CreditCard extends Component {

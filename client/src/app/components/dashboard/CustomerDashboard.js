@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Grid } from "semantic-ui-react";
-import RestaurantList from "../home/customer/RestaurantList";
+import RestaurantList from "../restaurant/RestaurantList";
 import AccountNav from "../customer/AccountNav";
 import { connect } from "react-redux";
 

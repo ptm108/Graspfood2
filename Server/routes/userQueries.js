@@ -6,9 +6,9 @@ var client = require("../main/elephantsql");
 // const router = new Router();
 
 router.get("/api/get/test", (req, res) => {
-  client.query(`SELECT * FROM test`, (q_err, q_res) => {
+  client.query(`SELECT * FROM actor`, (q_err, q_res) => {
     console.log(q_res);
-    res.send(q_res);
+    console.log(q_err);
   });
 });
 

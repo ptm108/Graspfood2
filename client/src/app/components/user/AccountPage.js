@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import PastOrders from "../customer/PastOrders";
 import ReviewPostings from "../customer/ReviewPostings";
 import { Grid, Header } from "semantic-ui-react";
-import AccountNav from "../AccountNav";
+import AccountNav from "../customer/AccountNav";
 
 class AccountPage extends Component {
   render() {

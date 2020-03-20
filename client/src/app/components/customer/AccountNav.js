@@ -1,9 +1,17 @@
 import React, { Component, Fragment } from "react";
-import { Grid, Menu, Header } from "semantic-ui-react";
+import { Grid, Menu, Header, Button } from "semantic-ui-react";
 import { NavLink } from "react-router-dom";
 import ChangePassword from "../user/ChangePassword";
+import { SIGN_OUT_USER } from "../auth/authConstants";
+import { connect } from "react-redux"
 
-const AccountNav = () => {
+const mapDispatchToProps = dispatch => {
+  return {
+    signOut: () => dispatch({ type: SIGN_OUT_USER })
+  };
+};
+
+const AccountNav = ({signOut}) => {
   return (
     <Fragment>
       <Grid.Column width={6}>
@@ -18,10 +26,15 @@ const AccountNav = () => {
           <Menu.Item as={NavLink} to="/creditcard">
             Add/Remove Credit Card
           </Menu.Item>
+          <Menu.Item>
+            <Button fluid onClick={signOut}>
+              Log Out
+            </Button>
+          </Menu.Item>
         </Menu>
       </Grid.Column>
     </Fragment>
   );
 };
 
-export default AccountNav;
+export default connect(null, mapDispatchToProps)(AccountNav);
