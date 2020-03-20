@@ -75,8 +75,26 @@ router.get("/api/get/restaurantList", (req, res, next) => {
       if (q_err) {
         return next(q_err);
       }
-      console.log(q_res);
+      //console.log(q_res);
       res.send(q_res);
+    }
+  );
+});
+
+router.get("/api/get/fetchFoodItemsByRid", (req, res, next) => {
+  // console.log(req.query);
+  const rid = [req.query.rid]
+  client.query(
+    `SELECT * FROM fooditem WHERE rid=$1 `,
+    rid,
+    (q_err, q_res) => {
+      if (q_err) {
+        return next(q_err);
+      }
+      if (q_res.rows[0]) {
+        res.json(q_res);
+      }
+      return next(q_err);
     }
   );
 });
