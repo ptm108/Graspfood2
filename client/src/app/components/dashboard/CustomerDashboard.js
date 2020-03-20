@@ -14,10 +14,10 @@ class CustomerDashBoard extends Component {
     const authenticated = auth.authenticated;
     return (
       <Grid>
-        <Grid.Column width={10}>
+        <Grid.Column width={12}>
           <RestaurantList />
         </Grid.Column>
-        <Grid.Column width={6}>
+        <Grid.Column width={4}>
           <AccountNav />
         </Grid.Column>
       </Grid>

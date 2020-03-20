@@ -8,13 +8,15 @@ import { reducer as ToastrReducer } from "react-redux-toastr";
 import asyncReducer from "../async/asyncReducer";
 import { persistStore, persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage' // defaults to localStorage for web
+import restaurantReducer from "../components/restaurant/restaurantUtils/restaurantReducer";
 
 const rootReducer = combineReducers({
     test: testReducer,
     auth: authReducer,
     form: FormReducer,
     toastr: ToastrReducer,
-    async: asyncReducer
+    async: asyncReducer,
+    restaurant: restaurantReducer
 })
 
 const persistConfig = {
