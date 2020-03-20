@@ -7,27 +7,30 @@ import { configureStore } from "./app/reduxstore/configureStore";
 import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
 import ReduxToastr from "react-redux-toastr";
+import { PersistGate } from "redux-persist/integration/react";
 
-const store = configureStore();
+const { persistor, store } = configureStore();
 const rootEl = document.getElementById("root");
 
 let render = () => {
   ReactDOM.render(
     <Provider store={store}>
-      <BrowserRouter>
-        <ReduxToastr
-          timeOut={4000}
-          newestOnTop={false}
-          preventDuplicates
-          position="bottom-right"
-          getState={state => state.toastr} // This is the default
-          transitionIn="fadeIn"
-          transitionOut="fadeOut"
-          progressBar
-          closeOnToastrClick
-        />
-        <App />
-      </BrowserRouter>
+      <PersistGate loading={null} persistor={persistor}>
+        <BrowserRouter>
+          <ReduxToastr
+            timeOut={4000}
+            newestOnTop={false}
+            preventDuplicates
+            position="bottom-right"
+            getState={state => state.toastr} // This is the default
+            transitionIn="fadeIn"
+            transitionOut="fadeOut"
+            progressBar
+            closeOnToastrClick
+          />
+          <App />
+        </BrowserRouter>
+      </PersistGate>
     </Provider>,
     rootEl
   );

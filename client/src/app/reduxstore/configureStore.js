@@ -6,6 +6,8 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 import thunk from "redux-thunk";
 import { reducer as ToastrReducer } from "react-redux-toastr";
 import asyncReducer from "../async/asyncReducer";
+import { persistStore, persistReducer } from 'redux-persist'
+import storage from 'redux-persist/lib/storage' // defaults to localStorage for web
 
 const rootReducer = combineReducers({
     test: testReducer,
@@ -15,12 +17,19 @@ const rootReducer = combineReducers({
     async: asyncReducer
 })
 
+const persistConfig = {
+    key: 'root',
+    storage
+};
+
 export const configureStore = () => {
     const store = createStore(
-        rootReducer,
+        persistReducer(persistConfig, rootReducer),
         composeWithDevTools(
             applyMiddleware(thunk)
         )
         );
-    return store;
+
+    const persistor = persistStore(store);
+    return { persistor, store };
 }
