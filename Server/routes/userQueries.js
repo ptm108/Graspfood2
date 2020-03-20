@@ -43,7 +43,7 @@ router.post("/api/post/registerUser", (req, res, next) => {
         res.send(q_err.detail);
       } else {
         console.log(q_res);
-        res.json(q_res);
+        res.json(user);
       }
     }
   );
