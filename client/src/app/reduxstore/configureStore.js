@@ -10,6 +10,7 @@ import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage"; // defaults to localStorage for web
 import restaurantReducer from "../components/restaurant/restaurantUtils/restaurantReducer";
 import customerReducer from "../components/customer/customerUtils/customerReducer";
+import OrderReducer from "../components/order/OrderReducer";
 
 const rootReducer = combineReducers({
   test: testReducer,
@@ -18,7 +19,8 @@ const rootReducer = combineReducers({
   toastr: ToastrReducer,
   async: asyncReducer,
   restaurant: restaurantReducer,
-  customer: customerReducer
+  customer: customerReducer,
+  order: OrderReducer
 });
 
 const persistConfig = {

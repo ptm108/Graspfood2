@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from "react";
 import { Grid, Menu, Header, Button } from "semantic-ui-react";
-import { NavLink } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
 import ChangePassword from "../user/ChangePassword";
 import { SIGN_OUT_USER } from "../auth/authConstants";
 import { connect } from "react-redux";
@@ -10,7 +10,6 @@ const mapDispatchToProps = dispatch => {
   return {
     signOut: () => {
       dispatch({ type: SIGN_OUT_USER });
-      //history.push("/dashboard");
     }
   };
 };
@@ -31,7 +30,7 @@ const AccountNav = ({ signOut, history }) => {
             Add/Remove Credit Card
           </Menu.Item>
           <Menu.Item>
-            <Button fluid onClick={signOut}>
+            <Button fluid onClick={signOut} as={NavLink} to="/dashboard">
               Log Out
             </Button>
           </Menu.Item>
