@@ -9,6 +9,7 @@ import asyncReducer from "../async/asyncReducer";
 import { persistStore, persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage' // defaults to localStorage for web
 import restaurantReducer from "../components/restaurant/restaurantUtils/restaurantReducer";
+import OrderReducer from "../components/order/OrderReducer";
 
 const rootReducer = combineReducers({
     test: testReducer,
@@ -16,7 +17,8 @@ const rootReducer = combineReducers({
     form: FormReducer,
     toastr: ToastrReducer,
     async: asyncReducer,
-    restaurant: restaurantReducer
+    restaurant: restaurantReducer,
+    order: OrderReducer
 })
 
 const persistConfig = {
