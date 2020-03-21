@@ -20,6 +20,10 @@ class RestaurantFoodList extends Component {
     await fetchFoodItemsByRid(restaurant);
   }
 
+  state = {
+    orderitems: this.props.fooditems
+  }
+
   render() {
     const { fooditems } = this.props;
 
@@ -29,8 +33,11 @@ class RestaurantFoodList extends Component {
         <Segment.Group>
           <Segment>
             <Grid divided>
-              <Grid.Column width={10}>
+              <Grid.Column width={8}>
                 <Header as="h3">Food Item</Header>
+              </Grid.Column>
+              <Grid.Column width={2} textAlign="center">
+                <Header as="h3">Price</Header>
               </Grid.Column>
               <Grid.Column width={2} textAlign="center">
                 <Header as="h3">Qty</Header>
