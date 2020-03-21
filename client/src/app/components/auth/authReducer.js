@@ -11,7 +11,7 @@ const login = (state, payload) => {
   console.log(payload);
   return {
     authenticated: true,
-    currentUser: payload.username,
+    currentUser: payload,
     userAccessRight: payload.accessright
   };
 };

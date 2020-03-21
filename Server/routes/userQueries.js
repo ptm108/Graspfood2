@@ -69,14 +69,31 @@ router.put("/api/put/updateUser", (req, res, next) => {
 });
 
 router.get("/api/get/restaurantList", (req, res, next) => {
+  client.query(`SELECT * from restaurant;`, (q_err, q_res) => {
+    if (q_err) {
+      return next(q_err);
+    }
+    console.log(q_res);
+    res.send(q_res);
+  });
+});
+
+router.get("/api/get/creditcard", (req, res, next) => {
+  const creds = [req.query.uid];
+  console.log(req.query);
+  console.log(req.query.uid);
   client.query(
-    `SELECT * from restaurant;`,
+    `SELECT * FROM creditcard WHERE uid = $1`,
+    creds,
     (q_err, q_res) => {
       if (q_err) {
         return next(q_err);
       }
+      if (q_res.rows[0]) {
+        res.json(q_res);
+      }
       console.log(q_res);
-      res.send(q_res);
+      return next(q_err);
     }
   );
 });

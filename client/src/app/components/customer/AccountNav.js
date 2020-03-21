@@ -3,15 +3,19 @@ import { Grid, Menu, Header, Button } from "semantic-ui-react";
 import { NavLink } from "react-router-dom";
 import ChangePassword from "../user/ChangePassword";
 import { SIGN_OUT_USER } from "../auth/authConstants";
-import { connect } from "react-redux"
+import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
 
 const mapDispatchToProps = dispatch => {
   return {
-    signOut: () => dispatch({ type: SIGN_OUT_USER })
+    signOut: () => {
+      dispatch({ type: SIGN_OUT_USER });
+      //history.push("/dashboard");
+    }
   };
 };
 
-const AccountNav = ({signOut}) => {
+const AccountNav = ({ signOut, history }) => {
   return (
     <Fragment>
       <Grid.Column width={6}>
@@ -37,4 +41,4 @@ const AccountNav = ({signOut}) => {
   );
 };
 
-export default connect(null, mapDispatchToProps)(AccountNav);
+export default withRouter(connect(null, mapDispatchToProps)(AccountNav));
