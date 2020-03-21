@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
 import { fetchFoodItemsByRid } from "./restaurantUtils/restaurantActions";
-import { Segment } from "semantic-ui-react";
+import { Segment, Grid, Header, Divider } from "semantic-ui-react";
 import RestaurantFoodListItem from "./RestaurantFoodListItem";
 
 const mapDispatchToProps = {
@@ -24,12 +24,28 @@ class RestaurantFoodList extends Component {
     const { fooditems } = this.props;
 
     return (
+      <Fragment>
+        <Segment>Total Order</Segment>
         <Segment.Group>
+          <Segment>
+            <Grid divided>
+              <Grid.Column width={10}>
+                <Header as="h3">Food Item</Header>
+              </Grid.Column>
+              <Grid.Column width={2} textAlign="center">
+                <Header as="h3">Qty</Header>
+              </Grid.Column>
+              <Grid.Column width={4} textAlign="center">
+                <Header as="h3">Add/Remove</Header>
+              </Grid.Column>
+            </Grid>
+          </Segment>
           {fooditems &&
             fooditems.map(fooditem => (
-              <RestaurantFoodListItem key={fooditem.fid} fooditem={fooditem}/>
+              <RestaurantFoodListItem key={fooditem.fid} fooditem={fooditem} />
             ))}
         </Segment.Group>
+      </Fragment>
     );
   }
 }

@@ -21,7 +21,7 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-const mapDispatchToProps = ( dispatch, state ) => {
+const mapDispatchToProps = (dispatch, state) => {
   return {
     resetFoodItems: () => dispatch({ type: RESET_FOOD_ITEMS })
   };
@@ -38,6 +38,9 @@ class RestaurantDetailedPage extends Component {
     return (
       <Grid>
         <Grid.Column width={10}>
+          <RestaurantFoodList restaurant={restaurant} />
+        </Grid.Column>
+        <Grid.Column width={6}>
           <Segment>
             <Header as="h1" size="huge">
               <Icon name="food" />
@@ -48,12 +51,6 @@ class RestaurantDetailedPage extends Component {
               Address: {restaurant.streetname}, {restaurant.unitno}, Singapore{" "}
               {restaurant.postalcode}
             </Header.Subheader>
-          </Segment>
-          <RestaurantFoodList restaurant={restaurant} />
-        </Grid.Column>
-        <Grid.Column width={6}>
-          <Segment>
-            Order: <br />
           </Segment>
         </Grid.Column>
       </Grid>
