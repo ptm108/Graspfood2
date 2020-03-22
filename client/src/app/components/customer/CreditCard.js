@@ -2,24 +2,35 @@ import React, { Component, Fragment } from "react";
 import AccountNav from "../customer/AccountNav";
 import { Grid, Card, Header, Icon } from "semantic-ui-react";
 import { connect } from "react-redux";
-import { fetchCreditCard } from "./customerUtils/customerActions";
+import {
+  fetchCreditCard,
+  resetCreditCard
+} from "./customerUtils/customerActions";
+import { RESET_CREDITCARD } from "./customerUtils/customerConstants";
 
 const mapStateToProps = state => ({
   currentUser: state.auth.currentUser,
   creditCard: state.customer.creditCard
 });
 
-const mapDispatchToProps = { fetchCreditCard };
+const mapDispatchToProps = {
+  fetchCreditCard,
+  resetCreditCard
+};
 
 class CreditCard extends Component {
-  async componentDidMount() {
-    await this.props.fetchCreditCard(this.props.currentUser);
+  componentDidMount() {
+    this.props.fetchCreditCard(this.props.currentUser);
+  }
+
+  componentWillUnmount() {
+    this.props.resetCreditCard();
   }
 
   render() {
     const { creditCard } = this.props;
     console.log(this.props);
-    console.log(creditCard[0]);
+    console.log(creditCard);
     return (
       <Fragment>
         <Grid>
@@ -28,7 +39,7 @@ class CreditCard extends Component {
               <Icon name="credit card" />
               Added Credit Card
             </Header>
-            {creditCard[0] ? (
+            {creditCard ? (
               <Card>
                 <Card.Content>
                   <Card.Header>
@@ -43,7 +54,7 @@ class CreditCard extends Component {
                 </Card.Content>
               </Card>
             ) : (
-              <Header>No added credit card yet</Header>
+              <Header>No credit card yet</Header>
             )}
           </Grid.Column>
           <Grid.Column width={4}>

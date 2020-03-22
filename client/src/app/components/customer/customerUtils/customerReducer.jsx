@@ -1,7 +1,7 @@
 import { createReducer } from "../../../reduxstore/reducerUtil";
 import {
   FETCH_USER_CREDITCARD,
-  RESET_STATE
+  RESET_CREDITCARD
 } from "../customerUtils/customerConstants";
 
 const initialState = {
@@ -15,6 +15,14 @@ const fetchCreditCard = (state, payload) => {
   };
 };
 
+const resetCreditCard = state => {
+  return {
+    ...state,
+    creditCard: null
+  };
+};
+
 export default createReducer(initialState, {
-  [FETCH_USER_CREDITCARD]: fetchCreditCard
+  [FETCH_USER_CREDITCARD]: fetchCreditCard,
+  [RESET_CREDITCARD]: resetCreditCard
 });

@@ -1,5 +1,8 @@
 import axios from "axios";
-import { FETCH_USER_CREDITCARD } from "../customerUtils/customerConstants";
+import {
+  FETCH_USER_CREDITCARD,
+  RESET_CREDITCARD
+} from "../customerUtils/customerConstants";
 
 export const fetchCreditCard = user => {
   console.log(user);
@@ -11,5 +14,11 @@ export const fetchCreditCard = user => {
         return res.data.rows;
       }
     });
+  };
+};
+
+export const resetCreditCard = () => {
+  return async dispatch => {
+    dispatch({ type: RESET_CREDITCARD });
   };
 };
