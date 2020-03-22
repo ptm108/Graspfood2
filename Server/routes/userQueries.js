@@ -78,6 +78,16 @@ router.get("/api/get/orderList", (req, res, next) => {
   });
 });
 
+router.get("/api/get/reviewList", (req, res, next) => {
+  client.query(`SELECT * from reviews;`, (q_err, q_res) => {
+    if (q_err) {
+      return next(q_err);
+    }
+    console.log(q_res);
+    res.send(q_res);
+  });
+});
+
 router.get("/api/get/restaurantList", (req, res, next) => {
   client.query(`SELECT * from restaurant;`, (q_err, q_res) => {
     if (q_err) {
