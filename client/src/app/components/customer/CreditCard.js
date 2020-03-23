@@ -1,20 +1,69 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import AccountNav from "../customer/AccountNav";
-import { Grid } from "semantic-ui-react";
+import { Grid, Card, Header, Icon } from "semantic-ui-react";
+import { connect } from "react-redux";
+import {
+  fetchCreditCard,
+  resetCreditCard
+} from "./customerUtils/customerActions";
+import { RESET_CREDITCARD } from "./customerUtils/customerConstants";
+
+const mapStateToProps = state => ({
+  currentUser: state.auth.currentUser,
+  creditCard: state.customer.creditCard
+});
+
+const mapDispatchToProps = {
+  fetchCreditCard,
+  resetCreditCard
+};
 
 class CreditCard extends Component {
+  componentDidMount() {
+    this.props.fetchCreditCard(this.props.currentUser);
+  }
+
+  componentWillUnmount() {
+    this.props.resetCreditCard();
+  }
+
   render() {
+    const { creditCard } = this.props;
+    console.log(this.props);
+    console.log(creditCard);
     return (
-      <Grid>
-        <Grid.Column width={12}>
-          <h1>add/remove credit card here</h1>
-        </Grid.Column>
-        <Grid.Column width={4}>
-          <AccountNav />
-        </Grid.Column>
-      </Grid>
+      <Fragment>
+        <Grid>
+          <Grid.Column width={12}>
+            <Header>
+              <Icon name="credit card" />
+              Added Credit Card
+            </Header>
+            {creditCard ? (
+              <Card>
+                <Card.Content>
+                  <Card.Header>
+                    XXXX - XXXX - XXXX - {creditCard[0].ccnumber.substring(12)}
+                  </Card.Header>
+                  <Card.Description>
+                    Expiry Date: {creditCard[0].expirydate.substring(0, 10)}
+                  </Card.Description>
+                  <Card.Description>
+                    Cardholder Name: {creditCard[0].cardholdername}
+                  </Card.Description>
+                </Card.Content>
+              </Card>
+            ) : (
+              <Header>No credit card yet</Header>
+            )}
+          </Grid.Column>
+          <Grid.Column width={4}>
+            <AccountNav />
+          </Grid.Column>
+        </Grid>
+      </Fragment>
     );
   }
 }
 
-export default CreditCard;
+export default connect(mapStateToProps, mapDispatchToProps)(CreditCard);

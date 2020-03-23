@@ -1,26 +1,18 @@
 import { createReducer } from "../../reduxstore/reducerUtil";
-// import { CREATE_ORDER, DELETE_ORDER, FETCH_ORDER, FETCH_USER_ORDERS} from "./OrderConstants";
-import {FETCH_ORDER} from "./OrderConstants";
+import { FETCH_ORDERS } from "../order/OrderConstants"
 
 const initialState = {
-    orders: []
-  };
+  orders: []
+};
 
-  
-  const fetchOrders = (state, payload) => {
-    console.log(payload);
-    return {
-      orders: payload
-    };
+const fetchOrders = (state, payload) => {
+  //console.log(payload);
+  return {
+    ...state,
+    orders: payload
   };
-  
-  export default createReducer(initialState, {
-    [FETCH_ORDER]: fetchOrders
-  });
+};
 
 export default createReducer(initialState, {
-    // [CREATE_ORDER]: createOrder,
-    // [DELETE_ORDER]: deleteOrder,
-    [FETCH_ORDER]: fetchOrder
-    // [FETCH_USER_ORDERS]: fetchUserOrders
-  });
+  [FETCH_ORDERS]: fetchOrders
+});

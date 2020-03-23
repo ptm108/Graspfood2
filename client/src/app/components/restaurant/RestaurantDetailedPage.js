@@ -21,14 +21,13 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch, state) => {
   return {
     resetFoodItems: () => dispatch({ type: RESET_FOOD_ITEMS })
   };
-}
+};
 
 class RestaurantDetailedPage extends Component {
-
   componentWillUnmount() {
     this.props.resetFoodItems();
   }
@@ -39,21 +38,19 @@ class RestaurantDetailedPage extends Component {
     return (
       <Grid>
         <Grid.Column width={10}>
+          <RestaurantFoodList restaurant={restaurant} />
+        </Grid.Column>
+        <Grid.Column width={6}>
           <Segment>
             <Header as="h1" size="huge">
               <Icon name="food" />
               <Header.Content>Restaurant Details</Header.Content>
             </Header>
             <Header.Subheader>Name: {restaurant.rname}</Header.Subheader>
-            <Header.Subheader>Address: {restaurant.streetname}, {restaurant.unitno}, Singapore {restaurant.postalcode}</Header.Subheader>
-          </Segment>
-          <Segment>
-            <RestaurantFoodList restaurant={restaurant}/>
-          </Segment>
-        </Grid.Column>
-        <Grid.Column width={6}>
-          <Segment>
-            Order: <br/>
+            <Header.Subheader>
+              Address: {restaurant.streetname}, {restaurant.unitno}, Singapore{" "}
+              {restaurant.postalcode}
+            </Header.Subheader>
           </Segment>
         </Grid.Column>
       </Grid>
@@ -61,4 +58,7 @@ class RestaurantDetailedPage extends Component {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(RestaurantDetailedPage);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(RestaurantDetailedPage);
