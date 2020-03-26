@@ -3,6 +3,7 @@ import {
   FETCH_USER_CREDITCARD,
   RESET_CREDITCARD
 } from "../customerUtils/customerConstants";
+import { toastr } from "react-redux-toastr";
 
 export const fetchCreditCard = user => {
   console.log(user);
@@ -20,5 +21,25 @@ export const fetchCreditCard = user => {
 export const resetCreditCard = () => {
   return async dispatch => {
     dispatch({ type: RESET_CREDITCARD });
+  };
+};
+
+export const addCreditCard = values => {
+  console.log(values);
+  return async dispatch => {
+    await axios
+      .post("/api/post/addCreditCard", values)
+      .then(res => {
+        //console.log(res.data);
+        if (res.data.length >= 0) {
+          toastr.success("Credit Card added successfully!");
+        } else {
+          toastr.error("Oops! Something went wrong");
+        }
+      })
+      .catch(error => {
+        toastr.error("Oops! Something went wrong");
+        console.log(error);
+      });
   };
 };

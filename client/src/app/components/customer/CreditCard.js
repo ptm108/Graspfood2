@@ -7,6 +7,7 @@ import {
   resetCreditCard
 } from "./customerUtils/customerActions";
 import { RESET_CREDITCARD } from "./customerUtils/customerConstants";
+import CreditCardForm from "./CreditCardForm";
 
 const mapStateToProps = state => ({
   currentUser: state.auth.currentUser,
@@ -28,7 +29,7 @@ class CreditCard extends Component {
   }
 
   render() {
-    const { creditCard } = this.props;
+    const { creditCard, currentUser } = this.props;
     console.log(this.props);
     console.log(creditCard);
     return (
@@ -54,7 +55,11 @@ class CreditCard extends Component {
                 </Card.Content>
               </Card>
             ) : (
-              <Header>No credit card yet</Header>
+              <Fragment>
+                <Header>No credit card yet</Header>
+                <br />
+                <CreditCardForm currentUser={currentUser} />
+              </Fragment>
             )}
           </Grid.Column>
           <Grid.Column width={4}>
