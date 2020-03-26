@@ -43,3 +43,23 @@ export const addCreditCard = values => {
       });
   };
 };
+
+export const deleteCreditCard = values => {
+  console.log(values);
+  return async dispatch => {
+    await axios
+      .delete("/api/delete/deleteCreditCard", { data: values })
+      .then(res => {
+        console.log(res.data);
+        if (res.data.rowCount >= 0) {
+          toastr.success("Credit card deleted successfully!");
+        } else {
+          toastr.error("Oops! Something went wrong");
+        }
+      })
+      .catch(error => {
+        toastr.error("Oops! Something went wrong");
+        console.log(error);
+      });
+  };
+};

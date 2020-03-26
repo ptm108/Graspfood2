@@ -134,6 +134,18 @@ router.post("/api/post/addCreditCard", (req, res, next) => {
   );
 });
 
+router.delete("/api/delete/deleteCreditCard", (req, res, next) => {
+  const user = [req.body.uid];
+  console.log(req.body);
+  client.query(`DELETE FROM creditcard WHERE uid=$1`, user, (q_err, q_res) => {
+    if (q_err) {
+      return next(q_err);
+    } else {
+      res.json(q_res);
+    }
+  });
+});
+
 router.get("/api/get/fetchFoodItemsByRid", (req, res, next) => {
   // console.log(req.query);
   const rid = [req.query.rid];
