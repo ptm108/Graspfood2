@@ -1,12 +1,13 @@
 import React, { Component, Fragment } from "react";
 import AccountNav from "../customer/AccountNav";
-import { Grid, Card, Header, Icon } from "semantic-ui-react";
+import { Grid, Card, Header, Icon, Button } from "semantic-ui-react";
 import { connect } from "react-redux";
 import {
   fetchCreditCard,
-  resetCreditCard
+  resetCreditCard,
+  deleteCreditCard
 } from "./customerUtils/customerActions";
-import { RESET_CREDITCARD } from "./customerUtils/customerConstants";
+import CreditCardForm from "./CreditCardForm";
 
 const mapStateToProps = state => ({
   currentUser: state.auth.currentUser,
@@ -15,10 +16,16 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
   fetchCreditCard,
-  resetCreditCard
+  resetCreditCard,
+  deleteCreditCard
 };
 
 class CreditCard extends Component {
+  onDeleteCard = () => {
+    this.props.deleteCreditCard(this.props.currentUser);
+    this.props.resetCreditCard();
+  };
+
   componentDidMount() {
     this.props.fetchCreditCard(this.props.currentUser);
   }
@@ -28,9 +35,9 @@ class CreditCard extends Component {
   }
 
   render() {
-    const { creditCard } = this.props;
-    console.log(this.props);
-    console.log(creditCard);
+    const { creditCard, currentUser, loading } = this.props;
+    //console.log(this.props);
+    //console.log(creditCard);
     return (
       <Fragment>
         <Grid>
@@ -40,21 +47,35 @@ class CreditCard extends Component {
               Added Credit Card
             </Header>
             {creditCard ? (
-              <Card>
-                <Card.Content>
-                  <Card.Header>
-                    XXXX - XXXX - XXXX - {creditCard[0].ccnumber.substring(12)}
-                  </Card.Header>
-                  <Card.Description>
-                    Expiry Date: {creditCard[0].expirydate.substring(0, 10)}
-                  </Card.Description>
-                  <Card.Description>
-                    Cardholder Name: {creditCard[0].cardholdername}
-                  </Card.Description>
-                </Card.Content>
-              </Card>
+              <Fragment>
+                <Card>
+                  <Card.Content>
+                    <Card.Header>
+                      XXXX - XXXX - XXXX -{" "}
+                      {creditCard[0].ccnumber.substring(12)}
+                    </Card.Header>
+                    <Card.Description>
+                      Expiry Date: {creditCard[0].expirydate.substring(0, 10)}
+                    </Card.Description>
+                    <Card.Description>
+                      Cardholder Name: {creditCard[0].cardholdername}
+                    </Card.Description>
+                  </Card.Content>
+                </Card>
+                <Button
+                  negative
+                  loading={loading}
+                  onClick={() => this.onDeleteCard()}
+                >
+                  Delete
+                </Button>
+              </Fragment>
             ) : (
-              <Header>No credit card yet</Header>
+              <Fragment>
+                <Header>No credit card yet</Header>
+                <br />
+                <CreditCardForm currentUser={currentUser} />
+              </Fragment>
             )}
           </Grid.Column>
           <Grid.Column width={4}>

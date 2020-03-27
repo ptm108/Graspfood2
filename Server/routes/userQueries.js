@@ -110,6 +110,42 @@ router.get("/api/get/creditcard", (req, res, next) => {
   );
 });
 
+router.post("/api/post/addCreditCard", (req, res, next) => {
+  const creditcard = [
+    req.body.uid,
+    req.body.cardnumber,
+    req.body.cardholdername,
+    req.body.expirydate
+  ];
+  console.log(req.body);
+  client.query(
+    `INSERT into creditcard(uid, ccnumber, cardholdername, expirydate)
+          VALUES($1, $2, $3, $4)`,
+    creditcard,
+    (q_err, q_res) => {
+      if (q_err) {
+        console.log(q_err);
+        res.send(q_err.detail);
+      } else {
+        console.log(q_res);
+        res.json(creditcard);
+      }
+    }
+  );
+});
+
+router.delete("/api/delete/deleteCreditCard", (req, res, next) => {
+  const user = [req.body.uid];
+  console.log(req.body);
+  client.query(`DELETE FROM creditcard WHERE uid=$1`, user, (q_err, q_res) => {
+    if (q_err) {
+      return next(q_err);
+    } else {
+      res.json(q_res);
+    }
+  });
+});
+
 router.get("/api/get/fetchFoodItemsByRid", (req, res, next) => {
   // console.log(req.query);
   const rid = [req.query.rid];
