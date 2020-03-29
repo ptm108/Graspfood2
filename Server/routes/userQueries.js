@@ -68,6 +68,22 @@ router.put("/api/put/updateUser", (req, res, next) => {
   );
 });
 
+router.put("/api/put/changePassword", (req, res, next) => {
+  const user = [req.body.uid, req.body.password];
+  console.log(req.body);
+  client.query(
+    `UPDATE actor SET password=$2 WHERE uid=$1`,
+    user,
+    (q_err, q_res) => {
+      if (q_err) {
+        return next(q_err);
+      } else {
+        res.json(q_res);
+      }
+    }
+  );
+});
+
 router.get("/api/get/orderList", (req, res, next) => {
   client.query(`SELECT * from contains;`, (q_err, q_res) => {
     if (q_err) {
