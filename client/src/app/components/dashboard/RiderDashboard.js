@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from "react";
-import AccountNav from "../customer/AccountNav";
+import AccountNav from "../user/AccountNav";
 import { Grid } from "semantic-ui-react";
+import { connect } from "react-redux";
 
 class RiderDashboard extends Component {
   render() {
@@ -19,4 +20,4 @@ class RiderDashboard extends Component {
   }
 }
 
-export default RiderDashboard;
+export default connect(null, null)(RiderDashboard);

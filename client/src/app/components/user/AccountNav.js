@@ -1,9 +1,14 @@
 import React, { Component, Fragment } from "react";
 import { Grid, Menu, Header, Button } from "semantic-ui-react";
 import { NavLink, Link } from "react-router-dom";
+import ChangePassword from "./ChangePassword";
 import { SIGN_OUT_USER } from "../auth/authConstants";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
+
+const mapStateToProps = state => ({
+  currentUser: state.auth.currentUser
+});
 
 const mapDispatchToProps = dispatch => {
   return {
@@ -13,7 +18,7 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-const RestaurantAccountNav = ({ signOut, history }) => {
+const AccountNav = ({ signOut, history, currentUser }) => {
   return (
     <Fragment>
       <Grid.Column width={6}>
@@ -25,6 +30,11 @@ const RestaurantAccountNav = ({ signOut, history }) => {
           <Menu.Item as={NavLink} to="/changepassword">
             Change Password
           </Menu.Item>
+          {currentUser.accessright === 4 && (
+            <Menu.Item as={NavLink} to="/creditcard">
+              Add/Remove Credit Card
+            </Menu.Item>
+          )}
           <Menu.Item>
             <Button fluid onClick={signOut} as={NavLink} to="/dashboard">
               Log Out
@@ -37,5 +47,5 @@ const RestaurantAccountNav = ({ signOut, history }) => {
 };
 
 export default withRouter(
-  connect(null, mapDispatchToProps)(RestaurantAccountNav)
+  connect(mapStateToProps, mapDispatchToProps)(AccountNav)
 );

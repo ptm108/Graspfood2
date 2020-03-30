@@ -1,8 +1,7 @@
 import React, { Component, Fragment } from "react";
 import { Grid, Header, Form, Button } from "semantic-ui-react";
-import AccountNav from "../customer/AccountNav";
+import AccountNav from "./AccountNav";
 import { connect } from "react-redux";
-import RestaurantAccountNav from "../restaurant/RestaurantAccountNav";
 import { Field, reduxForm } from "redux-form";
 import TextInput from "../../util/form/TextInput";
 import { changePassword } from "../auth/authActions";
@@ -53,8 +52,7 @@ class ChangePassword extends Component {
             </Form>
           </Grid.Column>
           <Grid.Column width={4}>
-            {accessRight === 4 && <AccountNav />}
-            {accessRight === 1 && <RestaurantAccountNav />}
+            <AccountNav />
           </Grid.Column>
         </Grid>
       </Fragment>

@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from "react";
 import { Grid, Header } from "semantic-ui-react";
-import RestaurantAccountNav from "../restaurant/RestaurantAccountNav";
 import { connect } from "react-redux";
+import AccountNav from "../user/AccountNav";
 
 const mapStateToProps = state => ({
   currentUser: state.auth.currentUser
@@ -16,7 +16,7 @@ class RestaurantStaffDashboard extends Component {
             <Header>RestaurantStaffDashboard</Header>
           </Grid.Column>
           <Grid.Column width={4}>
-            <RestaurantAccountNav />
+            <AccountNav />
           </Grid.Column>
         </Grid>
       </Fragment>

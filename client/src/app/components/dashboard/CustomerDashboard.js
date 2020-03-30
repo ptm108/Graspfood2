@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Grid } from "semantic-ui-react";
 import RestaurantList from "../restaurant/RestaurantList";
-import AccountNav from "../customer/AccountNav";
+import AccountNav from "../user/AccountNav";
 import { connect } from "react-redux";
 
 const mapStateToProps = state => ({

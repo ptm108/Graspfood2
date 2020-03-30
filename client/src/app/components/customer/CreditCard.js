@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from "react";
-import AccountNav from "../customer/AccountNav";
+import AccountNav from "../user/AccountNav";
 import { Grid, Card, Header, Icon, Button } from "semantic-ui-react";
 import { connect } from "react-redux";
 import {
