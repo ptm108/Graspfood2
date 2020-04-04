@@ -1,8 +1,7 @@
 import axios from "axios";
 import {
   FETCH_USER_CREDITCARD,
-  RESET_CREDITCARD,
-  FETCH_USER_DETAILS
+  RESET_CREDITCARD
 } from "../customerUtils/customerConstants";
 import { toastr } from "react-redux-toastr";
 
@@ -62,18 +61,5 @@ export const deleteCreditCard = values => {
         toastr.error("Oops! Something went wrong");
         console.log(error);
       });
-  };
-};
-
-export const fetchCustomerDetails = values => {
-  console.log(values);
-  return async dispatch => {
-    await axios.get("/api/get/userDetails", { params: values }).then(res => {
-      console.log(res.data);
-      if (res.data.rows) {
-        dispatch({ type: FETCH_USER_DETAILS, payload: res.data.rows });
-        return res.data.rows;
-      }
-    });
   };
 };

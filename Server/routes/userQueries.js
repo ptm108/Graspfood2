@@ -176,22 +176,4 @@ router.get("/api/get/fetchFoodItemsByRid", (req, res, next) => {
   });
 });
 
-router.get("/api/get/userDetails", (req, res, next) => {
-  console.log(req.query);
-  const uid = [req.query.uid];
-  client.query(
-    `SELECT cname, rewardpoints FROM customer WHERE uid=$1`,
-    uid,
-    (q_err, q_res) => {
-      if (q_err) {
-        return next(q_err);
-      }
-      if (q_res.rows[0]) {
-        res.json(q_res);
-      }
-      return next(q_err);
-    }
-  );
-});
-
 module.exports = router;
