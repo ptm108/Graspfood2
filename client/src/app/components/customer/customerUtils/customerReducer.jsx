@@ -24,7 +24,7 @@ const resetCreditCard = state => {
   };
 };
 
-const fetchUserDetails = (state, payload) => {
+const fetchCustomerDetails = (state, payload) => {
   console.log(payload);
   return {
     ...state,
@@ -35,5 +35,5 @@ const fetchUserDetails = (state, payload) => {
 export default createReducer(initialState, {
   [FETCH_USER_CREDITCARD]: fetchCreditCard,
   [RESET_CREDITCARD]: resetCreditCard,
-  [FETCH_USER_DETAILS]: fetchUserDetails
+  [FETCH_USER_DETAILS]: fetchCustomerDetails
 });

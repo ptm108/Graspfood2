@@ -11,6 +11,7 @@ import storage from "redux-persist/lib/storage"; // defaults to localStorage for
 import restaurantReducer from "../components/restaurant/restaurantUtils/restaurantReducer";
 import customerReducer from "../components/customer/customerUtils/customerReducer";
 import OrderReducer from "../components/order/OrderReducer";
+import riderReducer from "../components/deliveryRider/riderUtils/riderReducer";
 
 const rootReducer = combineReducers({
   test: testReducer,
@@ -20,12 +21,13 @@ const rootReducer = combineReducers({
   async: asyncReducer,
   restaurant: restaurantReducer,
   customer: customerReducer,
-  order: OrderReducer
+  order: OrderReducer,
+  rider: riderReducer,
 });
 
 const persistConfig = {
   key: "root",
-  storage
+  storage,
 };
 
 export const configureStore = () => {

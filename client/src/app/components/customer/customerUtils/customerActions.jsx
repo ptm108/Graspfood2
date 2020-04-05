@@ -68,12 +68,14 @@ export const deleteCreditCard = values => {
 export const fetchCustomerDetails = values => {
   console.log(values);
   return async dispatch => {
-    await axios.get("/api/get/userDetails", { params: values }).then(res => {
-      console.log(res.data);
-      if (res.data.rows) {
-        dispatch({ type: FETCH_USER_DETAILS, payload: res.data.rows });
-        return res.data.rows;
-      }
-    });
+    await axios
+      .get("/api/get/customerDetails", { params: values })
+      .then(res => {
+        console.log(res.data);
+        if (res.data.rows) {
+          dispatch({ type: FETCH_USER_DETAILS, payload: res.data.rows });
+          return res.data.rows;
+        }
+      });
   };
 };

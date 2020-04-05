@@ -15,6 +15,7 @@ import RiderDashboard from "../components/dashboard/RiderDashboard";
 import RestaurantStaffDashboard from "../components/dashboard/RestaurantStaffDashboard";
 import RegisterPage from "../components/auth/Register/RegisterPage";
 import NotFound from "../layout/NotFound";
+import FDSButton1 from "../components/fds/FDSButton1";
 
 class App extends Component {
   render() {
@@ -43,6 +44,7 @@ class App extends Component {
                   />
                   <Route exact path="/creditcard" component={CreditCard} />
                   <Route exact path="/fdsdashboard" component={FDSDashboard} />
+                  <Route exact path="/fdsinfo1" component={FDSButton1} />
                   <Route
                     exact
                     path="/riderdashboard"
