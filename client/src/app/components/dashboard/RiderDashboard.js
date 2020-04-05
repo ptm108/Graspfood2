@@ -1,7 +1,11 @@
 import React, { Component, Fragment } from "react";
 import AccountNav from "../user/AccountNav";
-import { Grid } from "semantic-ui-react";
+import { Grid, Header } from "semantic-ui-react";
 import { connect } from "react-redux";
+
+const mapStateToProps = state => {};
+
+const mapDispatchToProps = {};
 
 class RiderDashboard extends Component {
   render() {
@@ -10,6 +14,7 @@ class RiderDashboard extends Component {
         <Grid>
           <Grid.Column width={12}>
             <h2>RiderDashboard</h2>
+            <Header>Summary Information</Header>
           </Grid.Column>
           <Grid.Column width={4}>
             <AccountNav />
@@ -20,4 +25,4 @@ class RiderDashboard extends Component {
   }
 }
 
-export default connect(null, null)(RiderDashboard);
+export default connect(mapStateToProps, mapDispatchToProps)(RiderDashboard);
