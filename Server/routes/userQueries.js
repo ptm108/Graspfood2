@@ -54,7 +54,7 @@ router.put("/api/put/updateUser", (req, res, next) => {
     req.body.username,
     req.body.password,
     req.body.accessRight,
-    req.body.userid
+    req.body.userid,
   ];
   client.query(
     `UPDATE Actor SET(username=$1, password=$2, accessRight=$3) WHERE userid=$4`,
@@ -131,7 +131,7 @@ router.post("/api/post/addCreditCard", (req, res, next) => {
     req.body.uid,
     req.body.cardnumber,
     req.body.cardholdername,
-    req.body.expirydate
+    req.body.expirydate,
   ];
   console.log(req.body);
   client.query(
@@ -199,6 +199,44 @@ router.get("/api/get/riderDetails", (req, res, next) => {
   const uid = [req.query.uid];
   client.query(
     `SELECT * FROM deliveryrider WHERE uid=$1`,
+    uid,
+    (q_err, q_res) => {
+      if (q_err) {
+        return next(q_err);
+      }
+      if (q_res.rows[0]) {
+        res.json(q_res);
+      }
+      return next(q_err);
+    }
+  );
+});
+
+router.get("/api/get/riderSalary", (req, res, next) => {
+  //console.log(req.query);
+  const uid = [req.query.uid];
+  client.query(
+    `WITH main AS (SELECT uid, monthlybasesalary, null as weeklybasesalary, null as totalworkhours FROM fulltime
+    union SELECT uid, null as monthlybasesalary, weeklybasesalary, totalworkhours FROM parttime)
+    SELECT * from main where uid=$1`,
+    uid,
+    (q_err, q_res) => {
+      if (q_err) {
+        return next(q_err);
+      }
+      if (q_res.rows[0]) {
+        res.json(q_res);
+      }
+      return next(q_err);
+    }
+  );
+});
+
+router.get("/api/get/deliverOrders", (req, res, next) => {
+  console.log(req.query);
+  const uid = [req.query.uid];
+  client.query(
+    `select * from orderplaced o full join delivers d on o.oid = d.oid where d.uid=$1`,
     uid,
     (q_err, q_res) => {
       if (q_err) {
