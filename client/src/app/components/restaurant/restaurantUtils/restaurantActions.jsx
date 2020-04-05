@@ -32,6 +32,6 @@ export const fetchFoodItemsByRid = restaurant => {
   };
 };
 
-export const addItemToOrder = fooditem => {
-  console.log(fooditem);
+export const postNewOrder = order => {
+  console.log(order);
 }

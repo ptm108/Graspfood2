@@ -5,20 +5,18 @@ const RestaurantFoodListItem = ({ fooditem }) => {
   return (
     <Segment>
       <Grid divided>
-        <Grid.Column width={4} textAlign="center">
-          <Button.Group>
-            <Button basic color="green" icon="plus" />
-            <Button basic color="red" icon="minus" />
-          </Button.Group>
+        <Grid.Column width={1} textAlign="center">
+          {fooditem.fid}
         </Grid.Column>
-        <Grid.Column width={8} verticalAlign="middle">
-          {fooditem.fname}
+        <Grid.Column width={4}>{fooditem.fname}</Grid.Column>
+        <Grid.Column width={7} textAlign="center">
+          {fooditem.description}
         </Grid.Column>
-        <Grid.Column width={2} textAlign="center" verticalAlign="middle">
+        <Grid.Column width={2} textAlign="center">
           ${fooditem.price}
         </Grid.Column>
-        <Grid.Column width={2} verticalAlign="middle">
-          {fooditem.quantity}
+        <Grid.Column width={2} textAlign="center">
+          {fooditem.dailylimit - fooditem.currentnumoforders}
         </Grid.Column>
       </Grid>
     </Segment>
