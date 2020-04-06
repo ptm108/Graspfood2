@@ -4,6 +4,7 @@ import {
   FETCH_USER_DETAILS,
   FETCH_SALARY,
   FETCH_DELIVERS,
+  RESET_STATE,
 } from "./riderConstants";
 
 export const fetchRiderDetails = (values) => {
@@ -44,5 +45,11 @@ export const fetchDeliverOrders = (values) => {
           return res.data.rows;
         }
       });
+  };
+};
+
+export const resetState = () => {
+  return async (dispatch) => {
+    dispatch({ type: RESET_STATE });
   };
 };
