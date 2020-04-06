@@ -218,7 +218,7 @@ router.get("/api/get/riderSalary", (req, res, next) => {
   client.query(
     `WITH main AS (SELECT uid, monthlybasesalary, null as weeklybasesalary, null as totalworkhours FROM fulltime
     union SELECT uid, null as monthlybasesalary, weeklybasesalary, totalworkhours FROM parttime)
-    SELECT * from main where uid=$1`,
+    SELECT * from main natural join deliveryrider where uid=$1`,
     uid,
     (q_err, q_res) => {
       if (q_err) {

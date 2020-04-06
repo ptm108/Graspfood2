@@ -1,3 +1,4 @@
 export const FETCH_USER_DETAILS = "FETCH_USER_DETAILS";
 export const FETCH_SALARY = "FETCH_SALARY";
 export const FETCH_DELIVERS = "FETCH_DELIVERS";
+export const RESET_STATE = "RESET_STATE";

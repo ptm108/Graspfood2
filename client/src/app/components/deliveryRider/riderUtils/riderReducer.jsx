@@ -3,6 +3,7 @@ import {
   FETCH_USER_DETAILS,
   FETCH_SALARY,
   FETCH_DELIVERS,
+  RESET_STATE,
 } from "./riderConstants";
 
 const initialState = {
@@ -35,8 +36,17 @@ const fetchDelivers = (state, payload) => {
   };
 };
 
+const resetState = (state) => {
+  return {
+    ...state,
+    salary: null,
+    deliverOrders: null,
+  };
+};
+
 export default createReducer(initialState, {
   [FETCH_USER_DETAILS]: fetchRiderDetails,
   [FETCH_SALARY]: fetchSalary,
   [FETCH_DELIVERS]: fetchDelivers,
+  [RESET_STATE]: resetState,
 });
