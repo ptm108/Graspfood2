@@ -33,7 +33,7 @@ export const register = user => {
     await axios
       .post("/api/post/registerUser", user)
       .then(res => {
-        if (res.data.rowCount == 1) {
+        if (res.status === 200) {
           let newUser = JSON.parse(res.config.data);
           toastr.success("Success!", "Welcome, " + newUser.username);
         } else {

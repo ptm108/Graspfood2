@@ -14,7 +14,7 @@ router.get("/api/get/test", (req, res) => {
 
 router.get("/api/get/loginUser", (req, res, next) => {
   const creds = [req.query.username, req.query.password];
-  //console.log(req.query);
+  // console.log(req.query);
   client.query(
     `SELECT * FROM Actor WHERE username = $1 AND password = $2`,
     creds,
@@ -31,22 +31,90 @@ router.get("/api/get/loginUser", (req, res, next) => {
   );
 });
 
-router.post("/api/post/registerUser", (req, res, next) => {
+router.post("/api/post/registerUser", async (req, res, next) => {
   const user = [req.body.username, req.body.password, req.body.accessRight];
-  client.query(
-    `INSERT into Actor(username, password, accessRight)
-          VALUES($1, $2, $3)`,
-    user,
-    (q_err, q_res) => {
-      if (q_err) {
-        console.log(q_err);
-        res.send(q_err.detail);
-      } else {
-        console.log(q_res);
+  console.log(user);
+  try {
+    await client.query("BEGIN");
+    console.log("begun");
+    await client.query(
+      `INSERT into Actor(username, password, accessRight)
+            VALUES($1, $2, $3)`,
+      user,
+      (q_err, q_res) => {
+        if (q_err) {
+          // console.log(q_err);
+          res.send(q_err.detail);
+        } else {
+          // console.log(q_res);
+        }
+      }
+    );
+
+    const retrievedUser = await client.query(
+      "SELECT * FROM Actor where username=$1",
+      [req.body.username]
+    );
+    console.log(retrievedUser.rows[0].uid);
+
+    if (req.body.accessRight === "1") {
+      console.log("inserting restaurant staff");
+      await client.query(
+        `INSERT into RestaurantStaff(uid, rsName) VALUES ($1, $2)`,
+        [retrievedUser.rows[0].uid, req.body.username],
+        (q_err, q_res) => {
+          if (q_err)
+          throw q_err;
+        }
+      )
+    }
+    if (req.body.accessRight === "2") {
+      console.log("inserting fds manager");
+      await client.query(
+        `INSERT into FDSManager(uid, fdsmName) VALUES ($1, $2)`,
+        [retrievedUser.rows[0].uid, req.body.username],
+        (q_err, q_res) => {
+          if (q_err)
+          throw q_err;
+        }
+      )
+    }
+    if (req.body.accessRight === "3") {
+      console.log("inserting delivery rider");
+      await client.query(
+        `INSERT into DeliveryRider(uid, drname, isIdle, deliveryRiderRating, joinDate) VALUES ($1, $2, $3, $4, current_date)`,
+        [retrievedUser.rows[0].uid, req.body.username, true, 0],
+        (q_err, q_res) => {
+          if (q_err)
+          throw q_err;
+        }
+      )
+    }
+    if (req.body.accessRight === "4") {
+      console.log("inserting customer");
+      await client.query(
+        `INSERT into Customer(uid, cname, rewardPoints) VALUES($1, $2, $3)`,
+        [retrievedUser.rows[0].uid, req.body.username, 0],
+        (q_err, q_res) => {
+          if (q_err)
+          throw q_err;
+        }
+      );
+    }
+
+    await client.query("COMMIT", (q_err, q_res) => {
+      if (q_res) {
         res.json(user);
       }
-    }
-  );
+    });
+    console.log("commited");
+  } catch (error) {
+    client.query("ROLLBACK", (q_err, q_res) => {
+      res.json(q_res);
+    });
+    console.log("rollbacked");
+    throw error;
+  }
 });
 
 router.put("/api/put/updateUser", (req, res, next) => {
@@ -54,7 +122,7 @@ router.put("/api/put/updateUser", (req, res, next) => {
     req.body.username,
     req.body.password,
     req.body.accessRight,
-    req.body.userid,
+    req.body.userid
   ];
   client.query(
     `UPDATE Actor SET(username=$1, password=$2, accessRight=$3) WHERE userid=$4`,
@@ -131,7 +199,7 @@ router.post("/api/post/addCreditCard", (req, res, next) => {
     req.body.uid,
     req.body.cardnumber,
     req.body.cardholdername,
-    req.body.expirydate,
+    req.body.expirydate
   ];
   console.log(req.body);
   client.query(
@@ -248,6 +316,37 @@ router.get("/api/get/deliverOrders", (req, res, next) => {
       return next(q_err);
     }
   );
+});
+
+// order related
+router.post("/api/post/postNewOrder", async (req, res, next) => {
+  // console.log(req.body);
+  const createNewOrderParams = [
+    req.body.uid,
+    req.body.rid,
+    req.body.totalPrice,
+    req.body.paymentMethod
+  ];
+  console.log(createNewOrderParams);
+
+  try {
+    await client.query("BEGIN");
+    console.log("begun");
+
+    const createNewOrderQuery = `INSERT INTO OrderPlaced(uid, rid, totalPrice, paymentMethod) VALUES ($1, $2, $3, $4) RETURNING oid`;
+    client.query(createNewOrderQuery, createNewOrderParams, (q_err, q_res) => {
+      console.log(q_res);
+      console.log(q_err);
+    });
+
+    await client.query("COMMIT");
+    console.log("commited");
+  } catch (e) {
+    await client.query("ROLLBACK");
+    console.log("rollbacked");
+    console.log(e);
+    throw e;
+  }
 });
 
 module.exports = router;
