@@ -1,0 +1,2 @@
+//export const CREATE_REVIEWS = "CREATE_REVIEWS";
+export const FETCH_REVIEWS = "FETCH_REVIEWS";
