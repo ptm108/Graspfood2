@@ -23,7 +23,8 @@ const mapDispatchToProps = {
 
 const mapStateToProps = state => {
   return {
-    fooditems: state.restaurant.fooditems
+    fooditems: state.restaurant.fooditems,
+    currentUser: state.auth.currentUser
   };
 };
 
@@ -55,9 +56,50 @@ class RestaurantFoodList extends Component {
       });
   };
 
-  handleCreateOrder = async () => {
-    const { addedFoodItems } = this.state;
+  handleCreateOrderCash = async () => {
+    const { postNewOrder } = this.props;
+    let { addedFoodItems } = this.state;
+    let totalPrice = 0;
+    if (addedFoodItems.length != 0) {
+      totalPrice = addedFoodItems
+        .map(addedFoodItem => {
+          return addedFoodItem.quantity * addedFoodItem.fooditem.price;
+        })
+        .reduce((a, b) => a + b);
+    }
+    // console.log(totalPrice);
+    addedFoodItems = {
+      ...addedFoodItems,
+      totalPrice: totalPrice,
+      uid: this.props.currentUser.uid,
+      rid: this.props.restaurant.rid,
+      paymentMethod: "cash"
+    };
     await postNewOrder(addedFoodItems);
+    this.setState({ addedFoodItems: [] });
+  };
+
+  handleCreateOrderCC = async () => {
+    const { postNewOrder } = this.props;
+    let { addedFoodItems } = this.state;
+    let totalPrice = 0;
+    if (addedFoodItems.length != 0) {
+      totalPrice = addedFoodItems
+        .map(addedFoodItem => {
+          return addedFoodItem.quantity * addedFoodItem.fooditem.price;
+        })
+        .reduce((a, b) => a + b);
+    }
+    // console.log(totalPrice);
+    addedFoodItems = {
+      ...addedFoodItems,
+      totalPrice: totalPrice,
+      uid: this.props.currentUser.uid,
+      rid: this.props.restaurant.rid,
+      paymentMethod: "credit card"
+    };
+    await postNewOrder(addedFoodItems);
+    this.setState({ addedFoodItems: [] });
   };
 
   render() {
@@ -89,9 +131,6 @@ class RestaurantFoodList extends Component {
                   onChange={this.onChange}
                 />
                 <Form.Button content="Add Item" />
-                <Button positive onClick={this.handleCreateOrder}>
-                  Submit Order
-                </Button>
               </Form.Group>
             </Form>
           </Segment>
@@ -138,6 +177,19 @@ class RestaurantFoodList extends Component {
                         })
                         .reduce((a, b) => a + b)}
                     </GridColumn>
+                  </Grid.Row>
+                  <Grid.Row>
+                    <Grid.Column textAlign="center">
+                      <Button.Group>
+                        <Button onClick={this.handleCreateOrderCash}>
+                          Checkout (Cash)
+                        </Button>
+                        <Button.Or />
+                        <Button onClick={this.handleCreateOrderCC}>
+                          Checkout (CC)
+                        </Button>
+                      </Button.Group>
+                    </Grid.Column>
                   </Grid.Row>
                 </Grid>
               </Segment>

@@ -35,7 +35,7 @@ const resetFoodItems = (state, payload) => {
 }
 
 const postNewOrder = (state, payload) => {
-  //console.log(payload);
+  console.log(payload);
   return {
     ...state
   };

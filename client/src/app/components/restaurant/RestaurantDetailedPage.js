@@ -6,7 +6,7 @@ import { RESET_FOOD_ITEMS } from "./restaurantUtils/restaurantConstants";
 
 const mapStateToProps = (state, ownProps) => {
   const restaurantId = ownProps.match.params.id;
-  console.log(restaurantId);
+  // console.log(restaurantId);
 
   let restaurant = {};
   if (state.restaurant.restaurants && state.restaurant.restaurants.length > 0) {
