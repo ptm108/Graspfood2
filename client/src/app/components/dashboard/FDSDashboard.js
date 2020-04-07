@@ -33,7 +33,7 @@ class FDSDashboard extends Component {
         <Grid>
           <Grid.Column width={12}>
             <Header>FDSDashboard</Header>
-            <Header sub>
+            <Header>
               Press the buttons on the right to get the information
             </Header>
           </Grid.Column>
