@@ -7,9 +7,9 @@ import { connect } from "react-redux";
 import { fetchCustomerDetails } from "../customer/customerUtils/customerActions";
 import { fetchRiderDetails } from "../deliveryRider/riderUtils/riderActions";
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   currentUser: state.auth.currentUser,
-  userDetails: state.customer.userDetails[0]
+  userDetails: state.customer.userDetails,
 });
 
 const mapDispatchToProps = { fetchCustomerDetails, fetchRiderDetails };
@@ -34,8 +34,12 @@ class AccountPage extends Component {
             <Header content="Account Page" />
             {accessRight === 4 && (
               <Fragment>
-                <Header>Customer Name: {userDetails.cname}</Header>
-                <Header>Reward Points: {userDetails.rewardpoints}</Header>
+                <Header>
+                  Customer Name: {userDetails && userDetails[0].cname}
+                </Header>
+                <Header>
+                  Reward Points: {userDetails && userDetails[0].rewardpoints}
+                </Header>
               </Fragment>
             )}
             {accessRight === 4 && <ReviewPostings />}
@@ -43,9 +47,12 @@ class AccountPage extends Component {
 
             {accessRight === 3 && (
               <Fragment>
-                <Header>Rider Name: {userDetails.drname}</Header>
+                <Header>
+                  Rider Name: {userDetails && userDetails[0].drname}
+                </Header>
                 <Header sub>
-                  Rider Rating: {userDetails.deliveryriderrating}
+                  Rider Rating:{" "}
+                  {userDetails && userDetails[0].deliveryriderrating}
                 </Header>
               </Fragment>
             )}
