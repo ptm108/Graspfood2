@@ -1,6 +1,7 @@
 import { dispatch } from "redux-form";
 import axios from "axios";
 import { FETCH_RESTAURANTS, FETCH_FOOD_ITEMS } from "./restaurantConstants";
+import { toastr } from "react-redux-toastr";
 
 export const fetchRestaurants = () => {
   return async (dispatch, getState) => {
@@ -38,9 +39,10 @@ export const postNewOrder = order => {
     .post("/api/post/postNewOrder", order)
     .then(res => {
       console.log(res);
-      if (res.data.rows) {
-        console.log(res.data.rows);
-        return res.data.rows;
+      if (res.data.status === "SUCCESS") {
+        toastr.success("Order " + res.data.oid + " created", "Delivering by " + res.data.dr.drname)
+      } else {
+        toastr.error("Oops", "Something went wrong with your order");
       }
     })
   };

@@ -138,7 +138,7 @@ router.put("/api/put/updateUser", (req, res, next) => {
     req.body.username,
     req.body.password,
     req.body.accessRight,
-    req.body.userid,
+    req.body.userid
   ];
   client.query(
     `UPDATE Actor SET(username=$1, password=$2, accessRight=$3) WHERE userid=$4`,
@@ -215,7 +215,7 @@ router.post("/api/post/addCreditCard", (req, res, next) => {
     req.body.uid,
     req.body.cardnumber,
     req.body.cardholdername,
-    req.body.expirydate,
+    req.body.expirydate
   ];
   console.log(req.body);
   client.query(
@@ -336,38 +336,67 @@ router.get("/api/get/deliverOrders", (req, res, next) => {
 
 // order related
 router.post("/api/post/postNewOrder", async (req, res, next) => {
-  console.log(req.body);
+  // console.log(req.body);
   const createNewOrderParams = [
     req.body.uid,
     req.body.rid,
     req.body.totalPrice,
     req.body.paymentMethod,
+    req.body.address
   ];
-  console.log(createNewOrderParams);
+  const addedFoodItems = req.body.addedFoodItems;
+  // console.log(createNewOrderParams);
+  console.log(addedFoodItems);
 
   try {
     await client.query("BEGIN");
     console.log("begun");
+    const createNewOrderQuery = `INSERT INTO OrderPlaced(uid, rid, totalPrice, paymentMethod, address, timestamp, deliveryFee) VALUES ($1, $2, $3, $4, $5, NOW(), 4.50) RETURNING oid`;
+    const response = await client.query(createNewOrderQuery, createNewOrderParams);
 
-    // const createNewOrderQuery = `INSERT INTO OrderPlaced(uid, rid, totalPrice, paymentMethod) VALUES ($1, $2, $3, $4) RETURNING oid`;
-    // client.query(createNewOrderQuery, createNewOrderParams, (q_err, q_res) => {
-    //   console.log(q_res);
-    //   console.log(q_err);
-    // });
+    const oid = response.rows[0].oid;
+    const propagateContainsQuery = `INSERT INTO Contains(fid, oid, qty) VALUES ($1, $2, $3)`;
 
-    await client.query("COMMIT");
+    addedFoodItems.forEach(async fooditem => {
+      const containsParams = [fooditem.fooditem.fid, oid, fooditem.quantity];
+      console.log(containsParams);
+      await client.query(propagateContainsQuery, containsParams);
+    });
+
+    const findAvailRiderQuery = `SELECT * FROM DeliveryRider dr WHERE dr.isIdle = true LIMIT 1`;
+    const result = await client.query(findAvailRiderQuery, []);
+    // console.log(response);
+    const dr = result.rows[0];
+
+    const insertIntoDeliversQuery = `INSERT INTO Delivers(oid, uid, riderLeaveForRestaurantTime) VALUES ($1, $2, NOW())`;
+    const deliversParams = [oid, dr.uid];
+    await client.query(insertIntoDeliversQuery, deliversParams);
+
+    await client.query("COMMIT", (q_err, q_res) => {
+      if (q_res) {
+        res.json({
+          status: "SUCCESS",
+          dr: dr,
+          oid: oid
+        });
+      } else {
+        res.json(q_err);
+      }
+    });
     console.log("commited");
   } catch (e) {
-    await client.query("ROLLBACK");
-    console.log("rollbacked", (q_err, q_res) => {
-      res.json(q_res);
+    await client.query("ROLLBACK", (q_err, q_res) => {
+      res.json({
+        status: "Problem sia"
+      });
     });
+    console.log("rollbacked");
     console.log(e);
   }
 });
 
-// fds info 1 (get new customers)
-router.get("/api/get/newCustomers", (req, res, next) => {
+// fds info 1 (get all customers)
+router.get("/api/get/allCustomers", (req, res, next) => {
   client.query(`SELECT * FROM customer c `, (q_err, q_res) => {
     if (q_err) {
       return next(q_err);
@@ -380,8 +409,24 @@ router.get("/api/get/newCustomers", (req, res, next) => {
 // fds info 1 (get orders by month)
 router.get("/api/get/ordersByMonth", (req, res, next) => {
   client.query(
-    `SELECT oid, uid, rid, totalprice, deliveryfee, rewardpointsused, paymentmethod, address, 
+    `SELECT oid, uid, rid, totalprice, deliveryfee,
       (SELECT EXTRACT(MONTH FROM orderplaced.timestamp)) as month from orderplaced`,
+    (q_err, q_res) => {
+      if (q_err) {
+        console.log(q_err);
+        return next(q_err);
+      }
+      console.log(q_res);
+      res.send(q_res);
+    }
+  );
+});
+
+// fds info 2 (get orders by customer)
+router.get("/api/get/ordersByCustomer", (req, res, next) => {
+  client.query(
+    `SELECT uid, sum(totalprice + deliveryfee), count(*), 
+      (SELECT EXTRACT(MONTH FROM orderplaced.timestamp)) as month, cname from orderplaced natural join customer group by uid, cname, month`,
     (q_err, q_res) => {
       if (q_err) {
         console.log(q_err);
