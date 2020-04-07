@@ -12,6 +12,7 @@ import restaurantReducer from "../components/restaurant/restaurantUtils/restaura
 import customerReducer from "../components/customer/customerUtils/customerReducer";
 import OrderReducer from "../components/order/OrderReducer";
 import riderReducer from "../components/deliveryRider/riderUtils/riderReducer";
+import fdsReducer from "../components/fds/fdsUtils/fdsReducer";
 
 const rootReducer = combineReducers({
   test: testReducer,
@@ -23,6 +24,7 @@ const rootReducer = combineReducers({
   customer: customerReducer,
   order: OrderReducer,
   rider: riderReducer,
+  fds: fdsReducer,
 });
 
 const persistConfig = {

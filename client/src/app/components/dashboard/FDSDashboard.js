@@ -3,30 +3,31 @@ import { Grid, Button, Header } from "semantic-ui-react";
 import { connect } from "react-redux";
 import AccountNav from "../user/AccountNav";
 import { NavLink } from "react-router-dom";
+import FDSButton2 from "../fds/FDSButton2";
 
 class FDSDashboard extends Component {
-  /* state = {
-    buttonValue: 0
+  state = {
+    buttonValue: 0,
   };
 
-  handleClick = value => {
+  handleClick = (value) => {
     this.setState({
-      buttonValue: value
+      buttonValue: value,
     });
   };
 
-  componentDidUpdate = (prevProps, prevState, snapShot) => {
+  /* componentDidUpdate = (prevProps, prevState, snapShot) => {
     console.log(prevState);
     if (prevState.buttonValue !== this.state.buttonValue) {
       this.setState({
-        buttonValue: this.state.buttonValue
+        buttonValue: this.state.buttonValue,
       });
     }
   }; */
 
   render() {
-    /* console.log(this.state);
-    console.log(this.state.buttonValue); */
+    //console.log(this.state);
+    //console.log(this.state.buttonValue);
     return (
       <Fragment>
         <Grid>
@@ -42,13 +43,13 @@ class FDSDashboard extends Component {
             <Button as={NavLink} to="/fdsinfo1">
               1
             </Button>
-            <Button value="2" onClick={e => this.handleClick(e.target.value)}>
+            <Button as={NavLink} to="/fdsinfo2">
               2
             </Button>
-            <Button value="3" onClick={e => this.handleClick(e.target.value)}>
+            <Button as={NavLink} to="/fdsinfo3">
               3
             </Button>
-            <Button value="4" onClick={e => this.handleClick(e.target.value)}>
+            <Button as={NavLink} to="/fdsinfo4">
               4
             </Button>
           </Grid.Column>

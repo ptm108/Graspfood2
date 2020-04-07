@@ -63,10 +63,9 @@ router.post("/api/post/registerUser", async (req, res, next) => {
         `INSERT into RestaurantStaff(uid, rsName) VALUES ($1, $2)`,
         [retrievedUser.rows[0].uid, req.body.username],
         (q_err, q_res) => {
-          if (q_err)
-          throw q_err;
+          if (q_err) throw q_err;
         }
-      )
+      );
     }
     if (req.body.accessRight === "2") {
       console.log("inserting fds manager");
@@ -74,10 +73,9 @@ router.post("/api/post/registerUser", async (req, res, next) => {
         `INSERT into FDSManager(uid, fdsmName) VALUES ($1, $2)`,
         [retrievedUser.rows[0].uid, req.body.username],
         (q_err, q_res) => {
-          if (q_err)
-          throw q_err;
+          if (q_err) throw q_err;
         }
-      )
+      );
     }
     if (req.body.accessRight === "3") {
       console.log("inserting delivery rider");
@@ -85,10 +83,9 @@ router.post("/api/post/registerUser", async (req, res, next) => {
         `INSERT into DeliveryRider(uid, drname, isIdle, deliveryRiderRating, joinDate) VALUES ($1, $2, $3, $4, current_date)`,
         [retrievedUser.rows[0].uid, req.body.username, true, 0],
         (q_err, q_res) => {
-          if (q_err)
-          throw q_err;
+          if (q_err) throw q_err;
         }
-      )
+      );
     }
     if (req.body.accessRight === "4") {
       console.log("inserting customer");
@@ -96,8 +93,7 @@ router.post("/api/post/registerUser", async (req, res, next) => {
         `INSERT into Customer(uid, cname, rewardPoints) VALUES($1, $2, $3)`,
         [retrievedUser.rows[0].uid, req.body.username, 0],
         (q_err, q_res) => {
-          if (q_err)
-          throw q_err;
+          if (q_err) throw q_err;
         }
       );
     }
@@ -122,7 +118,7 @@ router.put("/api/put/updateUser", (req, res, next) => {
     req.body.username,
     req.body.password,
     req.body.accessRight,
-    req.body.userid
+    req.body.userid,
   ];
   client.query(
     `UPDATE Actor SET(username=$1, password=$2, accessRight=$3) WHERE userid=$4`,
@@ -199,7 +195,7 @@ router.post("/api/post/addCreditCard", (req, res, next) => {
     req.body.uid,
     req.body.cardnumber,
     req.body.cardholdername,
-    req.body.expirydate
+    req.body.expirydate,
   ];
   console.log(req.body);
   client.query(
@@ -325,7 +321,7 @@ router.post("/api/post/postNewOrder", async (req, res, next) => {
     req.body.uid,
     req.body.rid,
     req.body.totalPrice,
-    req.body.paymentMethod
+    req.body.paymentMethod,
   ];
   console.log(createNewOrderParams);
 
@@ -347,6 +343,20 @@ router.post("/api/post/postNewOrder", async (req, res, next) => {
     console.log(e);
     throw e;
   }
+});
+
+// fds info 1 (get new customers)
+router.get("/api/get/newCustomers", (req, res, next) => {
+  client.query(
+    `SELECT count(*) FROM customer c where not exists (select 1 from orderplaced o where o.uid = c.uid)`,
+    (q_err, q_res) => {
+      if (q_err) {
+        return next(q_err);
+      }
+      console.log(q_res);
+      res.send(q_res);
+    }
+  );
 });
 
 module.exports = router;
