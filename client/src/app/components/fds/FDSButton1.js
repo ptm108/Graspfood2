@@ -4,18 +4,18 @@ import { connect } from "react-redux";
 import AccountNav from "../user/AccountNav";
 import { NavLink } from "react-router-dom";
 import { Component } from "react";
-import { fetchNewCustomers, fetchOrdersByMonth } from "./fdsUtils/fdsActions";
+import { fetchAllCustomers, fetchOrdersByMonth } from "./fdsUtils/fdsActions";
 
 const mapStateToProps = (state) => ({
-  numNewCustomers: state.fds.newCustomers,
+  numNewCustomers: state.fds.allCustomers,
   ordersByMonth: state.fds.ordersByMonth,
 });
 
-const mapDispatchToProps = { fetchNewCustomers, fetchOrdersByMonth };
+const mapDispatchToProps = { fetchAllCustomers, fetchOrdersByMonth };
 
 class FDSButton1 extends Component {
   componentDidMount() {
-    this.props.fetchNewCustomers();
+    this.props.fetchAllCustomers();
     this.props.fetchOrdersByMonth();
   }
 
@@ -43,7 +43,7 @@ class FDSButton1 extends Component {
               <Table.Body>
                 <Table.Row>
                   <Table.Cell>
-                    {
+                    {numNewCustomers &&
                       numNewCustomers.filter((newCustomer) => {
                         for (let i = 0; i < ordersByMonth.length; i++) {
                           if (
@@ -55,8 +55,7 @@ class FDSButton1 extends Component {
                           }
                         }
                         return true;
-                      }).length
-                    }
+                      }).length}
                   </Table.Cell>
                   <Table.Cell>
                     {ordersByMonth &&
@@ -68,7 +67,10 @@ class FDSButton1 extends Component {
                       ordersByMonth
                         .filter((order) => order.month === 1)
                         .map((order) => {
-                          return parseFloat(order.totalprice);
+                          return (
+                            parseFloat(order.totalprice) +
+                            parseFloat(order.deliveryfee)
+                          );
                         })
                         .reduce((a, b) => a + b, 0)}
                   </Table.Cell>
@@ -91,7 +93,7 @@ class FDSButton1 extends Component {
               <Table.Body>
                 <Table.Row>
                   <Table.Cell>
-                    {
+                    {numNewCustomers &&
                       numNewCustomers.filter((newCustomer) => {
                         for (let i = 0; i < ordersByMonth.length; i++) {
                           if (
@@ -103,8 +105,7 @@ class FDSButton1 extends Component {
                           }
                         }
                         return true;
-                      }).length
-                    }
+                      }).length}
                   </Table.Cell>
                   <Table.Cell>
                     {ordersByMonth &&
@@ -116,7 +117,10 @@ class FDSButton1 extends Component {
                       ordersByMonth
                         .filter((order) => order.month === 2)
                         .map((order) => {
-                          return parseFloat(order.totalprice);
+                          return (
+                            parseFloat(order.totalprice) +
+                            parseFloat(order.deliveryfee)
+                          );
                         })
                         .reduce((a, b) => a + b, 0)}
                   </Table.Cell>
@@ -139,7 +143,7 @@ class FDSButton1 extends Component {
               <Table.Body>
                 <Table.Row>
                   <Table.Cell>
-                    {
+                    {numNewCustomers &&
                       numNewCustomers.filter((newCustomer) => {
                         for (let i = 0; i < ordersByMonth.length; i++) {
                           if (
@@ -151,8 +155,7 @@ class FDSButton1 extends Component {
                           }
                         }
                         return true;
-                      }).length
-                    }
+                      }).length}
                   </Table.Cell>
                   <Table.Cell>
                     {ordersByMonth &&
@@ -164,7 +167,10 @@ class FDSButton1 extends Component {
                       ordersByMonth
                         .filter((order) => order.month === 3)
                         .map((order) => {
-                          return parseFloat(order.totalprice);
+                          return (
+                            parseFloat(order.totalprice) +
+                            parseFloat(order.deliveryfee)
+                          );
                         })
                         .reduce((a, b) => a + b, 0)}
                   </Table.Cell>
@@ -187,7 +193,7 @@ class FDSButton1 extends Component {
               <Table.Body>
                 <Table.Row>
                   <Table.Cell>
-                    {
+                    {numNewCustomers &&
                       numNewCustomers.filter((newCustomer) => {
                         for (let i = 0; i < ordersByMonth.length; i++) {
                           if (
@@ -199,8 +205,7 @@ class FDSButton1 extends Component {
                           }
                         }
                         return true;
-                      }).length
-                    }
+                      }).length}
                   </Table.Cell>
                   <Table.Cell>
                     {ordersByMonth &&
@@ -212,7 +217,10 @@ class FDSButton1 extends Component {
                       ordersByMonth
                         .filter((order) => order.month === 4)
                         .map((order) => {
-                          return parseFloat(order.totalprice);
+                          return (
+                            parseFloat(order.totalprice) +
+                            parseFloat(order.deliveryfee)
+                          );
                         })
                         .reduce((a, b) => a + b, 0)}
                   </Table.Cell>

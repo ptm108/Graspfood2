@@ -1,15 +1,20 @@
 import { createReducer } from "../../../reduxstore/reducerUtil";
 import {
-  FETCH_NEW_CUSTOMERS,
+  FETCH_ALL_CUSTOMERS,
   FETCH_ORDERS_BY_MONTH,
+  FETCH_ORDERS_BY_CUSTOMER,
 } from "../fdsUtils/fdsConstants";
 
-const initialState = { newCustomers: null, ordersByMonth: null };
+const initialState = {
+  allCustomers: null,
+  ordersByMonth: null,
+  ordersByCustomer: null,
+};
 
-export const fetchNewCustomers = (state, payload) => {
+export const fetchAllCustomers = (state, payload) => {
   return {
     ...state,
-    newCustomers: payload,
+    allCustomers: payload,
   };
 };
 
@@ -20,7 +25,15 @@ export const fetchOrdersByMonth = (state, payload) => {
   };
 };
 
+export const fetchOrdersByCustomer = (state, payload) => {
+  return {
+    ...state,
+    ordersByCustomer: payload,
+  };
+};
+
 export default createReducer(initialState, {
-  [FETCH_NEW_CUSTOMERS]: fetchNewCustomers,
+  [FETCH_ALL_CUSTOMERS]: fetchAllCustomers,
   [FETCH_ORDERS_BY_MONTH]: fetchOrdersByMonth,
+  [FETCH_ORDERS_BY_CUSTOMER]: fetchOrdersByCustomer,
 });

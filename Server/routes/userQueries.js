@@ -366,8 +366,8 @@ router.post("/api/post/postNewOrder", async (req, res, next) => {
   }
 });
 
-// fds info 1 (get new customers)
-router.get("/api/get/newCustomers", (req, res, next) => {
+// fds info 1 (get all customers)
+router.get("/api/get/allCustomers", (req, res, next) => {
   client.query(`SELECT * FROM customer c `, (q_err, q_res) => {
     if (q_err) {
       return next(q_err);
@@ -382,6 +382,22 @@ router.get("/api/get/ordersByMonth", (req, res, next) => {
   client.query(
     `SELECT oid, uid, rid, totalprice, deliveryfee, rewardpointsused, paymentmethod, address, 
       (SELECT EXTRACT(MONTH FROM orderplaced.timestamp)) as month from orderplaced`,
+    (q_err, q_res) => {
+      if (q_err) {
+        console.log(q_err);
+        return next(q_err);
+      }
+      console.log(q_res);
+      res.send(q_res);
+    }
+  );
+});
+
+// fds info 2 (get orders by customer)
+router.get("/api/get/ordersByCustomer", (req, res, next) => {
+  client.query(
+    `SELECT uid, sum(totalprice + deliveryfee), count(*), 
+      (SELECT EXTRACT(MONTH FROM orderplaced.timestamp)) as month, cname from orderplaced natural join customer group by uid, cname, month`,
     (q_err, q_res) => {
       if (q_err) {
         console.log(q_err);
