@@ -34,6 +34,8 @@ router.get("/api/get/loginUser", (req, res, next) => {
 router.post("/api/post/registerUser", async (req, res, next) => {
   const user = [req.body.username, req.body.password, req.body.accessRight];
   console.log(user);
+
+  
   try {
     await client.query("BEGIN");
     console.log("begun");
@@ -63,10 +65,9 @@ router.post("/api/post/registerUser", async (req, res, next) => {
         `INSERT into RestaurantStaff(uid, rsName) VALUES ($1, $2)`,
         [retrievedUser.rows[0].uid, req.body.username],
         (q_err, q_res) => {
-          if (q_err)
-          throw q_err;
+          if (q_err) console.log(q_err);
         }
-      )
+      );
     }
     if (req.body.accessRight === "2") {
       console.log("inserting fds manager");
@@ -74,10 +75,9 @@ router.post("/api/post/registerUser", async (req, res, next) => {
         `INSERT into FDSManager(uid, fdsmName) VALUES ($1, $2)`,
         [retrievedUser.rows[0].uid, req.body.username],
         (q_err, q_res) => {
-          if (q_err)
-          throw q_err;
+          if (q_err) console.log(q_err);
         }
-      )
+      );
     }
     if (req.body.accessRight === "3") {
       console.log("inserting delivery rider");
@@ -85,10 +85,30 @@ router.post("/api/post/registerUser", async (req, res, next) => {
         `INSERT into DeliveryRider(uid, drname, isIdle, deliveryRiderRating, joinDate) VALUES ($1, $2, $3, $4, current_date)`,
         [retrievedUser.rows[0].uid, req.body.username, true, 0],
         (q_err, q_res) => {
-          if (q_err)
-          throw q_err;
+          if (q_err) console.log(q_err);
         }
-      )
+      );
+
+      if (req.body.deliveryRiderType === "fulltime") {
+        await client.query(
+          `INSERT INTO FullTime(uid) VALUES ($1)`,
+          [retrievedUser.rows[0].uid],
+          (q_err, q_res) => {
+            if (q_err) console.log(q_err);
+          }
+        )
+      }
+
+      if (req.body.deliveryRiderType === "parttime") {
+        await client.query(
+          `INSERT INTO PartTime(uid, totalWorkHours) VALUES ($1, $2)`,
+          [retrievedUser.rows[0].uid, 0],
+          (q_err, q_res) => {
+            if (q_err) console.log(q_err);
+          }
+        )
+      }
+
     }
     if (req.body.accessRight === "4") {
       console.log("inserting customer");
@@ -96,8 +116,7 @@ router.post("/api/post/registerUser", async (req, res, next) => {
         `INSERT into Customer(uid, cname, rewardPoints) VALUES($1, $2, $3)`,
         [retrievedUser.rows[0].uid, req.body.username, 0],
         (q_err, q_res) => {
-          if (q_err)
-          throw q_err;
+          if (q_err) console.log(q_err);
         }
       );
     }
@@ -110,10 +129,9 @@ router.post("/api/post/registerUser", async (req, res, next) => {
     console.log("commited");
   } catch (error) {
     client.query("ROLLBACK", (q_err, q_res) => {
-      res.json(q_res);
+      console.log(q_res);
     });
     console.log("rollbacked");
-    throw error;
   }
 });
 
