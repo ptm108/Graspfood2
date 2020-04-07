@@ -18,12 +18,14 @@ import NotFound from "../layout/NotFound";
 import FDSButton1 from "../components/fds/FDSButton1";
 import HomePage from "../homepage/HomePage";
 import FDSButton2 from "../components/fds/FDSButton2";
+import FDSButton3 from "../components/fds/FDSButton3";
+import FDSButton4 from "../components/fds/FDSButton4";
 
 class App extends Component {
   render() {
     return (
       <Fragment>
-      <Route exact path="/" component={HomePage} />
+        <Route exact path="/" component={HomePage} />
         <NavBar />
 
         <Route
@@ -49,8 +51,8 @@ class App extends Component {
                   <Route exact path="/fdsdashboard" component={FDSDashboard} />
                   <Route exact path="/fdsinfo1" component={FDSButton1} />
                   <Route exact path="/fdsinfo2" component={FDSButton2} />
-                  {/* <Route exact path="/fdsinfo1" component={FDSButton3} />
-                  <Route exact path="/fdsinfo1" component={FDSButton4} /> */}
+                  <Route exact path="/fdsinfo3" component={FDSButton3} />
+                  <Route exact path="/fdsinfo4" component={FDSButton4} />
                   <Route
                     exact
                     path="/riderdashboard"
