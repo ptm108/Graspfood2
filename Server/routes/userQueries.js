@@ -338,7 +338,7 @@ router.get("/api/get/deliverOrders", (req, res, next) => {
 
 // order related
 router.post("/api/post/postNewOrder", async (req, res, next) => {
-  // console.log(req.body);
+  console.log(req.body);
   const createNewOrderParams = [
     req.body.uid,
     req.body.rid,
@@ -351,19 +351,20 @@ router.post("/api/post/postNewOrder", async (req, res, next) => {
     await client.query("BEGIN");
     console.log("begun");
 
-    const createNewOrderQuery = `INSERT INTO OrderPlaced(uid, rid, totalPrice, paymentMethod) VALUES ($1, $2, $3, $4) RETURNING oid`;
-    client.query(createNewOrderQuery, createNewOrderParams, (q_err, q_res) => {
-      console.log(q_res);
-      console.log(q_err);
-    });
+    // const createNewOrderQuery = `INSERT INTO OrderPlaced(uid, rid, totalPrice, paymentMethod) VALUES ($1, $2, $3, $4) RETURNING oid`;
+    // client.query(createNewOrderQuery, createNewOrderParams, (q_err, q_res) => {
+    //   console.log(q_res);
+    //   console.log(q_err);
+    // });
 
     await client.query("COMMIT");
     console.log("commited");
   } catch (e) {
     await client.query("ROLLBACK");
-    console.log("rollbacked");
+    console.log("rollbacked", (q_err, q_res) => {
+      res.json(q_res);
+    });
     console.log(e);
-    throw e;
   }
 });
 
