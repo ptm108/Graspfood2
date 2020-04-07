@@ -679,3 +679,37 @@ SET
     dailylimit = 50
  WHERE
     Fid = 7;
+
+update DeliveryRider
+set 
+   isIdle = true
+where 
+   uid = 49;
+
+ALTER TABLE contacts
+  ADD postalCode varchar(6) NOT NULl;
+
+update OrderPlaced
+set 
+   postalCode = '234567'
+where oid = 27; 
+
+update OrderPlaced
+set 
+   postalCode = '987654'
+where oid = 28; 
+
+update OrderPlaced
+set 
+   postalCode = '567890'
+where oid = 29; 
+
+update OrderPlaced
+set 
+   postalCode = '987654'
+where oid = 25; 
+
+update OrderPlaced
+set 
+   postalCode = '345678'
+where oid = 26; 

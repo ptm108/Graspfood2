@@ -61,6 +61,7 @@ deliveryFee DECIMAL(5,2),
 rewardPointsUsed INTEGER,
 paymentMethod VARCHAR(255),
 address VARCHAR(255),
+postalCode VARCHAR(6),
 PRIMARY KEY(oid),
 FOREIGN KEY(uid) REFERENCES Customer (uid) ON DELETE SET NULL,
             FOREIGN KEY(rid) REFERENCES Restaurant (rid) ON DELETE SET NULL
