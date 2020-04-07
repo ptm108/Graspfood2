@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Label, Form, Segment, Button, Divider, Icon } from "semantic-ui-react";
 import { Field, reduxForm } from "redux-form";
 import TextInput from "../../../util/form/TextInput";
@@ -24,6 +24,8 @@ const RegisterForm = ({
   invalid,
   submitting
 }) => {
+  const [dr, setDr] = useState(0);
+
   return (
     <div>
       <Form size="large" onSubmit={handleSubmit(register)} autoComplete="off">
@@ -42,7 +44,7 @@ const RegisterForm = ({
           />
           {error && (
             <Label basic color="red">
-              <Icon name="x"/>
+              <Icon name="x" />
               {error}
             </Label>
           )}
@@ -54,6 +56,9 @@ const RegisterForm = ({
               value="4"
               label="Customer"
               component={RadioInput}
+              onChange={() => {
+                setDr(4);
+              }}
             />
             <Field
               name="accessRight"
@@ -61,6 +66,9 @@ const RegisterForm = ({
               value="3"
               label="DeliveryRider"
               component={RadioInput}
+              onChange={() => {
+                setDr(3);
+              }}
             />
             <Field
               name="accessRight"
@@ -68,6 +76,9 @@ const RegisterForm = ({
               value="1"
               label="RestaurantStaff"
               component={RadioInput}
+              onChange={() => {
+                setDr(1);
+              }}
             />
             <Field
               name="accessRight"
@@ -75,8 +86,29 @@ const RegisterForm = ({
               value="2"
               label="FDSStaff"
               component={RadioInput}
+              onChange={() => {
+                setDr(2);
+              }}
             />
           </Form.Group>
+          {dr === 3 && 
+          <Form.Group inline>
+          <label>Schedule Type: </label>
+          <Field
+              name="deliveryRiderType"
+              type="radio"
+              value="parttime"
+              label="Part Time"
+              component={RadioInput}
+            />
+            <Field
+              name="deliveryRiderType"
+              type="radio"
+              value="fulltime"
+              label="Full Time"
+              component={RadioInput}
+            />
+          </Form.Group>}
           <Button
             disabled={invalid || submitting}
             fluid
