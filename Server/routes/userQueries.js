@@ -367,10 +367,23 @@ router.post("/api/post/postNewOrder", async (req, res, next) => {
 
 // fds info 1 (get new customers)
 router.get("/api/get/newCustomers", (req, res, next) => {
+  client.query(`SELECT * FROM customer c `, (q_err, q_res) => {
+    if (q_err) {
+      return next(q_err);
+    }
+    //console.log(q_res);
+    res.send(q_res);
+  });
+});
+
+// fds info 1 (get orders by month)
+router.get("/api/get/ordersByMonth", (req, res, next) => {
   client.query(
-    `SELECT count(*) FROM customer c where not exists (select 1 from orderplaced o where o.uid = c.uid)`,
+    `SELECT oid, uid, rid, totalprice, deliveryfee, rewardpointsused, paymentmethod, address, 
+      (SELECT EXTRACT(MONTH FROM orderplaced.timestamp)) as month from orderplaced`,
     (q_err, q_res) => {
       if (q_err) {
+        console.log(q_err);
         return next(q_err);
       }
       console.log(q_res);
