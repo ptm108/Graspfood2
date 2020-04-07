@@ -16,12 +16,14 @@ import RestaurantStaffDashboard from "../components/dashboard/RestaurantStaffDas
 import RegisterPage from "../components/auth/Register/RegisterPage";
 import NotFound from "../layout/NotFound";
 import FDSButton1 from "../components/fds/FDSButton1";
+import HomePage from "../homepage/HomePage";
 import FDSButton2 from "../components/fds/FDSButton2";
 
 class App extends Component {
   render() {
     return (
       <Fragment>
+      <Route exact path="/" component={HomePage} />
         <NavBar />
 
         <Route
