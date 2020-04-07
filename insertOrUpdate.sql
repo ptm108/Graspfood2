@@ -642,6 +642,13 @@ INSERT INTO Reviews (oid, uid, timeStamp, title, description, rating)
 VALUES
 (1, 62, CURRENT_TIMESTAMP, 'McDelivery', 'Food was good, food was hot, woohoo~', 5);
 
+INSERT INTO Reviews (oid, uid, timeStamp, title, description, rating)
+VALUES
+(2, 63, '2020-04-05 03:35:00', 'Satisfied!', 'Food was good and super flavorful', 5), 
+(3, 65, '2020-04-05 03:30:22', 'so-so', 'Food was not so hot and noodles was soggy!', 3), 
+(4, 66, '2020-04-05 03:30:56', 'Average', 'Food was okay', 4), 
+(5, 64, '2020-04-05 03:40:23', 'Delivery time was too long!', 'Food took too long to come and was served cold', 2);
+
 UPDATE fooditem
 SET 
     currentnumoforders = 7,
