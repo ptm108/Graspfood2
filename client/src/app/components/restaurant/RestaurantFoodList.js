@@ -8,10 +8,10 @@ import {
   Segment,
   Grid,
   Header,
-  Divider,
   Form,
   GridColumn,
-  Button
+  Button,
+  Input
 } from "semantic-ui-react";
 import RestaurantFoodListItem from "./RestaurantFoodListItem";
 import RestaurantOrderItem from "./RestaurantOrderItem";
@@ -37,10 +37,15 @@ class RestaurantFoodList extends Component {
   state = {
     foodId: null,
     quantity: 0,
+    address: "",
     addedFoodItems: []
   };
 
-  onChange = (e, { name, value }) => this.setState({ [name]: value });
+  onChange = (e, { name, value }) => {
+    console.log(name);
+    console.log(value);
+    this.setState({ [name]: value });
+  };
 
   handleSubmit = () => {
     const { foodId, quantity } = this.state;
@@ -69,14 +74,15 @@ class RestaurantFoodList extends Component {
     }
     // console.log(totalPrice);
     addedFoodItems = {
-      ...addedFoodItems,
+      addedFoodItems: addedFoodItems,
       totalPrice: totalPrice,
       uid: this.props.currentUser.uid,
       rid: this.props.restaurant.rid,
-      paymentMethod: "cash"
+      paymentMethod: "cash",
+      address: this.state.address
     };
     await postNewOrder(addedFoodItems);
-    this.setState({ addedFoodItems: [] });
+    this.setState({ addedFoodItems: [], address: "" });
   };
 
   handleCreateOrderCC = async () => {
@@ -92,19 +98,20 @@ class RestaurantFoodList extends Component {
     }
     // console.log(totalPrice);
     addedFoodItems = {
-      ...addedFoodItems,
+      addedFoodItems: addedFoodItems,
       totalPrice: totalPrice,
       uid: this.props.currentUser.uid,
       rid: this.props.restaurant.rid,
-      paymentMethod: "credit card"
+      paymentMethod: "credit card",
+      address: this.state.address
     };
     await postNewOrder(addedFoodItems);
-    this.setState({ addedFoodItems: [] });
+    this.setState({ addedFoodItems: [], address: "" });
   };
 
   render() {
     const { fooditems } = this.props;
-    const { addedFoodItems } = this.state;
+    const { addedFoodItems, address } = this.state;
 
     {
       fooditems &&
@@ -121,7 +128,7 @@ class RestaurantFoodList extends Component {
             <Form onSubmit={this.handleSubmit}>
               <Form.Group>
                 <Form.Input
-                  placeholder="ID"
+                  placeholder="Food ID"
                   name="foodId"
                   onChange={this.onChange}
                 />
@@ -179,18 +186,30 @@ class RestaurantFoodList extends Component {
                     </GridColumn>
                   </Grid.Row>
                   <Grid.Row>
-                    <Grid.Column textAlign="center">
-                      <Button.Group>
-                        <Button onClick={this.handleCreateOrderCash}>
-                          Checkout (Cash)
-                        </Button>
-                        <Button.Or />
-                        <Button onClick={this.handleCreateOrderCC}>
-                          Checkout (CC)
-                        </Button>
-                      </Button.Group>
+                    <Grid.Column>
+                      <Input
+                        fluid
+                        placeholder="Enter Address"
+                        name="address"
+                        onChange={this.onChange}
+                      />
                     </Grid.Column>
                   </Grid.Row>
+                  {address !== "" && (
+                    <Grid.Row>
+                      <Grid.Column textAlign="center">
+                        <Button.Group>
+                          <Button onClick={this.handleCreateOrderCash}>
+                            Checkout (Cash)
+                          </Button>
+                          <Button.Or />
+                          <Button onClick={this.handleCreateOrderCC}>
+                            Checkout (CC)
+                          </Button>
+                        </Button.Group>
+                      </Grid.Column>
+                    </Grid.Row>
+                  )}
                 </Grid>
               </Segment>
             </Fragment>
