@@ -35,7 +35,6 @@ router.post("/api/post/registerUser", async (req, res, next) => {
   const user = [req.body.username, req.body.password, req.body.accessRight];
   console.log(user);
 
-  
   try {
     await client.query("BEGIN");
     console.log("begun");
@@ -96,7 +95,7 @@ router.post("/api/post/registerUser", async (req, res, next) => {
           (q_err, q_res) => {
             if (q_err) console.log(q_err);
           }
-        )
+        );
       }
 
       if (req.body.deliveryRiderType === "parttime") {
@@ -106,9 +105,8 @@ router.post("/api/post/registerUser", async (req, res, next) => {
           (q_err, q_res) => {
             if (q_err) console.log(q_err);
           }
-        )
+        );
       }
-
     }
     if (req.body.accessRight === "4") {
       console.log("inserting customer");
@@ -140,7 +138,7 @@ router.put("/api/put/updateUser", (req, res, next) => {
     req.body.username,
     req.body.password,
     req.body.accessRight,
-    req.body.userid
+    req.body.userid,
   ];
   client.query(
     `UPDATE Actor SET(username=$1, password=$2, accessRight=$3) WHERE userid=$4`,
@@ -217,7 +215,7 @@ router.post("/api/post/addCreditCard", (req, res, next) => {
     req.body.uid,
     req.body.cardnumber,
     req.body.cardholdername,
-    req.body.expirydate
+    req.body.expirydate,
   ];
   console.log(req.body);
   client.query(
@@ -343,7 +341,7 @@ router.post("/api/post/postNewOrder", async (req, res, next) => {
     req.body.uid,
     req.body.rid,
     req.body.totalPrice,
-    req.body.paymentMethod
+    req.body.paymentMethod,
   ];
   console.log(createNewOrderParams);
 
@@ -366,6 +364,20 @@ router.post("/api/post/postNewOrder", async (req, res, next) => {
     });
     console.log(e);
   }
+});
+
+// fds info 1 (get new customers)
+router.get("/api/get/newCustomers", (req, res, next) => {
+  client.query(
+    `SELECT count(*) FROM customer c where not exists (select 1 from orderplaced o where o.uid = c.uid)`,
+    (q_err, q_res) => {
+      if (q_err) {
+        return next(q_err);
+      }
+      console.log(q_res);
+      res.send(q_res);
+    }
+  );
 });
 
 module.exports = router;
