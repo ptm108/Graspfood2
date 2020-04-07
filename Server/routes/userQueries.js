@@ -380,7 +380,7 @@ router.get("/api/get/allCustomers", (req, res, next) => {
 // fds info 1 (get orders by month)
 router.get("/api/get/ordersByMonth", (req, res, next) => {
   client.query(
-    `SELECT oid, uid, rid, totalprice, deliveryfee, rewardpointsused, paymentmethod, address, 
+    `SELECT oid, uid, rid, totalprice, deliveryfee,
       (SELECT EXTRACT(MONTH FROM orderplaced.timestamp)) as month from orderplaced`,
     (q_err, q_res) => {
       if (q_err) {
