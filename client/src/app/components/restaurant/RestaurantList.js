@@ -22,8 +22,8 @@ class RestaurantList extends Component {
     return (
       <Fragment>
         <Segment.Group>
-          <Segment>
-            <Header size="huge">
+          <Segment color="grey">
+            <Header color="white" size="huge">
               <Icon name="food" />
               <Header.Content>Restaurants:</Header.Content>
             </Header>
