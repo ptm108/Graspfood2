@@ -32,18 +32,19 @@ class RestaurantFoodList extends Component {
   async componentDidMount() {
     const { restaurant, fetchFoodItemsByRid, postNewOrder } = this.props;
     await fetchFoodItemsByRid(restaurant);
+    console.log(this.props.fooditems);
   }
 
   state = {
     foodId: null,
     quantity: 0,
     address: "",
+    postalcode: "",
+    rewardpoints: "",
     addedFoodItems: []
   };
 
   onChange = (e, { name, value }) => {
-    console.log(name);
-    console.log(value);
     this.setState({ [name]: value });
   };
 
@@ -79,10 +80,12 @@ class RestaurantFoodList extends Component {
       uid: this.props.currentUser.uid,
       rid: this.props.restaurant.rid,
       paymentMethod: "cash",
-      address: this.state.address
+      address: this.state.address,
+      postalcode: this.state.postalcode,
+      rewardpoints: this.state.rewardpoints
     };
     await postNewOrder(addedFoodItems);
-    this.setState({ addedFoodItems: [], address: "" });
+    this.setState({ addedFoodItems: [], address: "", postalcode: "" });
   };
 
   handleCreateOrderCC = async () => {
@@ -103,7 +106,9 @@ class RestaurantFoodList extends Component {
       uid: this.props.currentUser.uid,
       rid: this.props.restaurant.rid,
       paymentMethod: "credit card",
-      address: this.state.address
+      address: this.state.address,
+      postalcode: this.state.postalcode,
+      rewardpoints: this.state.rewardpoints
     };
     await postNewOrder(addedFoodItems);
     this.setState({ addedFoodItems: [], address: "" });
@@ -111,7 +116,7 @@ class RestaurantFoodList extends Component {
 
   render() {
     const { fooditems } = this.props;
-    const { addedFoodItems, address } = this.state;
+    const { addedFoodItems, address, postalcode } = this.state;
 
     {
       fooditems &&
@@ -187,15 +192,28 @@ class RestaurantFoodList extends Component {
                   </Grid.Row>
                   <Grid.Row>
                     <Grid.Column>
-                      <Input
-                        fluid
-                        placeholder="Enter Address"
-                        name="address"
-                        onChange={this.onChange}
-                      />
+                      <Form>
+                        <Form.Group widths="equal">
+                          <Form.Input
+                            placeholder="Enter Address"
+                            name="address"
+                            onChange={this.onChange}
+                          />
+                          <Form.Input
+                            placeholder="Enter Postal Code"
+                            name="postalcode"
+                            onChange={this.onChange}
+                          />
+                          <Form.Input
+                            placeholder="Enter Reward Points"
+                            name="rewardpoints"
+                            onChange={this.onChange}
+                          />
+                        </Form.Group>
+                      </Form>
                     </Grid.Column>
                   </Grid.Row>
-                  {address !== "" && (
+                  {address !== "" && postalcode !== "" && (
                     <Grid.Row>
                       <Grid.Column textAlign="center">
                         <Button.Group>

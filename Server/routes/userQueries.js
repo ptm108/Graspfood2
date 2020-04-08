@@ -343,26 +343,51 @@ router.post("/api/post/postNewOrder", async (req, res, next) => {
     req.body.totalPrice,
     req.body.paymentMethod,
     req.body.address,
+<<<<<<< HEAD
+=======
+    req.body.postalcode,
+    req.body.rewardpoints
+>>>>>>> eec09f1b1ba008131fc8e0b87802a066cdb81a61
   ];
+  const uid = req.body.uid;
+  const rewardPointsUsed = req.body.rewardpoints;
   const addedFoodItems = req.body.addedFoodItems;
-  // console.log(createNewOrderParams);
-  console.log(addedFoodItems);
+  console.log(createNewOrderParams);
+  // console.log(addedFoodItems);
 
   try {
     await client.query("BEGIN");
     console.log("begun");
+<<<<<<< HEAD
     const createNewOrderQuery = `INSERT INTO OrderPlaced(uid, rid, totalPrice, paymentMethod, address, timestamp, deliveryFee) VALUES ($1, $2, $3, $4, $5, NOW(), 4.50) RETURNING oid`;
     const response = await client.query(
       createNewOrderQuery,
       createNewOrderParams
     );
+=======
+
+    // get user reward points
+    const getUserRewardPoints = `SELECT c.rewardPoints from customer c where c.uid = $1`;
+    const response2 = await client.query(getUserRewardPoints, [uid]);
+    console.log(response2);
+    const currRewardPoints = response2.rows[0].rewardpoints;
+    console.log(currRewardPoints);
+
+    if (rewardPointsUsed > currRewardPoints) {
+      throw "Not enough points";
+    }
+
+    // insert into orders placed
+    const createNewOrderQuery = `INSERT INTO OrderPlaced(uid, rid, totalPrice, paymentMethod, address, timestamp, deliveryFee, postalcode, rewardpointsused) VALUES ($1, $2, $3, $4, $5, NOW(), 4.50, $6, $7) RETURNING oid`;
+    const response = await client.query(createNewOrderQuery, createNewOrderParams);
+>>>>>>> eec09f1b1ba008131fc8e0b87802a066cdb81a61
 
     const oid = response.rows[0].oid;
     const propagateContainsQuery = `INSERT INTO Contains(fid, oid, qty) VALUES ($1, $2, $3)`;
 
     addedFoodItems.forEach(async (fooditem) => {
       const containsParams = [fooditem.fooditem.fid, oid, fooditem.quantity];
-      console.log(containsParams);
+      // console.log(containsParams);
       await client.query(propagateContainsQuery, containsParams);
     });
 
@@ -391,6 +416,10 @@ router.post("/api/post/postNewOrder", async (req, res, next) => {
     await client.query("ROLLBACK", (q_err, q_res) => {
       res.json({
         status: "Problem sia",
+<<<<<<< HEAD
+=======
+        msg: e
+>>>>>>> eec09f1b1ba008131fc8e0b87802a066cdb81a61
       });
     });
     console.log("rollbacked");

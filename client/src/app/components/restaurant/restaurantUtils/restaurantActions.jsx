@@ -42,7 +42,7 @@ export const postNewOrder = order => {
       if (res.data.status === "SUCCESS") {
         toastr.success("Order " + res.data.oid + " created", "Delivering by " + res.data.dr.drname)
       } else {
-        toastr.error("Oops", "Something went wrong with your order");
+        toastr.error("Oops", res.data.msg);
       }
     })
   };
