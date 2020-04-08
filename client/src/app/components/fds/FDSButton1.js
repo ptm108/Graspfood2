@@ -50,7 +50,7 @@ class FDSButton1 extends Component {
                             ordersByMonth[i].month <= 1 &&
                             newCustomer.uid === ordersByMonth[i].uid
                           ) {
-                            console.log(newCustomer.uid);
+                            //console.log(newCustomer.uid);
                             return false;
                           }
                         }
@@ -100,7 +100,7 @@ class FDSButton1 extends Component {
                             ordersByMonth[i].month <= 2 &&
                             newCustomer.uid === ordersByMonth[i].uid
                           ) {
-                            console.log(newCustomer.uid);
+                            //console.log(newCustomer.uid);
                             return false;
                           }
                         }
@@ -150,7 +150,7 @@ class FDSButton1 extends Component {
                             ordersByMonth[i].month <= 3 &&
                             newCustomer.uid === ordersByMonth[i].uid
                           ) {
-                            console.log(newCustomer.uid);
+                            //console.log(newCustomer.uid);
                             return false;
                           }
                         }
@@ -200,7 +200,7 @@ class FDSButton1 extends Component {
                             ordersByMonth[i].month <= 4 &&
                             newCustomer.uid === ordersByMonth[i].uid
                           ) {
-                            console.log(newCustomer.uid);
+                            //console.log(newCustomer.uid);
                             return false;
                           }
                         }
