@@ -44,3 +44,21 @@ Create trigger update_delivery_rider_rating_trigger
     on delivers
     For each row
 Execute procedure update_delivery_rider_rating();
+
+
+Create or replace function delete_old_schedule() 
+Returns trigger as $$
+    Begin
+		Delete from works where uid = NEW.uid;
+    Return null;
+End;
+$$ LANGUAGE plpgsql;
+
+Drop trigger if exists remove_schedule on DeliveryRider;
+Create trigger remove_schedule
+    After update 
+    Of timeForScheduleUpdate 
+    on DeliveryRider
+    For each row
+When (NEW.timeForScheduleUpdate > OLD.timeForScheduleUpdate)
+Execute procedure delete_old_schedule();

@@ -107,13 +107,14 @@ endNo INTEGER,
 );
 
 CREATE TABLE Works (
+	wid SERIAL,
 	uid INTEGER,
 	dayNo INTEGER NOT NULL,
 	startNo INTEGER NOT NULL,
 	endNo INTEGER NOT NULL,
-PRIMARY KEY(uid),
+	PRIMARY KEY(wid),
 	FOREIGN KEY(uid) REFERENCES DeliveryRider(uid) ON DELETE CASCADE,
-	FOREIGN KEY(dayNo,  startNo, endNo) REFERENCES Schedule(dayNo, startNo,      endNo) ON DELETE CASCADE
+	FOREIGN KEY(dayNo,  startNo, endNo) REFERENCES Schedule(dayNo, startNo, endNo) ON DELETE CASCADE
 	);
 
 CREATE TABLE FoodItem (
