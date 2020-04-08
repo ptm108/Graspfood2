@@ -138,7 +138,7 @@ router.put("/api/put/updateUser", (req, res, next) => {
     req.body.username,
     req.body.password,
     req.body.accessRight,
-    req.body.userid
+    req.body.userid,
   ];
   client.query(
     `UPDATE Actor SET(username=$1, password=$2, accessRight=$3) WHERE userid=$4`,
@@ -215,7 +215,7 @@ router.post("/api/post/addCreditCard", (req, res, next) => {
     req.body.uid,
     req.body.cardnumber,
     req.body.cardholdername,
-    req.body.expirydate
+    req.body.expirydate,
   ];
   console.log(req.body);
   client.query(
@@ -342,7 +342,7 @@ router.post("/api/post/postNewOrder", async (req, res, next) => {
     req.body.rid,
     req.body.totalPrice,
     req.body.paymentMethod,
-    req.body.address
+    req.body.address,
   ];
   const addedFoodItems = req.body.addedFoodItems;
   // console.log(createNewOrderParams);
@@ -352,12 +352,15 @@ router.post("/api/post/postNewOrder", async (req, res, next) => {
     await client.query("BEGIN");
     console.log("begun");
     const createNewOrderQuery = `INSERT INTO OrderPlaced(uid, rid, totalPrice, paymentMethod, address, timestamp, deliveryFee) VALUES ($1, $2, $3, $4, $5, NOW(), 4.50) RETURNING oid`;
-    const response = await client.query(createNewOrderQuery, createNewOrderParams);
+    const response = await client.query(
+      createNewOrderQuery,
+      createNewOrderParams
+    );
 
     const oid = response.rows[0].oid;
     const propagateContainsQuery = `INSERT INTO Contains(fid, oid, qty) VALUES ($1, $2, $3)`;
 
-    addedFoodItems.forEach(async fooditem => {
+    addedFoodItems.forEach(async (fooditem) => {
       const containsParams = [fooditem.fooditem.fid, oid, fooditem.quantity];
       console.log(containsParams);
       await client.query(propagateContainsQuery, containsParams);
@@ -377,7 +380,7 @@ router.post("/api/post/postNewOrder", async (req, res, next) => {
         res.json({
           status: "SUCCESS",
           dr: dr,
-          oid: oid
+          oid: oid,
         });
       } else {
         res.json(q_err);
@@ -387,7 +390,7 @@ router.post("/api/post/postNewOrder", async (req, res, next) => {
   } catch (e) {
     await client.query("ROLLBACK", (q_err, q_res) => {
       res.json({
-        status: "Problem sia"
+        status: "Problem sia",
       });
     });
     console.log("rollbacked");
@@ -427,6 +430,21 @@ router.get("/api/get/ordersByCustomer", (req, res, next) => {
   client.query(
     `SELECT uid, sum(totalprice + deliveryfee), count(*), 
       (SELECT EXTRACT(MONTH FROM orderplaced.timestamp)) as month, cname from orderplaced natural join customer group by uid, cname, month`,
+    (q_err, q_res) => {
+      if (q_err) {
+        console.log(q_err);
+        return next(q_err);
+      }
+      console.log(q_res);
+      res.send(q_res);
+    }
+  );
+});
+
+// fds infor 3 (get all orders)
+router.get("/api/get/allOrders", (req, res, next) => {
+  client.query(
+    `SELECT oid, uid, timestamp, EXTRACT(HOUR FROM orderplaced.timestamp) as hour, postalcode from orderplaced`,
     (q_err, q_res) => {
       if (q_err) {
         console.log(q_err);
