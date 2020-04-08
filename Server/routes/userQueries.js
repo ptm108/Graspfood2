@@ -356,7 +356,7 @@ router.post("/api/post/postNewOrder", async (req, res, next) => {
     req.body.paymentMethod,
     req.body.address,
     req.body.postalcode,
-    parseInt(req.body.rewardpoints) || 0
+    parseInt(req.body.rewardpoints) || 0,
   ];
   const uid = req.body.uid;
   const rewardPointsUsed = parseInt(req.body.rewardpoints);
@@ -453,7 +453,7 @@ router.get("/api/get/orderDetails", async (req, res, next) => {
     // console.log(drId);
 
     response = await client.query(`SELECT * from DeliveryRider WHERE uid=$1`, [
-      drId
+      drId,
     ]);
     // console.log(response)
     const dr = response.rows[0];
@@ -464,7 +464,7 @@ router.get("/api/get/orderDetails", async (req, res, next) => {
           status: "SUCCESS",
           order: order,
           fooditems: fooditems,
-          deliveryRider: dr
+          deliveryRider: dr,
         });
       }
     });
@@ -474,7 +474,7 @@ router.get("/api/get/orderDetails", async (req, res, next) => {
     await client.query("ROLLBACK");
     res.json({
       status: "ERROR",
-      msg: error
+      msg: error,
     });
     console.log("rolled back");
   }
@@ -494,7 +494,7 @@ router.post("/api/post/createReview", (req, res, next) => {
     req.body.uid,
     req.body.reviewTitle,
     req.body.reviewDesc,
-    req.body.rating
+    req.body.rating,
   ];
   console.log(reviewValues);
 
@@ -504,12 +504,12 @@ router.post("/api/post/createReview", (req, res, next) => {
     (q_err, q_res) => {
       if (q_err) {
         res.json({
-          status: "ERROR"
-        })
+          status: "ERROR",
+        });
       } else {
         res.json({
-          status: "SUCCESS"
-        })
+          status: "SUCCESS",
+        });
       }
     }
   );
@@ -568,6 +568,24 @@ router.get("/api/get/ordersByCustomer", (req, res, next) => {
 router.get("/api/get/allOrders", (req, res, next) => {
   client.query(
     `SELECT oid, uid, timestamp, EXTRACT(HOUR FROM orderplaced.timestamp) as hour, postalcode from orderplaced`,
+    (q_err, q_res) => {
+      if (q_err) {
+        console.log(q_err);
+        return next(q_err);
+      }
+      console.log(q_res);
+      res.send(q_res);
+    }
+  );
+});
+
+// fds info 4 (get all riders' deliveries info)
+router.get("/api/get/allRiderDeliveriesInfo", (req, res, next) => {
+  client.query(
+    `SELECT count(oid) as numorders, dr.uid, drname, sum(deliveryfeecommission) as fee, 
+      avg(extract(minute from(riderdelivertime - riderleaveforrestauranttime))) as delivertime, count(deliveryservicerating) as numratings, 
+      avg(deliveryservicerating) as avgrating, extract(month from riderdelivertime) as month 
+      from delivers d right join deliveryrider dr on d.uid = dr.uid group by dr.uid, month`,
     (q_err, q_res) => {
       if (q_err) {
         console.log(q_err);

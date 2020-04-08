@@ -4,6 +4,7 @@ import {
   FETCH_ORDERS_BY_MONTH,
   FETCH_ORDERS_BY_CUSTOMER,
   FETCH_ALL_ORDERS,
+  FETCH_ALL_RIDERS_DELIVERIES_INFO,
 } from "../fdsUtils/fdsConstants";
 
 export const fetchAllCustomers = () => {
@@ -48,6 +49,21 @@ export const fetchAllOrders = () => {
       console.log(res.data);
       if (res.data.rows) {
         dispatch({ type: FETCH_ALL_ORDERS, payload: res.data.rows });
+        return res.data.rows;
+      }
+    });
+  };
+};
+
+export const fetchAllRidersDeliveriesInfo = () => {
+  return async (dispatch) => {
+    await axios.get("/api/get/allRiderDeliveriesInfo").then((res) => {
+      console.log(res.data);
+      if (res.data.rows) {
+        dispatch({
+          type: FETCH_ALL_RIDERS_DELIVERIES_INFO,
+          payload: res.data.rows,
+        });
         return res.data.rows;
       }
     });
