@@ -127,7 +127,7 @@ insert into OrderPlaced (uid, rid, timeStamp, totalPrice, deliveryFee, rewardPoi
 insert into OrderPlaced (uid, rid, timeStamp, totalPrice, deliveryFee, rewardPointsUsed, paymentMethod) values (65, 14, CURRENT_TIMESTAMP, 22, 4.50, 200, 'credit card');
 insert into OrderPlaced (uid, rid, timeStamp, totalPrice, deliveryFee, rewardPointsUsed, paymentMethod) values (66, 2, CURRENT_TIMESTAMP, 12, 4.50, 800, 'credit card');
 
-insert into OrderPlaced (uid, rid, timeStamp, totalPrice, deliveryFee, rewardPointsUsed, paymentMethod) values (144, 1, '2020-04-10 11:11:45', 10, 4.50, 1000, 'credit card');
+insert into OrderPlaced (uid, rid, timeStamp, totalPrice, deliveryFee, rewardPointsUsed, paymentMethod) values (144, 1, '2020-04-11 11:11:45', 10, 4.50, 1000, 'credit card');
 
 INSERT INTO Actor (username, password, accessRight) 
 VALUES
@@ -614,8 +614,10 @@ VALUES
 ('85','3586050854902393', 'Amalle McPhee', '2024-05-07'),
 ('86','6709482905063281', 'Katharyn Cobbled', '2021-02-25');
 
-INSERT INTO delivers (oid, uid, riderLeaveForRestaurantTime, riderArriveAtRestaurantTime, riderLeaveRestaurantTime, riderDeliverTime, delieveryFeeCommission, deliveryServiceRating)
+INSERT INTO delivers (oid, uid, riderLeaveForRestaurantTime, riderArriveAtRestaurantTime, riderLeaveRestaurantTime, riderDeliverTime, deliveryFeeCommission)
 VALUES
+(37, 125, '2020-04-11 11:13:00', '2020-04-11 11:20:00', '2020-04-11 11:23:00', '2020-04-11 11:30:00', 8);
+
 (1, 49, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 8, 4),
 (2, 54, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 6, 5),
 (3, 51, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 7, 4),
@@ -633,7 +635,7 @@ update delivers set riderarriveatrestauranttime = '2020-04-05 03:18:32', riderle
 update delivers set riderleaverestauranttime = '2020-04-05 03:20:56', riderdelivertime = '2020-04-05 03:28:12'  where oid = 1;
 
 INSERT INTO contains (fid, oid, qty) values
-(8, 33, 2)
+(8, 37, 2)
 
 (1, 2, 7), 
 (2, 5, 5), 

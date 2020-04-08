@@ -91,7 +91,7 @@ CREATE TABLE DeliveryRider(
 	uid INTEGER PRIMARY KEY REFERENCES Actor ON DELETE CASCADE,
 	drname VARCHAR(255),
 	isIdle BOOLEAN,
-	deliveryRiderRating DECIMAL(1,1),
+	deliveryRiderRating NUMERIC(2,1),
 	timeForScheduleUpdate TIMESTAMP, 
 	joinDate DATE
 );

@@ -28,3 +28,19 @@ Create trigger update_reward_points_trigger
     on orderplaced
     For each row
 Execute procedure update_reward_points();
+
+
+Create or replace function update_delivery_rider_rating()
+Returns trigger as $$
+    Begin
+        Update deliveryrider set deliveryriderrating = (deliveryriderrating + NEW.deliveryservicerating) / 2 where uid = NEW.uid;
+    Return null;
+End;
+$$ LANGUAGE plpgsql ;
+
+Drop trigger if exists update_delivery_rider_rating_trigger on delivers;
+Create trigger update_delivery_rider_rating_trigger
+    After update
+    on delivers
+    For each row
+Execute procedure update_delivery_rider_rating();
