@@ -32,7 +32,7 @@ const mapStateToProps = (state, ownProps) => {
 };
 
 class OrderDetailedPage extends Component {
-  async componentDidMount() {
+  async componentWillMount() {
     const { fetchOrderDetails, currOid } = this.props;
     await fetchOrderDetails(currOid);
   }
@@ -75,11 +75,12 @@ class OrderDetailedPage extends Component {
     const deliveryRider = orderDetails.deliveryRider;
 
     let res = null;
-    if (restaurants.length != 0) {
+
+    if (restaurants.length != 0 && currOrder) {
       res = restaurants.filter(restaurant => restaurant.rid === currOrder.rid);
     }
 
-    const currentRestaurant = res[0];
+    const currentRestaurant = res && res[0];
     return (
       <Grid>
         <Grid.Column width={10}>
