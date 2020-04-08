@@ -127,7 +127,7 @@ insert into OrderPlaced (uid, rid, timeStamp, totalPrice, deliveryFee, rewardPoi
 insert into OrderPlaced (uid, rid, timeStamp, totalPrice, deliveryFee, rewardPointsUsed, paymentMethod) values (65, 14, CURRENT_TIMESTAMP, 22, 4.50, 200, 'credit card');
 insert into OrderPlaced (uid, rid, timeStamp, totalPrice, deliveryFee, rewardPointsUsed, paymentMethod) values (66, 2, CURRENT_TIMESTAMP, 12, 4.50, 800, 'credit card');
 
-insert into OrderPlaced (uid, rid, timeStamp, totalPrice, deliveryFee, rewardPointsUsed, paymentMethod) values (144, 1, '2020-04-08 11:11:45', 10, 4.50, 0, 'credit card');
+insert into OrderPlaced (uid, rid, timeStamp, totalPrice, deliveryFee, rewardPointsUsed, paymentMethod) values (144, 1, '2020-04-10 11:11:45', 10, 4.50, 1000, 'credit card');
 
 INSERT INTO Actor (username, password, accessRight) 
 VALUES
