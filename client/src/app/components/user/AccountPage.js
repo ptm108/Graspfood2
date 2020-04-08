@@ -1,15 +1,16 @@
 import React, { Component, Fragment } from "react";
 import PastOrders from "../customer/PastOrders";
 import ReviewPostings from "../customer/ReviewPostings";
-import { Grid, Header } from "semantic-ui-react";
+import { Grid, Header, Segment } from "semantic-ui-react";
 import AccountNav from "./AccountNav";
 import { connect } from "react-redux";
 import { fetchCustomerDetails } from "../customer/customerUtils/customerActions";
 import { fetchRiderDetails } from "../deliveryRider/riderUtils/riderActions";
+import OrderList from "../order/OrderList";
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   currentUser: state.auth.currentUser,
-  userDetails: state.customer.userDetails,
+  userDetails: state.customer.userDetails
 });
 
 const mapDispatchToProps = { fetchCustomerDetails, fetchRiderDetails };
@@ -31,19 +32,19 @@ class AccountPage extends Component {
       <Fragment>
         <Grid>
           <Grid.Column width={12}>
-            <Header content="Account Page" />
+            <Segment inverted>
+              <Header as="h3" content="Account Page" />
+            </Segment>
+
             {accessRight === 4 && (
-              <Fragment>
-                <Header>
-                  Customer Name: {userDetails && userDetails[0].cname}
-                </Header>
-                <Header>
+              <Segment>
+              <Header content="Customer Details"/>
+                  Customer Name: {userDetails && userDetails[0].cname}<br/>
                   Reward Points: {userDetails && userDetails[0].rewardpoints}
-                </Header>
-              </Fragment>
+              </Segment>
             )}
             {accessRight === 4 && <ReviewPostings />}
-            {accessRight === 4 && <PastOrders />}
+            {accessRight === 4 && <OrderList />}
 
             {accessRight === 3 && (
               <Fragment>

@@ -10,7 +10,7 @@ import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage"; // defaults to localStorage for web
 import restaurantReducer from "../components/restaurant/restaurantUtils/restaurantReducer";
 import customerReducer from "../components/customer/customerUtils/customerReducer";
-import OrderReducer from "../components/order/OrderReducer";
+import OrderReducer from "../components/order/orderUtils/OrderReducer";
 import riderReducer from "../components/deliveryRider/riderUtils/riderReducer";
 import fdsReducer from "../components/fds/fdsUtils/fdsReducer";
 

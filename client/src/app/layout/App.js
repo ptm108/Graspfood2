@@ -20,6 +20,7 @@ import HomePage from "../homepage/HomePage";
 import FDSButton2 from "../components/fds/FDSButton2";
 import FDSButton3 from "../components/fds/FDSButton3";
 import FDSButton4 from "../components/fds/FDSButton4";
+import OrderDetailedPage from "../components/order/OrderDetailedPage"
 
 class App extends Component {
   render() {
@@ -67,7 +68,7 @@ class App extends Component {
                     path="/restaurant/:id"
                     component={RestaurantDetailedPage}
                   />
-
+                  <Route path="/order/:id" component={OrderDetailedPage} />
                   <Route component={NotFound} />
                 </Switch>
               </Container>

@@ -169,13 +169,19 @@ router.put("/api/put/changePassword", (req, res, next) => {
 });
 
 router.get("/api/get/orderList", (req, res, next) => {
-  client.query(`SELECT * from contains;`, (q_err, q_res) => {
-    if (q_err) {
-      return next(q_err);
+  const uid = [req.query[0]];
+  console.log(req.query);
+  client.query(
+    `SELECT * from orderplaced op where op.uid = $1 ORDER BY timestamp DESC LIMIT 10;`,
+    uid,
+    (q_err, q_res) => {
+      if (q_err) {
+        console.log(q_err);
+      }
+      //console.log(q_res);
+      res.json(q_res);
     }
-    //console.log(q_res);
-    res.send(q_res);
-  });
+  );
 });
 
 router.get("/api/get/restaurantList", (req, res, next) => {
@@ -334,6 +340,12 @@ router.get("/api/get/deliverOrders", (req, res, next) => {
   );
 });
 
+/*
+
+Order Related
+
+
+*/
 // order related
 router.post("/api/post/postNewOrder", async (req, res, next) => {
   // console.log(req.body);
@@ -344,10 +356,10 @@ router.post("/api/post/postNewOrder", async (req, res, next) => {
     req.body.paymentMethod,
     req.body.address,
     req.body.postalcode,
-    req.body.rewardpoints
+    parseInt(req.body.rewardpoints) || 0
   ];
   const uid = req.body.uid;
-  const rewardPointsUsed = req.body.rewardpoints;
+  const rewardPointsUsed = parseInt(req.body.rewardpoints);
   const addedFoodItems = req.body.addedFoodItems;
   console.log(createNewOrderParams);
   // console.log(addedFoodItems);
@@ -359,17 +371,20 @@ router.post("/api/post/postNewOrder", async (req, res, next) => {
     // get user reward points
     const getUserRewardPoints = `SELECT c.rewardPoints from customer c where c.uid = $1`;
     const response2 = await client.query(getUserRewardPoints, [uid]);
-    console.log(response2);
+    // console.log(response2);
     const currRewardPoints = response2.rows[0].rewardpoints;
     console.log(currRewardPoints);
 
-    if (rewardPointsUsed > currRewardPoints) {
+    if (rewardPointsUsed !== "" && rewardPointsUsed > currRewardPoints) {
       throw "Not enough points";
     }
 
     // insert into orders placed
     const createNewOrderQuery = `INSERT INTO OrderPlaced(uid, rid, totalPrice, paymentMethod, address, timestamp, deliveryFee, postalcode, rewardpointsused) VALUES ($1, $2, $3, $4, $5, NOW(), 4.50, $6, $7) RETURNING oid`;
-    const response = await client.query(createNewOrderQuery, createNewOrderParams);
+    const response = await client.query(
+      createNewOrderQuery,
+      createNewOrderParams
+    );
 
     const oid = response.rows[0].oid;
     const propagateContainsQuery = `INSERT INTO Contains(fid, oid, qty) VALUES ($1, $2, $3)`;
@@ -413,6 +428,99 @@ router.post("/api/post/postNewOrder", async (req, res, next) => {
   }
 });
 
+router.get("/api/get/orderDetails", async (req, res, next) => {
+  const oid = [parseInt(req.query[0])];
+  console.log(oid[0]);
+
+  try {
+    await client.query("BEGIN");
+
+    let response = await client.query(
+      `SELECT * FROM OrderPlaced WHERE oid = $1`,
+      oid
+    );
+    const order = response.rows[0];
+
+    response = await client.query(
+      `SELECT * FROM Contains c NATURAL JOIN Fooditem WHERE c.oid = $1`,
+      oid
+    );
+    // console.log(response);
+    const fooditems = response.rows;
+
+    response = await client.query(`SELECT uid FROM Delivers WHERE oid=$1`, oid);
+    const drId = response.rows[0].uid;
+    // console.log(drId);
+
+    response = await client.query(`SELECT * from DeliveryRider WHERE uid=$1`, [
+      drId
+    ]);
+    // console.log(response)
+    const dr = response.rows[0];
+
+    await client.query("COMMIT", (q_err, q_res) => {
+      if (q_res) {
+        res.json({
+          status: "SUCCESS",
+          order: order,
+          fooditems: fooditems,
+          deliveryRider: dr
+        });
+      }
+    });
+    console.log("commited");
+  } catch (error) {
+    console.log(error);
+    await client.query("ROLLBACK");
+    res.json({
+      status: "ERROR",
+      msg: error
+    });
+    console.log("rolled back");
+  }
+});
+
+/*
+
+
+Review related Queries
+
+*/
+
+// create new review
+router.post("/api/post/createReview", (req, res, next) => {
+  const reviewValues = [
+    req.body.oid,
+    req.body.uid,
+    req.body.reviewTitle,
+    req.body.reviewDesc,
+    req.body.rating
+  ];
+  console.log(reviewValues);
+
+  client.query(
+    `INSERT INTO Reviews(oid, uid, title, description, rating, timestamp) VALUES ($1, $2, $3, $4, $5, NOW())`,
+    reviewValues,
+    (q_err, q_res) => {
+      if (q_err) {
+        res.json({
+          status: "ERROR"
+        })
+      } else {
+        res.json({
+          status: "SUCCESS"
+        })
+      }
+    }
+  );
+});
+
+/*
+
+FDS Summary related queries
+
+
+*/
 // fds info 1 (get all customers)
 router.get("/api/get/allCustomers", (req, res, next) => {
   client.query(`SELECT * FROM customer c `, (q_err, q_res) => {

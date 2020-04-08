@@ -1,0 +1,4 @@
+export const FETCH_ORDERS = "FETCH_ORDERS";
+export const RESET_ORDERS = "RESET_ORDERS";
+export const FETCH_ORDER_DETAILS = "FETCH_ORDER_DETAILS";
+export const CREATE_REVIEW = "CREATE_REVIEW";
