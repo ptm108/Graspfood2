@@ -71,14 +71,12 @@ class RestaurantStaffButton1 extends Component {
                           <Table.Cell>${order.sum ? order.sum : 0}</Table.Cell>
                         </Fragment>
                       ))}
-                  {topFiveFood &&
-                    topFiveFood
-                      .filter((food) => food.month === 1)
-                      .map((food) => (
-                        <Fragment>
-                          <Table.Cell>{food.fname} </Table.Cell>
-                        </Fragment>
-                      ))}
+                  <Table.Cell>
+                    {topFiveFood &&
+                      topFiveFood
+                        .filter((food) => food.month === 1)
+                        .map((food) => food.fname + ", ")}
+                  </Table.Cell>
                 </Table.Row>
               </Table.Body>
             </Table>
@@ -110,14 +108,12 @@ class RestaurantStaffButton1 extends Component {
                           <Table.Cell>${order.sum ? order.sum : 0}</Table.Cell>
                         </Fragment>
                       ))}
-                  {topFiveFood &&
-                    topFiveFood
-                      .filter((food) => food.month === 2)
-                      .map((food) => (
-                        <Fragment>
-                          <Table.Cell>{food.fname} </Table.Cell>
-                        </Fragment>
-                      ))}
+                  <Table.Cell>
+                    {topFiveFood &&
+                      topFiveFood
+                        .filter((food) => food.month === 2)
+                        .map((food) => food.fname + ", ")}
+                  </Table.Cell>
                 </Table.Row>
               </Table.Body>
             </Table>
@@ -149,14 +145,12 @@ class RestaurantStaffButton1 extends Component {
                           <Table.Cell>${order.sum ? order.sum : 0}</Table.Cell>
                         </Fragment>
                       ))}
-                  {topFiveFood &&
-                    topFiveFood
-                      .filter((food) => food.month === 3)
-                      .map((food) => (
-                        <Fragment>
-                          <Table.Cell>{food.fname} </Table.Cell>
-                        </Fragment>
-                      ))}
+                  <Table.Cell>
+                    {topFiveFood &&
+                      topFiveFood
+                        .filter((food) => food.month === 3)
+                        .map((food) => food.fname + ", ")}
+                  </Table.Cell>
                 </Table.Row>
               </Table.Body>
             </Table>
@@ -188,14 +182,12 @@ class RestaurantStaffButton1 extends Component {
                           <Table.Cell>${order.sum ? order.sum : 0}</Table.Cell>
                         </Fragment>
                       ))}
-                  {topFiveFood &&
-                    topFiveFood
-                      .filter((food) => food.month === 4)
-                      .map((food) => (
-                        <Fragment>
-                          <Table.Cell>{food.fname} </Table.Cell>
-                        </Fragment>
-                      ))}
+                  <Table.Cell>
+                    {topFiveFood &&
+                      topFiveFood
+                        .filter((food) => food.month === 4)
+                        .map((food) => food.fname + ", ")}
+                  </Table.Cell>
                 </Table.Row>
               </Table.Body>
             </Table>
