@@ -138,7 +138,7 @@ router.put("/api/put/updateUser", (req, res, next) => {
     req.body.username,
     req.body.password,
     req.body.accessRight,
-    req.body.userid,
+    req.body.userid
   ];
   client.query(
     `UPDATE Actor SET(username=$1, password=$2, accessRight=$3) WHERE userid=$4`,
@@ -221,7 +221,7 @@ router.post("/api/post/addCreditCard", (req, res, next) => {
     req.body.uid,
     req.body.cardnumber,
     req.body.cardholdername,
-    req.body.expirydate,
+    req.body.expirydate
   ];
   console.log(req.body);
   client.query(
@@ -356,7 +356,7 @@ router.post("/api/post/postNewOrder", async (req, res, next) => {
     req.body.paymentMethod,
     req.body.address,
     req.body.postalcode,
-    parseInt(req.body.rewardpoints) || 0,
+    parseInt(req.body.rewardpoints) || 0
   ];
   const uid = req.body.uid;
   const rewardPointsUsed = parseInt(req.body.rewardpoints);
@@ -389,7 +389,7 @@ router.post("/api/post/postNewOrder", async (req, res, next) => {
     const oid = response.rows[0].oid;
     const propagateContainsQuery = `INSERT INTO Contains(fid, oid, qty) VALUES ($1, $2, $3)`;
 
-    addedFoodItems.forEach(async (fooditem) => {
+    addedFoodItems.forEach(async fooditem => {
       const containsParams = [fooditem.fooditem.fid, oid, fooditem.quantity];
       // console.log(containsParams);
       await client.query(propagateContainsQuery, containsParams);
@@ -409,7 +409,7 @@ router.post("/api/post/postNewOrder", async (req, res, next) => {
         res.json({
           status: "SUCCESS",
           dr: dr,
-          oid: oid,
+          oid: oid
         });
       } else {
         res.json(q_err);
@@ -420,7 +420,7 @@ router.post("/api/post/postNewOrder", async (req, res, next) => {
     await client.query("ROLLBACK", (q_err, q_res) => {
       res.json({
         status: "Problem sia",
-        msg: e,
+        msg: e
       });
     });
     console.log("rollbacked");
@@ -453,7 +453,7 @@ router.get("/api/get/orderDetails", async (req, res, next) => {
     // console.log(drId);
 
     response = await client.query(`SELECT * from DeliveryRider WHERE uid=$1`, [
-      drId,
+      drId
     ]);
     // console.log(response)
     const dr = response.rows[0];
@@ -464,7 +464,7 @@ router.get("/api/get/orderDetails", async (req, res, next) => {
           status: "SUCCESS",
           order: order,
           fooditems: fooditems,
-          deliveryRider: dr,
+          deliveryRider: dr
         });
       }
     });
@@ -474,7 +474,7 @@ router.get("/api/get/orderDetails", async (req, res, next) => {
     await client.query("ROLLBACK");
     res.json({
       status: "ERROR",
-      msg: error,
+      msg: error
     });
     console.log("rolled back");
   }
@@ -494,21 +494,23 @@ router.post("/api/post/createReview", (req, res, next) => {
     req.body.uid,
     req.body.reviewTitle,
     req.body.reviewDesc,
-    req.body.rating,
+    req.body.rating
   ];
   console.log(reviewValues);
 
   client.query(
-    `INSERT INTO Reviews(oid, uid, title, description, rating, timestamp) VALUES ($1, $2, $3, $4, $5, NOW())`,
+    `INSERT INTO Reviews(oid, uid, title, description, rating, timestamp) 
+          VALUES ($1, $2, $3, $4, $5, NOW())`,
     reviewValues,
     (q_err, q_res) => {
       if (q_err) {
+        console.log(q_err);
         res.json({
-          status: "ERROR",
+          status: "ERROR"
         });
       } else {
         res.json({
-          status: "SUCCESS",
+          status: "SUCCESS"
         });
       }
     }
@@ -586,61 +588,6 @@ router.get("/api/get/allRiderDeliveriesInfo", (req, res, next) => {
       avg(extract(minute from(riderdelivertime - riderleaveforrestauranttime))) as delivertime, count(deliveryservicerating) as numratings, 
       avg(deliveryservicerating) as avgrating, extract(month from riderdelivertime) as month 
       from delivers d right join deliveryrider dr on d.uid = dr.uid group by dr.uid, month`,
-    (q_err, q_res) => {
-      if (q_err) {
-        console.log(q_err);
-        return next(q_err);
-      }
-      console.log(q_res);
-      res.send(q_res);
-    }
-  );
-});
-
-// restaurantStaff info 1 (get restaurant details)
-router.get("/api/get/restaurantDetails", (req, res, next) => {
-  const uid = [req.query.uid];
-  //console.log(req.query);
-  client.query(
-    `SELECT * FROM restaurant natural join restaurantstaff where uid=$1`,
-    uid,
-    (q_err, q_res) => {
-      if (q_err) {
-        console.log(q_err);
-        return next(q_err);
-      }
-      console.log(q_res);
-      res.send(q_res);
-    }
-  );
-});
-
-// restaurantStaff info 1 (get restaurant total orders and cost)
-router.get("/api/get/totalOrdersAndCost", (req, res, next) => {
-  const rid = [req.query.rid];
-  //console.log(req.query);
-  client.query(
-    `SELECT count(oid), extract(month from timestamp) as month, sum(totalprice) from orderplaced where rid=$1 
-      group by extract(month from timestamp)`,
-    rid,
-    (q_err, q_res) => {
-      if (q_err) {
-        console.log(q_err);
-        return next(q_err);
-      }
-      console.log(q_res);
-      res.send(q_res);
-    }
-  );
-});
-
-// restaurantStaff info 1 (get restaurant top 5 food items)4
-router.get("/api/get/topFiveFood", (req, res, next) => {
-  const rid = [req.query.rid];
-  client.query(
-    `select fname, count(fname), extract(month from timestamp) as month from contains natural join orderplaced natural join fooditem 
-    where rid=$1 group by fname, extract(month from timestamp) order by count(fname) desc limit 5`,
-    rid,
     (q_err, q_res) => {
       if (q_err) {
         console.log(q_err);

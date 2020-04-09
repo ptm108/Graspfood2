@@ -23,19 +23,21 @@ class RestaurantStaffDashboard extends Component {
     return (
       <Fragment>
         <Grid>
-          <Grid.Column width={12}>
-            <Header>RestaurantStaffDashboard</Header>
-            <Header>
-              Restaurant: {restaurantDetails && restaurantDetails[0].rname}
-            </Header>
-            <Header>
-              Staff Name: {restaurantDetails && restaurantDetails[0].rsname}
-            </Header>
-            <Header.Content>
-              Press the buttons on the right to view this restaurant's summary
-              info
-            </Header.Content>
-          </Grid.Column>
+          {restaurantDetails[0] && (
+            <Grid.Column width={12}>
+              <Header>RestaurantStaffDashboard</Header>
+              <Header>
+                Restaurant: {restaurantDetails && restaurantDetails[0].rname}
+              </Header>
+              <Header>
+                Staff Name: {restaurantDetails && restaurantDetails[0].rsname}
+              </Header>
+              <Header.Content>
+                Press the buttons on the right to view this restaurant's summary
+                info
+              </Header.Content>
+            </Grid.Column>
+          )}
           <Grid.Column width={4}>
             <AccountNav />
             <br />
