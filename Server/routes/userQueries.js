@@ -600,10 +600,47 @@ router.get("/api/get/allRiderDeliveriesInfo", (req, res, next) => {
 // restaurantStaff info 1 (get restaurant details)
 router.get("/api/get/restaurantDetails", (req, res, next) => {
   const uid = [req.query.uid];
-  console.log(req.query);
+  //console.log(req.query);
   client.query(
     `SELECT * FROM restaurant natural join restaurantstaff where uid=$1`,
     uid,
+    (q_err, q_res) => {
+      if (q_err) {
+        console.log(q_err);
+        return next(q_err);
+      }
+      console.log(q_res);
+      res.send(q_res);
+    }
+  );
+});
+
+// restaurantStaff info 1 (get restaurant total orders and cost)
+router.get("/api/get/totalOrdersAndCost", (req, res, next) => {
+  const rid = [req.query.rid];
+  //console.log(req.query);
+  client.query(
+    `SELECT count(oid), extract(month from timestamp) as month, sum(totalprice) from orderplaced where rid=$1 
+      group by extract(month from timestamp)`,
+    rid,
+    (q_err, q_res) => {
+      if (q_err) {
+        console.log(q_err);
+        return next(q_err);
+      }
+      console.log(q_res);
+      res.send(q_res);
+    }
+  );
+});
+
+// restaurantStaff info 1 (get restaurant top 5 food items)4
+router.get("/api/get/topFiveFood", (req, res, next) => {
+  const rid = [req.query.rid];
+  client.query(
+    `select fname, count(fname), extract(month from timestamp) as month from contains natural join orderplaced natural join fooditem 
+    where rid=$1 group by fname, extract(month from timestamp) order by count(fname) desc limit 5`,
+    rid,
     (q_err, q_res) => {
       if (q_err) {
         console.log(q_err);
