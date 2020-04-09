@@ -1,8 +1,8 @@
 import React, { Component, Fragment } from "react";
-import { Grid, Header, Button } from "semantic-ui-react";
 import { connect } from "react-redux";
+import { Header, Grid, Button } from "semantic-ui-react";
 import AccountNav from "../user/AccountNav";
-import { fetchRestaurantDetails } from "../restaurantStaff/restaurantStaffActions";
+import { fetchRestaurantDetails } from "./restaurantStaffActions";
 import { NavLink } from "react-router-dom";
 
 const mapStateToProps = (state) => ({
@@ -12,29 +12,22 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = { fetchRestaurantDetails };
 
-class RestaurantStaffDashboard extends Component {
+class RestaurantStaffButton2 extends Component {
   componentDidMount() {
     this.props.fetchRestaurantDetails(this.props.currentUser);
   }
 
   render() {
-    const { currentUser, restaurantDetails } = this.props;
-    //console.log(currentUser.uid);
+    const { restaurantDetails } = this.props;
+
     return (
       <Fragment>
         <Grid>
           <Grid.Column width={12}>
-            <Header>RestaurantStaffDashboard</Header>
+            <Header>Restaurant Staff Summary Info 2</Header>
             <Header>
               Restaurant: {restaurantDetails && restaurantDetails[0].rname}
             </Header>
-            <Header>
-              Staff Name: {restaurantDetails && restaurantDetails[0].rsname}
-            </Header>
-            <Header.Content>
-              Press the buttons on the right to view this restaurant's summary
-              info
-            </Header.Content>
           </Grid.Column>
           <Grid.Column width={4}>
             <AccountNav />
@@ -55,4 +48,4 @@ class RestaurantStaffDashboard extends Component {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(RestaurantStaffDashboard);
+)(RestaurantStaffButton2);

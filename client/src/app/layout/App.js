@@ -20,7 +20,9 @@ import HomePage from "../homepage/HomePage";
 import FDSButton2 from "../components/fds/FDSButton2";
 import FDSButton3 from "../components/fds/FDSButton3";
 import FDSButton4 from "../components/fds/FDSButton4";
-import OrderDetailedPage from "../components/order/OrderDetailedPage"
+import OrderDetailedPage from "../components/order/OrderDetailedPage";
+import RestaurantStaffButton1 from "../components/restaurantStaff/RestaurantStaffButton1";
+import RestaurantStaffButton2 from "../components/restaurantStaff/RestaurantStaffButton2";
 
 class App extends Component {
   render() {
@@ -63,6 +65,16 @@ class App extends Component {
                     exact
                     path="/restaurantstaffdashboard"
                     component={RestaurantStaffDashboard}
+                  />
+                  <Route
+                    exact
+                    path="/restaurantStaffInfo1"
+                    component={RestaurantStaffButton1}
+                  />
+                  <Route
+                    exact
+                    path="/restaurantStaffInfo2"
+                    component={RestaurantStaffButton2}
                   />
                   <Route
                     path="/restaurant/:id"

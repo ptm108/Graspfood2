@@ -597,4 +597,22 @@ router.get("/api/get/allRiderDeliveriesInfo", (req, res, next) => {
   );
 });
 
+// restaurantStaff info 1 (get restaurant details)
+router.get("/api/get/restaurantDetails", (req, res, next) => {
+  const uid = [req.query.uid];
+  console.log(req.query);
+  client.query(
+    `SELECT * FROM restaurant natural join restaurantstaff where uid=$1`,
+    uid,
+    (q_err, q_res) => {
+      if (q_err) {
+        console.log(q_err);
+        return next(q_err);
+      }
+      console.log(q_res);
+      res.send(q_res);
+    }
+  );
+});
+
 module.exports = router;
