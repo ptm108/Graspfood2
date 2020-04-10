@@ -33,7 +33,7 @@ class RestaurantStaffButton1 extends Component {
 
   render() {
     const { restaurantDetails, totalOrdersDetails, topFiveFood } = this.props;
-    console.log(topFiveFood);
+    //console.log(topFiveFood);
 
     return (
       <Fragment>
@@ -41,7 +41,13 @@ class RestaurantStaffButton1 extends Component {
           <Grid.Column width={12}>
             <Header>Restaurant Staff Summary Info 1</Header>
             <Header>
-              Restaurant: {restaurantDetails && restaurantDetails[0].rname}
+              Restaurant:{" "}
+              {restaurantDetails &&
+                restaurantDetails[0].rname +
+                  ", " +
+                  restaurantDetails[0].streetname +
+                  " #" +
+                  restaurantDetails[0].unitno}
             </Header>
 
             <Header sub>For January</Header>
