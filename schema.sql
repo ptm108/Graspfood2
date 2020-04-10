@@ -87,7 +87,8 @@ CREATE TABLE DeliveryRider(
 	isIdle BOOLEAN,
 	deliveryRiderRating NUMERIC(2,1),
 	timeForScheduleUpdate TIMESTAMP, 
-	joinDate DATE
+	joinDate DATE,
+	totalWorkHours INTEGER DEFAULT 0
 );
 
 CREATE TABLE Schedule (
@@ -101,12 +102,12 @@ endNo INTEGER,
 );
 
 CREATE TABLE Works (
-	wid SERIAL,
 	uid INTEGER,
 	dayNo INTEGER NOT NULL,
 	startNo INTEGER NOT NULL,
 	endNo INTEGER NOT NULL,
-	PRIMARY KEY(wid),
+	hours INTEGER NOT NULL,
+	PRIMARY KEY(uid, dayNo, startNo, endNo),
 	FOREIGN KEY(uid) REFERENCES DeliveryRider(uid) ON DELETE CASCADE,
 	FOREIGN KEY(dayNo,  startNo, endNo) REFERENCES Schedule(dayNo, startNo, endNo) ON DELETE CASCADE
 	);
