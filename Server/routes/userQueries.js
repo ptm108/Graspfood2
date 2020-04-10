@@ -634,12 +634,31 @@ router.get("/api/get/totalOrdersAndCost", (req, res, next) => {
   );
 });
 
-// restaurantStaff info 1 (get restaurant top 5 food items)4
+// restaurantStaff info 1 (get restaurant top 5 food items)
 router.get("/api/get/topFiveFood", (req, res, next) => {
   const rid = [req.query.rid];
   client.query(
     `select fname, count(fname), extract(month from timestamp) as month from contains natural join orderplaced natural join fooditem 
     where rid=$1 group by fname, extract(month from timestamp) order by count(fname) desc limit 5`,
+    rid,
+    (q_err, q_res) => {
+      if (q_err) {
+        console.log(q_err);
+        return next(q_err);
+      }
+      console.log(q_res);
+      res.send(q_res);
+    }
+  );
+});
+
+// restaurantStaff info 2 (get restaurant promo details)
+router.get("/api/get/promoDetails", (req, res, next) => {
+  const rid = [req.query.rid];
+  console.log(req.query);
+  client.query(
+    `SELECT count(oid), pid, (enddate - startdate) as days, p.promocode FROM orderplaced o right join promotion p on o.promocode = p.promocode 
+      where p.rid=$1 group by pid`,
     rid,
     (q_err, q_res) => {
       if (q_err) {

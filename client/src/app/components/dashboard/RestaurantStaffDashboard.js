@@ -26,7 +26,13 @@ class RestaurantStaffDashboard extends Component {
           <Grid.Column width={12}>
             <Header>RestaurantStaffDashboard</Header>
             <Header>
-              Restaurant: {restaurantDetails && restaurantDetails[0].rname}
+              Restaurant:{" "}
+              {restaurantDetails &&
+                restaurantDetails[0].rname +
+                  ", " +
+                  restaurantDetails[0].streetname +
+                  " #" +
+                  restaurantDetails[0].unitno}
             </Header>
             <Header>
               Staff Name: {restaurantDetails && restaurantDetails[0].rsname}
