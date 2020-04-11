@@ -13,26 +13,19 @@ CREATE TABLE PartTime(
 	FOREIGN KEY (uid) REFERENCES DeliveryRider(uid) ON DELETE CASCADE
 );
 
-CREATE TABLE RestaurantPromotion(
-	pid SERIAL, 
-	rid INTEGER, 
-	minSpending DECIMAL(5,2),
-	percentDiscount INTEGER,
-	customerType VARCHAR(255),
-	startDate DATE,
-	endDate DATE,
-	PRIMARY KEY(pid, rid),
-	FOREIGN KEY(rid) REFERENCES Restaurant(rid) ON DELETE CASCADE
-);
-
-CREATE TABLE FDSPromotion(
+CREATE TABLE Promotion(
 	pid SERIAL,
+	rid INTEGER,
+	minSpending NUMERIC(5,2),
+	percentDiscount INTEGER,
 	maxCustomerCount INTEGER,
 	currCustomerCount INTEGER,
 	customerType VARCHAR(255),
 	startDate DATE,
 	endDate DATE,
-	PRIMARY KEY(pid)
+	promoCode VARCHAR(255) UNIQUE,
+	PRIMARY KEY(pid),
+	FOREIGN KEY(rid) REFERENCES Restaurant(rid) ON DELETE CASCADE
 );
 
 CREATE TABLE Restaurant (
@@ -94,7 +87,8 @@ CREATE TABLE DeliveryRider(
 	isIdle BOOLEAN,
 	deliveryRiderRating NUMERIC(2,1),
 	timeForScheduleUpdate TIMESTAMP, 
-	joinDate DATE
+	joinDate DATE,
+	totalWorkHours INTEGER DEFAULT 0
 );
 
 CREATE TABLE Schedule (
@@ -108,12 +102,12 @@ endNo INTEGER,
 );
 
 CREATE TABLE Works (
-	wid SERIAL,
 	uid INTEGER,
 	dayNo INTEGER NOT NULL,
 	startNo INTEGER NOT NULL,
 	endNo INTEGER NOT NULL,
-	PRIMARY KEY(wid),
+	hours INTEGER NOT NULL,
+	PRIMARY KEY(uid, dayNo, startNo, endNo),
 	FOREIGN KEY(uid) REFERENCES DeliveryRider(uid) ON DELETE CASCADE,
 	FOREIGN KEY(dayNo,  startNo, endNo) REFERENCES Schedule(dayNo, startNo, endNo) ON DELETE CASCADE
 	);

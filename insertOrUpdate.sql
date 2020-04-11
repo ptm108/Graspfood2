@@ -719,3 +719,48 @@ update OrderPlaced
 set 
    postalCode = '345678'
 where oid = 26; 
+
+
+update RestaurantPromotion set promocode = 'GF0001' where pid = 1;
+update RestaurantPromotion set promocode = 'GF0002' where pid = 2;
+update RestaurantPromotion set promocode = 'GF0003' where pid = 3;
+update RestaurantPromotion set promocode = 'GF0004' where pid = 4;
+update RestaurantPromotion set promocode = 'GF0005' where pid = 5;
+update RestaurantPromotion set promocode = 'GF0006' where pid = 6;
+update RestaurantPromotion set promocode = 'GF0007' where pid = 7;
+update RestaurantPromotion set promocode = 'GF0008' where pid = 8;
+update RestaurantPromotion set promocode = 'GF0009' where pid = 9;
+update RestaurantPromotion set promocode = 'GF0010' where pid = 10;
+update RestaurantPromotion set promocode = 'GF0011' where pid = 11;
+update RestaurantPromotion set promocode = 'GF0012' where pid = 12;
+update RestaurantPromotion set promocode = 'GF0013' where pid = 13;
+update RestaurantPromotion set promocode = 'GF0014' where pid = 14;
+update RestaurantPromotion set promocode = 'GF0015' where pid = 15;
+update RestaurantPromotion set promocode = 'GF0016' where pid = 16;
+update RestaurantPromotion set promocode = 'GF0017' where pid = 17;
+update RestaurantPromotion set promocode = 'GF0018' where pid = 18;
+update RestaurantPromotion set promocode = 'GF0019' where pid = 19;
+update RestaurantPromotion set promocode = 'GF0020' where pid = 20;
+update RestaurantPromotion set promocode = 'GF0021' where pid = 21;
+
+INSERT INTO Promotion(rid, percentDiscount, startDate, endDate, promocode) values 
+(1, 20, '2020-04-00', '2020-05-00', 'R%Discount');
+
+insert into Promotion (rid, percentDiscount, startDate, endDate, promocode) values (1, 20, '2020-04-10', '2020-05-10', 'R%Discount');
+insert into Promotion (startDate, endDate, promocode) values ('2020-04-10', '2020-05-10', 'FDSFreeDeliveryForNewCustomer');
+insert into Promotion (percentDiscount, customerType, promocode) values (10, 'NEW', 'FDS%DiscountForNewCustomer');
+insert into Promotion (percentDiscount, customertype, startDate, endDate, promocode) values (15, 'OLD CUSTOMER', '2020-04-10', '2020-05-10', 'FDS%DiscountForLastOrderWas3MonthsAgo');
+
+insert into Promotion (rid, percentDiscount, startDate, endDate, promocode) values (14, 10, '2020-04-10', '2020-05-10', 'R%Discount2');
+insert into Promotion (rid, percentDiscount, startDate, endDate, promocode) values (16, 15, '2020-04-10', '2020-05-10', 'R%Discount3');
+insert into Promotion (rid, percentDiscount, startDate, endDate, promocode) values (2, 20, '2020-04-10', '2020-05-10', 'R%Discount4');
+insert into Promotion (rid, percentDiscount, startDate, endDate, promocode) values (1, 20, '2020-04-10', '2020-05-10', 'R%Discount');
+insert into Promotion (rid, percentDiscount, startDate, endDate, promocode) values (1, 20, '2020-04-10', '2020-05-10', 'R%Discount');
+
+update OrderPlaced set promocode = 'R%Discount2', totalPrice = 19.8 where oid = 42;
+update OrderPlaced set promocode = 'R%Discount3', totalPrice = 17 where oid = 43;
+update OrderPlaced set promocode = 'R%Discount4', totalPrice = 18.4 where oid = 30;
+
+
+
+
