@@ -1,5 +1,5 @@
 import { createReducer } from "../../../reduxstore/reducerUtil";
-import { FETCH_ORDERS, RESET_ORDERS, FETCH_ORDER_DETAILS } from "./OrderConstants"
+import { FETCH_ORDERS, RESET_ORDERS, FETCH_ORDER_DETAILS, PUT_RIDER_REVIEW } from "./OrderConstants"
 
 const initialState = {
   orders: []

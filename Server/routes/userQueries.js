@@ -500,7 +500,39 @@ router.post("/api/post/createReview", (req, res, next) => {
 
   client.query(
     `INSERT INTO Reviews(oid, uid, title, description, rating, timestamp) 
-          VALUES ($1, $2, $3, $4, $5, NOW())`,
+          VALUES ($1, $2, $3, $4, $5, NOW()) 
+          ON CONFLICT (oid, uid) DO 
+          UPDATE SET 
+          title = $3,
+          description = $4,
+          rating = $5`,
+    reviewValues,
+    (q_err, q_res) => {
+      if (q_err) {
+        console.log(q_err);
+        res.json({
+          status: "ERROR"
+        });
+      } else {
+        res.json({
+          status: "SUCCESS"
+        });
+      }
+    }
+  );
+});
+
+router.put("/api/put/putRiderReview", (req, res, next) => {
+  const reviewValues = [
+    req.body.oid,
+    req.body.drRating
+  ];
+  console.log(reviewValues);
+
+  client.query(
+    `UPDATE Delivers
+    SET deliveryServiceRating = $2
+    WHERE oid = $1`,
     reviewValues,
     (q_err, q_res) => {
       if (q_err) {
@@ -599,8 +631,6 @@ router.get("/api/get/allRiderDeliveriesInfo", (req, res, next) => {
   );
 });
 
-<<<<<<< HEAD
-=======
 // restaurantStaff info 1 (get restaurant details)
 router.get("/api/get/restaurantDetails", (req, res, next) => {
   const uid = [req.query.uid];
@@ -675,5 +705,4 @@ router.get("/api/get/promoDetails", (req, res, next) => {
   );
 });
 
->>>>>>> 4c380660fce2ed329483a22b9f6ba30c6abd74df
 module.exports = router;
