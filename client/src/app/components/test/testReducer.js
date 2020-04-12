@@ -13,6 +13,7 @@ const decrementCounter = state => {
   return { ...state, data: state.data - 1 };
 };
 
+// tm: test windows 
 export default createReducer(initialState, {
   [INCREMENT_COUNTER]: incrementCounter,
   [DECREMENT_COUNTER]: decrementCounter

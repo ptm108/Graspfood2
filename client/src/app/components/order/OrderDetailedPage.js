@@ -3,7 +3,8 @@ import { connect } from "react-redux";
 import {
   fetchOrderDetails,
   resetOrders,
-  createReview
+  createReview,
+  putRiderReview
 } from "./orderUtils/OrderActions";
 import {
   Grid,
@@ -11,14 +12,16 @@ import {
   Segment,
   Form,
   TextArea,
-  Rating
+  Rating,
+  Label,
 } from "semantic-ui-react";
 import RestaurantOrderItem from "../restaurant/RestaurantOrderItem";
 
 const mapDispatchToProps = {
   fetchOrderDetails,
   resetOrders,
-  createReview
+  createReview,
+  putRiderReview
 };
 
 const mapStateToProps = (state, ownProps) => {
@@ -27,7 +30,7 @@ const mapStateToProps = (state, ownProps) => {
     orderDetails: state.order.currentOrder,
     currentUser: state.auth.currentUser,
     restaurants: state.restaurant.restaurants,
-    currOid: currOid
+    currOid: currOid,
   };
 };
 
@@ -55,16 +58,29 @@ class OrderDetailedPage extends Component {
     const queryParams = {
       ...this.state,
       oid: parseInt(currOid),
-      uid: currentUser.uid
+      uid: currentUser.uid,
     };
 
     console.log(queryParams);
     await createReview(queryParams);
   };
 
+  handleRiderRating = async (e, {rating, maxRating}) => {
+    this.setState({ rating, maxRating });
+    const { currOid, putRiderReview } = this.props;
+
+    const queryParams = {
+      oid: parseInt(currOid),
+      drRating: rating
+    };
+
+    console.log(queryParams);
+    await putRiderReview(queryParams);
+  };
+
   state = {
     reviewTitle: "",
-    reviewDesc: ""
+    reviewDesc: "",
   };
 
   render() {
@@ -77,7 +93,9 @@ class OrderDetailedPage extends Component {
     let res = null;
 
     if (restaurants.length != 0 && currOrder) {
-      res = restaurants.filter(restaurant => restaurant.rid === currOrder.rid);
+      res = restaurants.filter(
+        (restaurant) => restaurant.rid === currOrder.rid
+      );
     }
 
     const currentRestaurant = res && res[0];
@@ -115,7 +133,7 @@ class OrderDetailedPage extends Component {
               </Grid>
             </Segment>
             {fooditems &&
-              fooditems.map(fooditem => (
+              fooditems.map((fooditem) => (
                 <RestaurantOrderItem
                   key={fooditem.fid}
                   fooditem={fooditem}
@@ -131,7 +149,7 @@ class OrderDetailedPage extends Component {
                   <Grid.Column width={2} textAlign="center">
                     $
                     {fooditems
-                      .map(fooditem => {
+                      .map((fooditem) => {
                         return fooditem.qty * fooditem.price;
                       })
                       .reduce((a, b) => a + b)}
@@ -172,6 +190,18 @@ class OrderDetailedPage extends Component {
           <Segment.Group>
             <Segment secondary>
               <Header content="Delivery Rider Review" />
+            </Segment>
+            <Segment>
+              <b>Rider Name:</b> {deliveryRider.drname}
+            </Segment>
+            <Segment>
+              <Rating
+                maxRating={5}
+                defaultRating={3}
+                icon="star"
+                size="massive"
+                onRate={this.handleRiderRating}
+              />
             </Segment>
           </Segment.Group>
         </Grid.Column>

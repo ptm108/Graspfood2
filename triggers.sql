@@ -62,3 +62,37 @@ Create trigger remove_schedule
     For each row
 When (NEW.timeForScheduleUpdate > OLD.timeForScheduleUpdate)
 Execute procedure delete_old_schedule();
+
+
+Create or replace function  must_not_exceed_a_certain_hour() returns trigger as $$
+DECLARE
+	total INTEGER;
+
+BEGIN
+	SELECT totalWorkHours
+	INTO total
+FROM DeliveryRider dr
+WHERE dr.uid = new.uid;
+
+IF total > 48
+THEN
+RAISE EXCEPTION 'Sorry, total hours has exceeded 48 hours';
+
+	END IF;
+RETURN NEW;
+END;
+$$ language plpgsql;
+
+Drop trigger exceed_schedule_trigger on Works;
+Create trigger exceed_schedule_trigger
+AFTER insert 
+on Works 
+For each row
+Execute function must_not_exceed_a_certain_hour();
+
+BEGIN TRANSACTION;
+INSERT INTO WORKS(UID, DAYNO, STARTNO, ENDNO, HOURS) VALUES (57, 4, 14,16, 2);
+UPDATE DeliveryRider 
+SET totalWorkHours = totalWorkHours + (SELECT hours FROM Works w WHERE w.uid = DeliveryRider.uid)
+WHERE DeliveryRider.uid = 57;
+COMMIT;

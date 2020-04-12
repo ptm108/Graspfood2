@@ -48,3 +48,17 @@ export const createReview = review => {
     });
   };
 };
+
+export const putRiderReview = review => {
+  console.log(review);
+  return async (dispatch, getState) => {
+    await axios.put("/api/put/putRiderReview", review).then(res => {
+      console.log(res);
+      if (res.data.status === "SUCCESS") {
+        toastr.success("Success", "Rider Review left!");
+      } else {
+        toastr.error("Opps", "Something went wrong");
+      }
+    });
+  };
+};

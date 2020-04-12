@@ -3,6 +3,7 @@ import {
   FETCH_RESTAURANT_DETAILS,
   FETCH_TOTAL_ORDERS_AND_COST,
   FETCH_TOP_FIVE_FOOD,
+  FETCH_PROMO_DETAILS,
 } from "./restaurantStaffConstants";
 
 export const fetchRestaurantDetails = (value) => {
@@ -44,6 +45,21 @@ export const fetchTopFiveFood = (value) => {
         //console.log(res.data.rows);
         dispatch({
           type: FETCH_TOP_FIVE_FOOD,
+          payload: res.data.rows,
+        });
+        return res.data.rows;
+      }
+    });
+  };
+};
+
+export const fetchPromoDetails = (value) => {
+  return async (dispatch) => {
+    await axios.get("/api/get/promoDetails", { params: value }).then((res) => {
+      if (res.data.rows) {
+        //console.log(res.data.rows);
+        dispatch({
+          type: FETCH_PROMO_DETAILS,
           payload: res.data.rows,
         });
         return res.data.rows;
