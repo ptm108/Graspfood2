@@ -189,7 +189,7 @@ router.get("/api/get/restaurantList", (req, res, next) => {
     if (q_err) {
       return next(q_err);
     }
-    console.log(q_res);
+    // console.log(q_res);
     res.send(q_res);
   });
 });
@@ -478,6 +478,27 @@ router.get("/api/get/orderDetails", async (req, res, next) => {
     });
     console.log("rolled back");
   }
+});
+
+router.get("/api/get/getPromotions", (req, res, next) => {
+  const rid = [req.query.rid];
+  console.log(rid);
+  client.query(
+    `SELECT * FROM Promotion 
+  WHERE rid = $1
+  AND startDate < current_date
+  AND endDate > current_date`,
+    rid,
+    (q_err, q_res) => {
+      if (q_err) {
+        // console.log(q_err);
+        res.json(q_err);
+      } else {
+        // console.log(q_res);
+        res.json(q_res);
+      }
+    }
+  );
 });
 
 /*
