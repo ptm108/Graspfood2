@@ -3,6 +3,7 @@ import AccountNav from "../user/AccountNav";
 import { Grid, Header, Table } from "semantic-ui-react";
 import { connect } from "react-redux";
 import {
+  fetchRiderDetails,
   fetchSalary,
   fetchDeliverOrders,
   resetState,
@@ -10,11 +11,17 @@ import {
 
 const mapStateToProps = (state) => ({
   currentUser: state.auth.currentUser,
+  userDetails: state.rider.userDetails,
   salary: state.rider.salary,
   deliverOrders: state.rider.deliverOrders,
 });
 
-const mapDispatchToProps = { fetchSalary, fetchDeliverOrders, resetState };
+const mapDispatchToProps = {
+  fetchRiderDetails,
+  fetchSalary,
+  fetchDeliverOrders,
+  resetState,
+};
 
 class RiderDashboard extends Component {
   calculateSalary = (value) => {
@@ -45,6 +52,7 @@ class RiderDashboard extends Component {
   };
 
   componentDidMount() {
+    this.props.fetchRiderDetails(this.props.currentUser);
     this.props.fetchSalary(this.props.currentUser);
     this.props.fetchDeliverOrders(this.props.currentUser);
   }
@@ -54,7 +62,7 @@ class RiderDashboard extends Component {
   }
 
   render() {
-    const { salary, deliverOrders } = this.props;
+    const { userDetails, salary, deliverOrders } = this.props;
     //console.log(deliverOrders[0]);
     //console.log(deliverOrders[0].timestamp.substring(0, 10));
     //console.log(new Date(deliverOrders[0].timestamp).toUTCString());
@@ -68,21 +76,25 @@ class RiderDashboard extends Component {
           <Grid.Column width={12}>
             <h2>RiderDashboard</h2>
             <Header>Summary Information</Header>
+            <Header>Rider: {userDetails && userDetails[0].drname}</Header>
             <Header.Subheader>
               Base Salary: $
-              {salary
-                ? salary[0].weeklybasesalary
-                  ? salary[0].weeklybasesalary
-                  : salary[0].monthlybasesalary
+              {userDetails
+                ? userDetails[0].weeklybasesalary
+                  ? userDetails[0].weeklybasesalary
+                  : userDetails[0].monthlybasesalary
                 : 0}
             </Header.Subheader>
             <Header.Subheader>
               Join Since:{" "}
-              {salary && new Date(salary[0].joindate).toLocaleDateString()}
+              {userDetails &&
+                new Date(userDetails[0].joindate).toLocaleDateString()}
             </Header.Subheader>
             <Header.Subheader>
               Work Status:{" "}
-              {salary && salary[0].totalworkhours ? "Part Time" : "Full Time"}
+              {userDetails && userDetails[0].weeklybasesalary
+                ? "Part Time"
+                : "Full Time"}
             </Header.Subheader>
             <Table celled>
               <Table.Header>

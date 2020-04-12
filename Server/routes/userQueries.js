@@ -138,7 +138,7 @@ router.put("/api/put/updateUser", (req, res, next) => {
     req.body.username,
     req.body.password,
     req.body.accessRight,
-    req.body.userid
+    req.body.userid,
   ];
   client.query(
     `UPDATE Actor SET(username=$1, password=$2, accessRight=$3) WHERE userid=$4`,
@@ -221,7 +221,7 @@ router.post("/api/post/addCreditCard", (req, res, next) => {
     req.body.uid,
     req.body.cardnumber,
     req.body.cardholdername,
-    req.body.expirydate
+    req.body.expirydate,
   ];
   console.log(req.body);
   client.query(
@@ -288,7 +288,9 @@ router.get("/api/get/riderDetails", (req, res, next) => {
   console.log(req.query);
   const uid = [req.query.uid];
   client.query(
-    `SELECT * FROM deliveryrider WHERE uid=$1`,
+    `WITH main AS (SELECT uid, monthlybasesalary, null as weeklybasesalary FROM fulltime
+    union SELECT uid, null as monthlybasesalary, weeklybasesalary FROM parttime)
+    SELECT * from main natural join deliveryrider where uid=$1`,
     uid,
     (q_err, q_res) => {
       if (q_err) {
@@ -356,7 +358,7 @@ router.post("/api/post/postNewOrder", async (req, res, next) => {
     req.body.paymentMethod,
     req.body.address,
     req.body.postalcode,
-    parseInt(req.body.rewardpoints) || 0
+    parseInt(req.body.rewardpoints) || 0,
   ];
   const uid = req.body.uid;
   const rewardPointsUsed = parseInt(req.body.rewardpoints);
@@ -389,7 +391,7 @@ router.post("/api/post/postNewOrder", async (req, res, next) => {
     const oid = response.rows[0].oid;
     const propagateContainsQuery = `INSERT INTO Contains(fid, oid, qty) VALUES ($1, $2, $3)`;
 
-    addedFoodItems.forEach(async fooditem => {
+    addedFoodItems.forEach(async (fooditem) => {
       const containsParams = [fooditem.fooditem.fid, oid, fooditem.quantity];
       // console.log(containsParams);
       await client.query(propagateContainsQuery, containsParams);
@@ -409,7 +411,7 @@ router.post("/api/post/postNewOrder", async (req, res, next) => {
         res.json({
           status: "SUCCESS",
           dr: dr,
-          oid: oid
+          oid: oid,
         });
       } else {
         res.json(q_err);
@@ -420,7 +422,7 @@ router.post("/api/post/postNewOrder", async (req, res, next) => {
     await client.query("ROLLBACK", (q_err, q_res) => {
       res.json({
         status: "Problem sia",
-        msg: e
+        msg: e,
       });
     });
     console.log("rollbacked");
@@ -453,7 +455,7 @@ router.get("/api/get/orderDetails", async (req, res, next) => {
     // console.log(drId);
 
     response = await client.query(`SELECT * from DeliveryRider WHERE uid=$1`, [
-      drId
+      drId,
     ]);
     // console.log(response)
     const dr = response.rows[0];
@@ -464,7 +466,7 @@ router.get("/api/get/orderDetails", async (req, res, next) => {
           status: "SUCCESS",
           order: order,
           fooditems: fooditems,
-          deliveryRider: dr
+          deliveryRider: dr,
         });
       }
     });
@@ -474,7 +476,7 @@ router.get("/api/get/orderDetails", async (req, res, next) => {
     await client.query("ROLLBACK");
     res.json({
       status: "ERROR",
-      msg: error
+      msg: error,
     });
     console.log("rolled back");
   }
@@ -494,7 +496,7 @@ router.post("/api/post/createReview", (req, res, next) => {
     req.body.uid,
     req.body.reviewTitle,
     req.body.reviewDesc,
-    req.body.rating
+    req.body.rating,
   ];
   console.log(reviewValues);
 
@@ -511,11 +513,11 @@ router.post("/api/post/createReview", (req, res, next) => {
       if (q_err) {
         console.log(q_err);
         res.json({
-          status: "ERROR"
+          status: "ERROR",
         });
       } else {
         res.json({
-          status: "SUCCESS"
+          status: "SUCCESS",
         });
       }
     }
@@ -523,10 +525,7 @@ router.post("/api/post/createReview", (req, res, next) => {
 });
 
 router.put("/api/put/putRiderReview", (req, res, next) => {
-  const reviewValues = [
-    req.body.oid,
-    req.body.drRating
-  ];
+  const reviewValues = [req.body.oid, req.body.drRating];
   console.log(reviewValues);
 
   client.query(
@@ -538,11 +537,11 @@ router.put("/api/put/putRiderReview", (req, res, next) => {
       if (q_err) {
         console.log(q_err);
         res.json({
-          status: "ERROR"
+          status: "ERROR",
         });
       } else {
         res.json({
-          status: "SUCCESS"
+          status: "SUCCESS",
         });
       }
     }
