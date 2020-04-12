@@ -156,6 +156,7 @@ timeStamp TIMESTAMP,
 title VARCHAR(255),
 description VARCHAR(255),
 rating DECIMAL,
+CONSTRAINT review_unique UNIQUE (oid, uid)
 	PRIMARY KEY(reid),
 	FOREIGN KEY(oid) REFERENCES OrderPlaced (oid) ON DELETE SET NULL,
 	FOREIGN KEY(uid) REFERENCES Customer(uid) ON DELETE SET NULL
