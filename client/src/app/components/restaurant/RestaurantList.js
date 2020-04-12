@@ -13,9 +13,9 @@ const mapStateToProps = state => ({
 });
 
 class RestaurantList extends Component {
-  // async componentDidMount() {
-  //   await this.props.fetchRestaurants();
-  // }
+  async componentDidMount() {
+    await this.props.fetchRestaurants();
+  }
 
   render() {
     const { restaurants } = this.props;

@@ -3,6 +3,7 @@ import { Segment, Grid, Icon, Header, Container } from "semantic-ui-react";
 import { connect, dispatch } from "react-redux";
 import RestaurantFoodList from "./RestaurantFoodList";
 import { RESET_FOOD_ITEMS } from "./restaurantUtils/restaurantConstants";
+import { retrievePromoCodes } from "./restaurantUtils/restaurantActions";
 
 const mapStateToProps = (state, ownProps) => {
   const restaurantId = ownProps.match.params.id;
@@ -11,23 +12,30 @@ const mapStateToProps = (state, ownProps) => {
   let restaurant = {};
   if (state.restaurant.restaurants && state.restaurant.restaurants.length > 0) {
     restaurant = state.restaurant.restaurants.filter(
-      restaurant => restaurant.rid == restaurantId
+      (restaurant) => restaurant.rid == restaurantId
     );
   }
 
   return {
     userAccessRight: state.auth.userAccessRight,
-    restaurant: restaurant[0]
+    restaurant: restaurant[0],
   };
 };
 
 const mapDispatchToProps = (dispatch, state) => {
   return {
-    resetFoodItems: () => dispatch({ type: RESET_FOOD_ITEMS })
+    resetFoodItems: () => dispatch({ type: RESET_FOOD_ITEMS }),
+    retrievePromoCodes,
   };
 };
 
 class RestaurantDetailedPage extends Component {
+  async componentWillMount() {
+    console.log("**** componentdidmount");
+    const { retrievePromoCodes, restaurant } = this.props;
+    retrievePromoCodes(restaurant.rid);
+  }
+
   componentWillUnmount() {
     this.props.resetFoodItems();
   }

@@ -755,7 +755,7 @@ insert into Promotion (rid, percentDiscount, startDate, endDate, promocode) valu
 insert into Promotion (rid, percentDiscount, startDate, endDate, promocode) values (16, 15, '2020-04-10', '2020-05-10', 'R%Discount3');
 insert into Promotion (rid, percentDiscount, startDate, endDate, promocode) values (2, 20, '2020-04-10', '2020-05-10', 'R%Discount4');
 insert into Promotion (rid, percentDiscount, startDate, endDate, promocode) values (1, 20, '2020-04-10', '2020-05-10', 'R%Discount');
-insert into Promotion (rid, percentDiscount, startDate, endDate, promocode) values (1, 20, '2020-04-10', '2020-05-10', 'R%Discount');
+insert into Promotion (rid, percentDiscount, startDate, endDate, promocode) values (1, 10, '2020-04-10', '2020-05-10', 'R%Discount5');
 
 update OrderPlaced set promocode = 'R%Discount2', totalPrice = 19.8 where oid = 42;
 update OrderPlaced set promocode = 'R%Discount3', totalPrice = 17 where oid = 43;

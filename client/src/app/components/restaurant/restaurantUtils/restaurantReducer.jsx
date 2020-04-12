@@ -3,7 +3,8 @@ import {
   FETCH_RESTAURANTS,
   FETCH_FOOD_ITEMS,
   RESET_FOOD_ITEMS,
-  POST_NEW_ORDER
+  POST_NEW_ORDER,
+  RETRIEVE_PROMO_CODES
 } from "../restaurantUtils/restaurantConstants";
 
 const initialState = {
@@ -41,9 +42,18 @@ const postNewOrder = (state, payload) => {
   };
 };
 
+const retrievePromo = (state, payload) => {
+  console.log(payload);
+  return {
+    ...state,
+    promoCodes: payload
+  }
+}
+
 export default createReducer(initialState, {
   [FETCH_RESTAURANTS]: fetchRestaurants,
   [FETCH_FOOD_ITEMS]: fetchFoodItemsByRid,
   [RESET_FOOD_ITEMS]: resetFoodItems,
-  [POST_NEW_ORDER]: postNewOrder
+  [POST_NEW_ORDER]: postNewOrder,
+  [RETRIEVE_PROMO_CODES]: retrievePromo
 });
