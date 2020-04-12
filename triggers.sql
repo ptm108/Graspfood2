@@ -17,7 +17,7 @@ Execute procedure Update_current_num_of_orders();
 Create or replace function update_reward_points()
 Returns trigger as $$
     Begin
-        Update customer set rewardpoints = rewardpoints - NEW.rewardpointsused where uid = NEW.uid;
+        Update customer set rewardpoints = rewardpoints - NEW.rewardpointsused + (NEW.totalprice * 100) where uid = NEW.uid;
     Return null;
 End;
 $$ LANGUAGE plpgsql ;
