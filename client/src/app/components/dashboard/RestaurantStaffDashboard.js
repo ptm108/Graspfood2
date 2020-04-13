@@ -1,9 +1,10 @@
 import React, { Component, Fragment } from "react";
-import { Grid, Header, Button } from "semantic-ui-react";
+import { Grid, Header, Button, Segment } from "semantic-ui-react";
 import { connect } from "react-redux";
 import AccountNav from "../user/AccountNav";
 import { fetchRestaurantDetails } from "../restaurantStaff/restaurantStaffActions";
 import { NavLink } from "react-router-dom";
+import RestaurantAdmin from "../restaurantStaff/RestaurantAdmin";
 
 const mapStateToProps = (state) => ({
   currentUser: state.auth.currentUser,
@@ -24,23 +25,26 @@ class RestaurantStaffDashboard extends Component {
       <Fragment>
         <Grid>
           <Grid.Column width={12}>
-            <Header>RestaurantStaffDashboard</Header>
-            <Header>
-              Restaurant:{" "}
-              {restaurantDetails &&
-                restaurantDetails[0].rname +
-                  ", " +
-                  restaurantDetails[0].streetname +
-                  " #" +
-                  restaurantDetails[0].unitno}
-            </Header>
-            <Header>
-              Staff Name: {restaurantDetails && restaurantDetails[0].rsname}
-            </Header>
-            <Header.Content>
-              Press the buttons on the right to view this restaurant's summary
-              info
-            </Header.Content>
+            <Segment>
+              <Header>RestaurantStaffDashboard</Header>
+              <Header>
+                Restaurant:{" "}
+                {restaurantDetails &&
+                  restaurantDetails[0].rname +
+                    ", " +
+                    restaurantDetails[0].streetname +
+                    " #" +
+                    restaurantDetails[0].unitno}
+              </Header>
+              <Header>
+                Staff Name: {restaurantDetails && restaurantDetails[0].rsname}
+              </Header>
+              <Header.Content>
+                Press the buttons on the right to view this restaurant's summary
+                info
+              </Header.Content>
+            </Segment>
+            <RestaurantAdmin />
           </Grid.Column>
           <Grid.Column width={4}>
             <AccountNav />

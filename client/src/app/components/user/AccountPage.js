@@ -8,9 +8,9 @@ import { fetchCustomerDetails } from "../customer/customerUtils/customerActions"
 import { fetchRiderDetails } from "../deliveryRider/riderUtils/riderActions";
 import OrderList from "../order/OrderList";
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   currentUser: state.auth.currentUser,
-  userDetails: state.customer.userDetails
+  userDetails: state.customer.userDetails,
 });
 
 const mapDispatchToProps = { fetchCustomerDetails, fetchRiderDetails };
@@ -38,9 +38,10 @@ class AccountPage extends Component {
 
             {accessRight === 4 && (
               <Segment>
-              <Header content="Customer Details"/>
-                  Customer Name: {userDetails && userDetails[0].cname}<br/>
-                  Reward Points: {userDetails && userDetails[0].rewardpoints}
+                <Header content="Customer Details" />
+                Customer Name: {userDetails && userDetails[0].cname}
+                <br />
+                Reward Points: {userDetails && userDetails[0].rewardpoints}
               </Segment>
             )}
             {accessRight === 4 && <ReviewPostings />}
@@ -56,6 +57,15 @@ class AccountPage extends Component {
                   {userDetails && userDetails[0].deliveryriderrating}
                 </Header>
               </Fragment>
+            )}
+
+            {accessRight === 1 && (
+              <Segment>
+                <Header>Staff Name:</Header>
+                {currentUser.rsname}
+                <Header>Restaurant Id:</Header>
+                {currentUser.rid}
+              </Segment>
             )}
           </Grid.Column>
           <Grid.Column width={4}>

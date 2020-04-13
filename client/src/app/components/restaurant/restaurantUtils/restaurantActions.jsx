@@ -4,6 +4,7 @@ import {
   FETCH_RESTAURANTS,
   FETCH_FOOD_ITEMS,
   RETRIEVE_PROMO_CODES,
+  RESET_FOOD_ITEMS,
 } from "./restaurantConstants";
 import { toastr } from "react-redux-toastr";
 
@@ -66,3 +67,23 @@ export const retrievePromoCodes = (rid) => {
       });
   };
 };
+
+export const createNewFoodItem = foodItem => {
+  console.log(foodItem);
+  return async (dispatch, getState) => {
+    await axios.post("/api/post/createFoodItem", foodItem).then((res) => {
+      console.log(res);
+      if (res.data.status === "SUCCESS") {
+        toastr.success("Yay", "Food item created")
+      } else {
+        toastr.error("Error", "Something went wrong")
+      }
+    });
+  };
+}
+
+export const resetFoodItems = () => {
+  return async (dispatch, getState) => {
+    dispatch({ type: RESET_FOOD_ITEMS})
+  }
+}
