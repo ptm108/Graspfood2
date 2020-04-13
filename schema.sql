@@ -29,52 +29,52 @@ CREATE TABLE Promotion(
 );
 
 CREATE TABLE Restaurant (
-rid  SERIAL, 
-rname VARCHAR(255) UNIQUE, 
-minSpending DECIMAL,
-streetName VARCHAR(255), 
-unitNo VARCHAR(255), 
-postalCode BIGINT, 
-rating NUMERIC(2, 1),
-PRIMARY KEY(rid)
+	rid  SERIAL, 
+	rname VARCHAR(255) UNIQUE, 
+	minSpending DECIMAL,
+	streetName VARCHAR(255), 
+	unitNo VARCHAR(255), 
+	postalCode BIGINT, 
+	rating NUMERIC(2, 1),
+	PRIMARY KEY(rid)
 );
 
 CREATE TABLE Customer(
 	uid INTEGER PRIMARY KEY REFERENCES Actor ON DELETE CASCADE,
-cname VARCHAR(255),
-rewardPoints INTEGER
+	cname VARCHAR(255),
+	rewardPoints INTEGER
 );
 
 CREATE TABLE OrderPlaced(
-oid SERIAL,
-uid INTEGER,
-rid INTEGER,
-timeStamp TIMESTAMP,
-totalPrice DECIMAL(5,2),
-deliveryFee DECIMAL(5,2),
-rewardPointsUsed INTEGER,
-paymentMethod VARCHAR(255),
-address VARCHAR(255),
-postalCode VARCHAR(6),
-promoCode VARCHAR(255),
-PRIMARY KEY(oid),
-FOREIGN KEY(uid) REFERENCES Customer (uid) ON DELETE SET NULL,
-            FOREIGN KEY(rid) REFERENCES Restaurant (rid) ON DELETE SET NULL
+	oid SERIAL,
+	uid INTEGER,
+	rid INTEGER,
+	timeStamp TIMESTAMP,
+	totalPrice DECIMAL(5,2),
+	deliveryFee DECIMAL(5,2),
+	rewardPointsUsed INTEGER,
+	paymentMethod VARCHAR(255),
+	address VARCHAR(255),
+	postalCode VARCHAR(6),
+	promoCode VARCHAR(255),
+	PRIMARY KEY(oid),
+	FOREIGN KEY(uid) REFERENCES Customer (uid) ON DELETE SET NULL,
+    FOREIGN KEY(rid) REFERENCES Restaurant (rid) ON DELETE SET NULL
 );
 
 CREATE TABLE Actor (
-uid SERIAL, 
-username VARCHAR(255) UNIQUE NOT NULL, 
-password VARCHAR(25) NOT NULL, 
-accessRight INTEGER REFERENCES ActorType(aid), 
-PRIMARY KEY(uid)
+	uid SERIAL, 
+	username VARCHAR(255) UNIQUE NOT NULL, 
+	password VARCHAR(25) NOT NULL, 
+	accessRight INTEGER REFERENCES ActorType(aid), 
+	PRIMARY KEY(uid)
 );
 
 CREATE TABLE RestaurantStaff(
 	uid INTEGER PRIMARY KEY REFERENCES Actor ON DELETE CASCADE,
 	rid INTEGER,
 	rsName VARCHAR(255),
-            FOREIGN KEY (rid) REFERENCES Restaurant (rid) ON DELETE CASCADE
+    FOREIGN KEY (rid) REFERENCES Restaurant (rid) ON DELETE CASCADE
 );
 
 CREATE TABLE FDSManager(
@@ -95,7 +95,7 @@ CREATE TABLE DeliveryRider(
 CREATE TABLE Schedule (
 	dayNo 	INTEGER,
 	startNo INTEGER, 
-endNo INTEGER, 
+	endNo INTEGER, 
 	PRIMARY KEY(dayNo, startNo, endNo),
 	check (
 	    (dayNo in (1,2,3,4,5,6,7) and startNo >= 10 and endNo <= 22)
@@ -119,12 +119,12 @@ CREATE TABLE FoodItem (
 	rid INTEGER,
 	fname VARCHAR(255),
 	price DECIMAL(5,2),
-description VARCHAR(255), 
-category VARCHAR(255),
-currentNumOforders INTEGER,
-dailyLimit INTEGER,
-PRIMARY KEY (fid),
-FOREIGN KEY (rid) REFERENCES Restaurant (rid) ON DELETE SET NULL
+	description VARCHAR(255), 
+	category VARCHAR(255),
+	currentNumOforders INTEGER,
+	dailyLimit INTEGER,
+	PRIMARY KEY (fid),
+	FOREIGN KEY (rid) REFERENCES Restaurant (rid) ON DELETE SET NULL
 );
 
 CREATE TABLE CreditCard (
@@ -133,7 +133,7 @@ CREATE TABLE CreditCard (
 	cardHolderName VARCHAR(255) NOT NULL,
 	expiryDate DATE NOT NULL,
 	PRIMARY KEY(ccNumber, uid),
-FOREIGN KEY(uid) REFERENCES Customer (uid) ON DELETE CASCADE
+	FOREIGN KEY(uid) REFERENCES Customer (uid) ON DELETE CASCADE
 	);
 
 CREATE TABLE Delivers (
@@ -145,20 +145,20 @@ CREATE TABLE Delivers (
 	riderDeliverTime TIMESTAMP,
 	delieveryFeeCommission DECIMAL,
 	deliveryServiceRating DECIMAL,
-PRIMARY KEY(oid, uid),
+	PRIMARY KEY(oid, uid),
 	FOREIGN KEY(oid) REFERENCES OrderPlaced(oid) ON DELETE SET NULL,
 	FOREIGN KEY(uid) REFERENCES DeliveryRider(uid) ON DELETE SET NULL
 );
 
 CREATE TABLE Reviews (	
 	reid SERIAL,
-oid INTEGER,
-uid INTEGER,
-timeStamp TIMESTAMP,
-title VARCHAR(255),
-description VARCHAR(255),
-rating DECIMAL,
-CONSTRAINT review_unique UNIQUE (oid, uid)
+	oid INTEGER,
+	uid INTEGER,
+	timeStamp TIMESTAMP,
+	title VARCHAR(255),
+	description VARCHAR(255),
+	rating DECIMAL,
+	CONSTRAINT review_unique UNIQUE (oid, uid)
 	PRIMARY KEY(reid),
 	FOREIGN KEY(oid) REFERENCES OrderPlaced (oid) ON DELETE SET NULL,
 	FOREIGN KEY(uid) REFERENCES Customer(uid) ON DELETE SET NULL
