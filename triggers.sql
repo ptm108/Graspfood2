@@ -47,36 +47,40 @@ Create trigger set_rider_state_trigger
 Execute procedure set_rider_state();
 
 
-Create or replace function update_reward_points()
-Returns trigger as $$
-    Begin
-        Update customer set rewardpoints = rewardpoints - NEW.rewardpointsused + (NEW.totalprice * 100) where uid = NEW.uid;
+CREATE OR REPLACE FUNCTION update_reward_points()
+RETURNS TRIGGER AS $$
+    BEGIN
+        UPDATE customer SET rewardpoints = rewardpoints -     
+        NEW.rewardpointsused + (NEW.totalprice * 100) 
+        WHERE uid = NEW.uid;
     Return null;
-End;
+END;
 $$ LANGUAGE plpgsql ;
 
-Drop trigger if exists update_reward_points_trigger on orderplaced;
-Create trigger update_reward_points_trigger
-    After insert
-    on orderplaced
-    For each row
-Execute procedure update_reward_points();
+DROP TRIGGER IF EXISTS update_reward_points_trigger ON orderplaced;
+CREATE TRIGGER update_reward_points_trigger
+    AFTER INSERT
+    ON orderplaced
+    FOR EACH ROW
+EXECUTE PROCEDURE update_reward_points();
 
 
-Create or replace function update_delivery_rider_rating()
-Returns trigger as $$
-    Begin
-        Update deliveryrider set deliveryriderrating = (select avg(deliveryriderrating) from delivers) where uid = NEW.uid;
+CREATE OR REPLACE FUNCTION update_delivery_rider_rating()
+RETURNS TRIGGER AS $$
+    BEGIN
+        UPDATE deliveryrider SET deliveryriderrating = (SELECT 
+        AVG(deliveryriderrating) FROM delivers) 
+        WHERE uid = NEW.uid;
     Return null;
-End;
+END;
 $$ LANGUAGE plpgsql ;
 
-Drop trigger if exists update_delivery_rider_rating_trigger on delivers;
-Create trigger update_delivery_rider_rating_trigger
-    After update of deliveryservicerating
-    on delivers
-    For each row
-Execute procedure update_delivery_rider_rating();
+DROP TRIGGER IF EXISTS update_delivery_rider_rating_trigger ON delivers;
+CREATE TRIGGER update_delivery_rider_rating_trigger
+    AFTER UPDATE OF deliveryservicerating
+    ON delivers
+    FOR EACH ROW
+EXECUTE PROCEDURE update_delivery_rider_rating();
 
 
 -- Create or replace function set_delivery_rider_rating()
@@ -116,3 +120,33 @@ Create trigger update_restaurant_rating_trigger_update
     For each row
 Execute procedure update_restaurant_rating();
 
+
+CREATE OR REPLACE FUNCTION must_not_exceed_a_certain_hour() RETURNS TRIGGER AS $$
+DECLARE
+	total INTEGER;
+BEGIN
+	SELECT totalWorkHours
+	INTO total
+FROM DeliveryRider dr
+WHERE dr.uid = new.uid;
+IF total > 48
+THEN
+RAISE EXCEPTION 'Sorry, total hours has exceeded 48 hours';
+	END IF;
+RETURN NEW;
+END;
+$$ language plpgsql;
+
+DROP TRIGGER exceed_schedule_trigger ON Works;
+CREATE TRIGGER exceed_schedule_trigger
+AFTER INSERT 
+ON Works 
+FOR EACH ROW
+EXECUTE FUNCTION must_not_exceed_a_certain_hour();
+
+BEGIN TRANSACTION;
+INSERT INTO WORKS(UID, DAYNO, STARTNO, ENDNO, HOURS, TIMESTAMP) VALUES (57, 4, 13,17, 4, '2020-04-13 08:25:00.277269');
+UPDATE DeliveryRider 
+SET totalWorkHours = totalWorkHours + (SELECT hours FROM Works w WHERE w.uid = DeliveryRider.uid)
+WHERE DeliveryRider.uid = 57;
+COMMIT;
