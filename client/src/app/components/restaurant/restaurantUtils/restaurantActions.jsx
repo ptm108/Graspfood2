@@ -68,22 +68,37 @@ export const retrievePromoCodes = (rid) => {
   };
 };
 
-export const createNewFoodItem = foodItem => {
+export const createNewFoodItem = (foodItem) => {
   console.log(foodItem);
   return async (dispatch, getState) => {
     await axios.post("/api/post/createFoodItem", foodItem).then((res) => {
       console.log(res);
       if (res.data.status === "SUCCESS") {
-        toastr.success("Yay", "Food item created")
+        toastr.success("Yay", "Food item created");
       } else {
-        toastr.error("Error", "Something went wrong")
+        toastr.error("Error", "Something went wrong");
       }
     });
   };
-}
+};
 
 export const resetFoodItems = () => {
   return async (dispatch, getState) => {
-    dispatch({ type: RESET_FOOD_ITEMS})
-  }
-}
+    dispatch({ type: RESET_FOOD_ITEMS });
+  };
+};
+
+export const deleteFoodItem = (fid) => {
+  return async (dispatch, getState) => {
+    console.log(fid);
+    await axios
+      .delete("/api/delete/deleteFoodItem", {params: {fid: fid}})
+      .then((res) => {
+        if (res.data.status === "SUCCESS") {
+          toastr.success("Success", "Food Item Deleted")
+        } else {
+          toastr.error("Error", "Something went wrong")
+        }
+      });
+  };
+};

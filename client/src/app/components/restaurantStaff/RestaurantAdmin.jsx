@@ -6,6 +6,7 @@ import {
   fetchFoodItemsByRid,
   createNewFoodItem,
   resetFoodItems,
+  deleteFoodItem,
 } from "../restaurant/restaurantUtils/restaurantActions";
 import RestaurantFoodListItem from "../restaurant/RestaurantFoodListItem";
 import { toastr } from "react-redux-toastr";
@@ -15,6 +16,7 @@ const mapDispatchToProps = {
   fetchFoodItemsByRid,
   createNewFoodItem,
   resetFoodItems,
+  deleteFoodItem,
 };
 
 const mapStateToProps = (state) => ({
@@ -51,6 +53,7 @@ class RestaurantAdmin extends Component {
     category: "",
     dailylimit: 0,
     description: "",
+    fid: "",
   };
 
   onChange = (e, { name, value }) => {
@@ -87,14 +90,44 @@ class RestaurantAdmin extends Component {
     fetchFoodItemsByRid(restaurant);
   };
 
+  handleDeleteItem = () => {
+    const fid = parseInt(this.state.fid);
+    // console.log(typeof fid);
+
+    if (isNaN(fid)) {
+      toastr.error("Error", "Enter a valid number");
+      return;
+    }
+
+    const { fooditems, deleteFoodItem } = this.props;
+    if (fooditems.filter((f) => f.fid === fid).length === 0) {
+      toastr.error("Error", "Enter a valid number");
+      return;
+    }
+
+    deleteFoodItem(fid);
+
+    const { currentUser, fetchFoodItemsByRid, restaurants } = this.props;
+    let restaurant = null;
+    restaurants
+      .filter((r) => r.rid === currentUser.rid)
+      .forEach((r) => {
+        restaurant = r;
+      });
+
+    // console.log(restaurant);
+    fetchFoodItemsByRid(restaurant);
+  };
+
   render() {
     const { fooditems } = this.props;
+    // console.log(fooditems);
 
     return (
       <Fragment>
         <Segment.Group>
           <Segment inverted>
-            <Header as="h3">Add Food Item</Header>
+            <Header as="h3">Add/Delete Food Item</Header>
           </Segment>
           <Segment>
             <Form onSubmit={this.handleSubmit}>
@@ -132,6 +165,20 @@ class RestaurantAdmin extends Component {
                 onChange={this.onChange}
               />
               <Form.Button fluid content="Add Food Item" />
+            </Form>
+          </Segment>
+          <Segment>
+            <Form onSubmit={this.handleDeleteItem}>
+              <Form.Group>
+                <Form.Input
+                  inline
+                  label="Food ID"
+                  placeholder="Food ID"
+                  name="fid"
+                  onChange={this.onChange}
+                />
+                <Form.Button content="Delete Food Item" />
+              </Form.Group>
             </Form>
           </Segment>
         </Segment.Group>

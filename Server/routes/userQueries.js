@@ -322,6 +322,24 @@ router.post("/api/post/createFoodItem", (req, res, next) => {
   );
 });
 
+router.delete("/api/delete/deleteFoodItem", (req, res, next) => {
+  console.log(req.query.fid);
+  const fid = [req.query.fid];
+  client.query(`DELETE FROM FoodItem WHERE fid = $1`,
+  fid,
+  (q_err, q_res) => {
+    if (q_err) {
+      res.json({
+        status: "ERROR"
+      })
+    } else {
+      res.json({
+        status: "SUCCESS"
+      })
+    }
+  })
+})
+
 router.get("/api/get/customerDetails", (req, res, next) => {
   console.log(req.query);
   const uid = [req.query.uid];
