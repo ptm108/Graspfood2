@@ -357,10 +357,13 @@ router.post("/api/post/postNewOrder", async (req, res, next) => {
     req.body.address,
     req.body.postalcode,
     parseInt(req.body.rewardpoints) || 0,
+    req.body.promocode,
+    4.5,
   ];
   const uid = req.body.uid;
   const rewardPointsUsed = parseInt(req.body.rewardpoints);
   const addedFoodItems = req.body.addedFoodItems;
+  const promocode = req.body.promocode;
   console.log(createNewOrderParams);
   // console.log(addedFoodItems);
 
@@ -369,18 +372,55 @@ router.post("/api/post/postNewOrder", async (req, res, next) => {
     console.log("begun");
 
     // get user reward points
-    const getUserRewardPoints = `SELECT c.rewardPoints from customer c where c.uid = $1`;
+    const getUserRewardPoints = `SELECT * from customer c where c.uid = $1`;
     const response2 = await client.query(getUserRewardPoints, [uid]);
     // console.log(response2);
     const currRewardPoints = response2.rows[0].rewardpoints;
+    const customer = response2.rows[0];
     console.log(currRewardPoints);
+    console.log(customer);
 
     if (rewardPointsUsed !== "" && rewardPointsUsed > currRewardPoints) {
       throw "Not enough points";
     }
 
+    let promotion = await client.query(
+      `SELECT * FROM Promotion WHERE promocode = $1`,
+      [promocode]
+    );
+    promotion = promotion.rows[0];
+    console.log(promotion);
+
+    if (promotion.customertype === "OLD CUSTOMER") {
+      let result = await client.query(
+        `SELECT count(*) FROM OrderPlaced 
+      WHERE uid = $1
+      AND timestamp > current_date - integer '90'`,
+        [uid]
+      );
+      let count = result.rows[0].count;
+      if (count > 0) {
+        throw "Promo Code does not apply!";
+      }
+    } else if (promotion.customertype === "NEW CUSTOMER") {
+      let result = await client.query(
+        `SELECT count(*) FROM OrderPlaced 
+      WHERE uid = $1`,
+        [uid]
+      );
+      let count = result.rows[0].count;
+      if (count > 0) {
+        throw "Promo Code does not apply!";
+      }
+    } else if (promotion.currcustomercount > promotion.maxcustomercount) {
+      throw "Promo code sold out!";
+    } else if (promotion.percentdiscount === null) {
+      createNewOrderParams.pop();
+      createNewOrderParams.push(0);
+    }
+
     // insert into orders placed
-    const createNewOrderQuery = `INSERT INTO OrderPlaced(uid, rid, totalPrice, paymentMethod, address, timestamp, deliveryFee, postalcode, rewardpointsused) VALUES ($1, $2, $3, $4, $5, NOW(), 4.50, $6, $7) RETURNING oid`;
+    const createNewOrderQuery = `INSERT INTO OrderPlaced(uid, rid, totalPrice, paymentMethod, address, timestamp, deliveryFee, postalcode, rewardpointsused, promocode) VALUES ($1, $2, $3, $4, $5, NOW(), $9, $6, $7, $8) RETURNING oid`;
     const response = await client.query(
       createNewOrderQuery,
       createNewOrderParams
@@ -389,7 +429,7 @@ router.post("/api/post/postNewOrder", async (req, res, next) => {
     const oid = response.rows[0].oid;
     const propagateContainsQuery = `INSERT INTO Contains(fid, oid, qty) VALUES ($1, $2, $3)`;
 
-    addedFoodItems.forEach(async (fooditem) => {
+    addedFoodItems.filter(f => f.fooditem.fid !== -1).forEach(async (fooditem) => {
       const containsParams = [fooditem.fooditem.fid, oid, fooditem.quantity];
       // console.log(containsParams);
       await client.query(propagateContainsQuery, containsParams);
