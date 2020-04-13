@@ -14,10 +14,10 @@ Our Team Motto (_also most used phrase_):
 
 ## Pre-requisites
 
-You must have npm and git installed. Clone this github repo using the follow:
+You must have npm and git installed. Clone this github repo using the following:
 
 ```
-git clone githubrepo
+git clone git@github.com:ptm108/Graspfood2.git
 ```
 
 ## Setup of Application
