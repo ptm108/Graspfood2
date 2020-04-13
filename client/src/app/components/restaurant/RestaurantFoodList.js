@@ -16,7 +16,6 @@ import {
 import RestaurantFoodListItem from "./RestaurantFoodListItem";
 import RestaurantOrderItem from "./RestaurantOrderItem";
 import { toastr } from "react-redux-toastr";
-import { FormName } from "redux-form";
 
 const mapDispatchToProps = {
   fetchFoodItemsByRid,
@@ -47,6 +46,7 @@ class RestaurantFoodList extends Component {
     addedFoodItems: [],
     promocode: "",
     promoApplied: false,
+    rpApplied: false,
   };
 
   onChange = (e, { name, value }) => {
@@ -178,6 +178,42 @@ class RestaurantFoodList extends Component {
     });
   };
 
+  handleUseRewardPoints = () => {
+    const { rewardpoints, addedFoodItems } = this.state;
+    console.log(rewardpoints);
+    let discount = (parseFloat(rewardpoints) / 100) * -1;
+
+    let totalPrice = 0;
+    if (addedFoodItems.length != 0) {
+      totalPrice = addedFoodItems
+        .map((addedFoodItem) => {
+          return addedFoodItem.quantity * addedFoodItem.fooditem.price;
+        })
+        .reduce((a, b) => a + b);
+    }
+
+    console.log(discount);
+    console.log(totalPrice);
+    if (discount * -1 > totalPrice) {
+      toastr.error("Oi", "Don't play punk ah");
+      return;
+    }
+
+    let newItem = {
+      fooditem: {
+        fid: -2,
+        fname: "Reward Points",
+        price: discount.toFixed(3).toString(),
+      },
+      quantity: "1",
+    };
+
+    this.setState({
+      addedFoodItems: [...addedFoodItems, newItem],
+      rpApplied: true,
+    });
+  };
+
   render() {
     const { fooditems } = this.props;
     const {
@@ -186,6 +222,7 @@ class RestaurantFoodList extends Component {
       postalcode,
       promocode,
       promoApplied,
+      rpApplied,
     } = this.state;
 
     {
@@ -257,7 +294,7 @@ class RestaurantFoodList extends Component {
                             addedFoodItem.fooditem.price
                           );
                         })
-                        .reduce((a, b) => a + b)}
+                        .reduce((a, b) => a + b).toFixed(2)}
                     </GridColumn>
                   </Grid.Row>
                   <Grid.Row>
@@ -274,10 +311,22 @@ class RestaurantFoodList extends Component {
                             name="postalcode"
                             onChange={this.onChange}
                           />
+                        </Form.Group>
+                      </Form>
+                    </Grid.Column>
+                  </Grid.Row>
+                  <Grid.Row>
+                    <Grid.Column>
+                      <Form onSubmit={this.handleUseRewardPoints}>
+                        <Form.Group inline>
                           <Form.Input
                             placeholder="Enter Reward Points"
                             name="rewardpoints"
                             onChange={this.onChange}
+                          />
+                          <Form.Button
+                            disabled={rpApplied}
+                            content="Use Reward Points"
                           />
                         </Form.Group>
                       </Form>
