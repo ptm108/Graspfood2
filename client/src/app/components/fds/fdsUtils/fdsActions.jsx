@@ -5,6 +5,7 @@ import {
   FETCH_ORDERS_BY_CUSTOMER,
   FETCH_ALL_ORDERS,
   FETCH_ALL_RIDERS_DELIVERIES_INFO,
+  FETCH_RIDER_HOURS,
 } from "../fdsUtils/fdsConstants";
 
 export const fetchAllCustomers = () => {
@@ -62,6 +63,21 @@ export const fetchAllRidersDeliveriesInfo = () => {
       if (res.data.rows) {
         dispatch({
           type: FETCH_ALL_RIDERS_DELIVERIES_INFO,
+          payload: res.data.rows,
+        });
+        return res.data.rows;
+      }
+    });
+  };
+};
+
+export const fetchWorkHours = () => {
+  return async (dispatch) => {
+    await axios.get("/api/get/allRiderWorkHours").then((res) => {
+      console.log(res.data);
+      if (res.data.rows) {
+        dispatch({
+          type: FETCH_RIDER_HOURS,
           payload: res.data.rows,
         });
         return res.data.rows;

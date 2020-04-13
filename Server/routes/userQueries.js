@@ -336,7 +336,9 @@ router.get("/api/get/riderDetails", (req, res, next) => {
   console.log(req.query);
   const uid = [req.query.uid];
   client.query(
-    `SELECT * FROM deliveryrider WHERE uid=$1`,
+    `WITH main AS (SELECT uid, monthlybasesalary, null as weeklybasesalary FROM fulltime
+    union SELECT uid, null as monthlybasesalary, weeklybasesalary FROM parttime)
+    SELECT * from main natural join deliveryrider where uid=$1`,
     uid,
     (q_err, q_res) => {
       if (q_err) {
@@ -350,13 +352,12 @@ router.get("/api/get/riderDetails", (req, res, next) => {
   );
 });
 
-router.get("/api/get/riderSalary", (req, res, next) => {
+router.get("/api/get/weeklyWorkHours", (req, res, next) => {
   //console.log(req.query);
   const uid = [req.query.uid];
   client.query(
-    `WITH main AS (SELECT uid, monthlybasesalary, null as weeklybasesalary, null as totalworkhours FROM fulltime
-    union SELECT uid, null as monthlybasesalary, weeklybasesalary, totalworkhours FROM parttime)
-    SELECT * from main natural join deliveryrider where uid=$1`,
+    `SELECT sum(hours), extract(month from timestamp) as month, extract(week from timestamp) as week 
+    FROM works where uid=$1 group by extract(month from timestamp), extract(week from timestamp) order by month, week`,
     uid,
     (q_err, q_res) => {
       if (q_err) {
@@ -374,7 +375,9 @@ router.get("/api/get/deliverOrders", (req, res, next) => {
   console.log(req.query);
   const uid = [req.query.uid];
   client.query(
-    `select * from orderplaced o full join delivers d on o.oid = d.oid where d.uid=$1`,
+    `select count(o.oid), sum(deliveryfeecommission), extract(month from timestamp) as month, extract(week from timestamp) as week, 
+    extract(week from CURRENT_TIMESTAMP) as current from orderplaced o full join delivers d on o.oid = d.oid 
+    where d.uid=$1 group by extract(month from timestamp), extract(week from timestamp) order by week`,
     uid,
     (q_err, q_res) => {
       if (q_err) {
@@ -817,6 +820,22 @@ router.get("/api/get/allRiderDeliveriesInfo", (req, res, next) => {
       avg(extract(minute from(riderdelivertime - riderleaveforrestauranttime))) as delivertime, count(deliveryservicerating) as numratings, 
       avg(deliveryservicerating) as avgrating, extract(month from riderdelivertime) as month 
       from delivers d right join deliveryrider dr on d.uid = dr.uid group by dr.uid, month`,
+    (q_err, q_res) => {
+      if (q_err) {
+        console.log(q_err);
+        return next(q_err);
+      }
+      console.log(q_res);
+      res.send(q_res);
+    }
+  );
+});
+
+// fds info 4 (get all riders work hours)
+router.get("/api/get/allRiderWorkHours", (req, res, next) => {
+  client.query(
+    `SELECT uid, sum(hours), extract(month from timestamp) as month
+    FROM works group by uid, extract(month from timestamp) order by month`,
     (q_err, q_res) => {
       if (q_err) {
         console.log(q_err);

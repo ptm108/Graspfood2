@@ -1,15 +1,15 @@
 import { createReducer } from "../../../reduxstore/reducerUtil";
 import {
   FETCH_USER_DETAILS,
-  FETCH_SALARY,
   FETCH_DELIVERS,
   RESET_STATE,
+  FETCH_WORK_HOURS,
 } from "./riderConstants";
 
 const initialState = {
   userDetails: null,
-  salary: null,
   deliverOrders: null,
+  workHours: null,
 };
 
 const fetchRiderDetails = (state, payload) => {
@@ -20,19 +20,19 @@ const fetchRiderDetails = (state, payload) => {
   };
 };
 
-const fetchSalary = (state, payload) => {
-  //console.log(payload);
-  return {
-    ...state,
-    salary: payload,
-  };
-};
-
 const fetchDelivers = (state, payload) => {
   //console.log(payload);
   return {
     ...state,
     deliverOrders: payload,
+  };
+};
+
+const fetchHours = (state, payload) => {
+  //console.log(payload);
+  return {
+    ...state,
+    workHours: payload,
   };
 };
 
@@ -46,7 +46,7 @@ const resetState = (state) => {
 
 export default createReducer(initialState, {
   [FETCH_USER_DETAILS]: fetchRiderDetails,
-  [FETCH_SALARY]: fetchSalary,
   [FETCH_DELIVERS]: fetchDelivers,
   [RESET_STATE]: resetState,
+  [FETCH_WORK_HOURS]: fetchHours,
 });

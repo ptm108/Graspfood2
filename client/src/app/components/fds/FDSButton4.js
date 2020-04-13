@@ -5,22 +5,28 @@ import { Fragment } from "react";
 import { NavLink } from "react-router-dom";
 import AccountNav from "../user/AccountNav";
 import { connect } from "react-redux";
-import { fetchAllRidersDeliveriesInfo } from "./fdsUtils/fdsActions";
+import {
+  fetchAllRidersDeliveriesInfo,
+  fetchWorkHours,
+} from "./fdsUtils/fdsActions";
 
 const mapStateToProps = (state) => ({
   allRidersDeliveriesInfo: state.fds.allRidersDeliveriesInfo,
+  workHours: state.fds.workHours,
 });
 
-const mapDispatchToProps = { fetchAllRidersDeliveriesInfo };
+const mapDispatchToProps = { fetchAllRidersDeliveriesInfo, fetchWorkHours };
 
 class FDSButton4 extends Component {
   componentDidMount() {
     this.props.fetchAllRidersDeliveriesInfo();
+    this.props.fetchWorkHours();
   }
 
   render() {
-    const { allRidersDeliveriesInfo } = this.props;
-    //console.log(allRidersDeliveriesInfo);
+    const { allRidersDeliveriesInfo, workHours } = this.props;
+    console.log(allRidersDeliveriesInfo);
+
     return (
       <Fragment>
         <Grid>
@@ -60,11 +66,14 @@ class FDSButton4 extends Component {
                             ${info.fee ? parseFloat(info.fee) : 0}
                           </Table.Cell>
                           <Table.Cell>
-                            {info.delivertime ? info.delivertime : 0} min
+                            {info.delivertime ? info.delivertime.toFixed(2) : 0}{" "}
+                            min
                           </Table.Cell>
                           <Table.Cell>{info.numratings}</Table.Cell>
                           <Table.Cell>
-                            {info.avgrating ? parseFloat(info.avgrating) : 0}
+                            {info.avgrating
+                              ? parseFloat(info.avgrating).toFixed(2)
+                              : 0}
                           </Table.Cell>
                         </Table.Row>
                       </Fragment>
@@ -106,11 +115,14 @@ class FDSButton4 extends Component {
                             ${info.fee ? parseFloat(info.fee) : 0}
                           </Table.Cell>
                           <Table.Cell>
-                            {info.delivertime ? info.delivertime : 0} min
+                            {info.delivertime ? info.delivertime.toFixed(2) : 0}{" "}
+                            min
                           </Table.Cell>
                           <Table.Cell>{info.numratings}</Table.Cell>
                           <Table.Cell>
-                            {info.avgrating ? parseFloat(info.avgrating) : 0}
+                            {info.avgrating
+                              ? parseFloat(info.avgrating).toFixed(2)
+                              : 0}
                           </Table.Cell>
                         </Table.Row>
                       </Fragment>
@@ -147,16 +159,27 @@ class FDSButton4 extends Component {
                         <Table.Row>
                           <Table.Cell>{info.drname}</Table.Cell>
                           <Table.Cell>{info.numorders}</Table.Cell>
-                          <Table.Cell />
+                          <Table.Cell>
+                            {workHours &&
+                              workHours
+                                .filter(
+                                  (work) =>
+                                    work.uid === info.uid && work.month === 3
+                                )
+                                .map((hour) => hour.sum)}
+                          </Table.Cell>
                           <Table.Cell>
                             ${info.fee ? parseFloat(info.fee) : 0}
                           </Table.Cell>
                           <Table.Cell>
-                            {info.delivertime ? info.delivertime : 0} min
+                            {info.delivertime ? info.delivertime.toFixed(2) : 0}{" "}
+                            min
                           </Table.Cell>
                           <Table.Cell>{info.numratings}</Table.Cell>
                           <Table.Cell>
-                            {info.avgrating ? parseFloat(info.avgrating) : 0}
+                            {info.avgrating
+                              ? parseFloat(info.avgrating).toFixed(2)
+                              : 0}
                           </Table.Cell>
                         </Table.Row>
                       </Fragment>
@@ -193,7 +216,15 @@ class FDSButton4 extends Component {
                         <Table.Row>
                           <Table.Cell>{info.drname}</Table.Cell>
                           <Table.Cell>{info.numorders}</Table.Cell>
-                          <Table.Cell />
+                          <Table.Cell>
+                            {workHours &&
+                              workHours
+                                .filter(
+                                  (work) =>
+                                    work.uid === info.uid && work.month === 4
+                                )
+                                .map((hour) => hour.sum)}
+                          </Table.Cell>
                           <Table.Cell>
                             ${info.fee ? parseFloat(info.fee) : 0}
                           </Table.Cell>
