@@ -304,13 +304,12 @@ router.get("/api/get/riderDetails", (req, res, next) => {
   );
 });
 
-router.get("/api/get/riderSalary", (req, res, next) => {
+router.get("/api/get/weeklyWorkHours", (req, res, next) => {
   //console.log(req.query);
   const uid = [req.query.uid];
   client.query(
-    `WITH main AS (SELECT uid, monthlybasesalary, null as weeklybasesalary, null as totalworkhours FROM fulltime
-    union SELECT uid, null as monthlybasesalary, weeklybasesalary, totalworkhours FROM parttime)
-    SELECT * from main natural join deliveryrider where uid=$1`,
+    `SELECT sum(hours), extract(month from timestamp) as month, extract(week from timestamp) as week 
+    FROM works where uid=$1 group by extract(month from timestamp), extract(week from timestamp) order by month, week`,
     uid,
     (q_err, q_res) => {
       if (q_err) {
@@ -328,7 +327,9 @@ router.get("/api/get/deliverOrders", (req, res, next) => {
   console.log(req.query);
   const uid = [req.query.uid];
   client.query(
-    `select * from orderplaced o full join delivers d on o.oid = d.oid where d.uid=$1`,
+    `select count(o.oid), sum(deliveryfeecommission), extract(month from timestamp) as month, extract(week from timestamp) as week, 
+    extract(week from CURRENT_TIMESTAMP) as current from orderplaced o full join delivers d on o.oid = d.oid 
+    where d.uid=$1 group by extract(month from timestamp), extract(week from timestamp) order by week`,
     uid,
     (q_err, q_res) => {
       if (q_err) {
