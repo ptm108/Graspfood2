@@ -14,6 +14,39 @@ Create trigger update_num_of_orders_trigger
 Execute procedure Update_current_num_of_orders();
 
 
+Create or replace function Update_rider_state()
+Returns trigger as $$
+    Begin
+        Update deliveryrider set isidle = false where uid = NEW.uid;
+    Return null;
+End;
+$$ LANGUAGE plpgsql ;
+
+Drop trigger if exists update_rider_state_trigger on contains;
+Create trigger update_rider_state_trigger
+    After insert
+    on delivers
+    For each row
+Execute procedure Update_rider_state();
+
+
+Create or replace function set_rider_state()
+Returns trigger as $$
+    Begin
+        Update deliveryrider set isidle = true where uid = NEW.uid and NEW.riderdelivertime is not null
+;
+    Return null;
+End;
+$$ LANGUAGE plpgsql ;
+
+Drop trigger if exists set_rider_state_trigger on delivers;
+Create trigger set_rider_state_trigger
+    After update of riderdelivertime
+    on delivers
+    For each row
+Execute procedure set_rider_state();
+
+
 Create or replace function update_reward_points()
 Returns trigger as $$
     Begin
@@ -33,66 +66,53 @@ Execute procedure update_reward_points();
 Create or replace function update_delivery_rider_rating()
 Returns trigger as $$
     Begin
-        Update deliveryrider set deliveryriderrating = (deliveryriderrating + NEW.deliveryservicerating) / 2 where uid = NEW.uid;
+        Update deliveryrider set deliveryriderrating = (select avg(deliveryriderrating) from delivers) where uid = NEW.uid;
     Return null;
 End;
 $$ LANGUAGE plpgsql ;
 
 Drop trigger if exists update_delivery_rider_rating_trigger on delivers;
 Create trigger update_delivery_rider_rating_trigger
-    After update
+    After update of deliveryservicerating
     on delivers
     For each row
 Execute procedure update_delivery_rider_rating();
 
 
-Create or replace function delete_old_schedule() 
+-- Create or replace function set_delivery_rider_rating()
+-- Returns trigger as $$
+--     Begin
+--         Update deliveryrider set deliveryriderrating = 5 where uid = NEW.uid;
+--     Return null;
+-- End;
+-- $$ LANGUAGE plpgsql ;
+
+-- Drop trigger if exists set_delivery_rider_rating_trigger on deliveryrider;
+-- Create trigger set_delivery_rider_rating_trigger
+--     After insert
+--     on deliveryrider
+--     For each row
+-- Execute procedure set_delivery_rider_rating();
+
+Create or replace function update_restaurant_rating()
 Returns trigger as $$
     Begin
-		Delete from works where uid = NEW.uid;
+        Update restaurant set rating = (select avg(rating) from reviews) where rid = NEW.rid;
     Return null;
 End;
-$$ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql ;
 
-Drop trigger if exists remove_schedule on DeliveryRider;
-Create trigger remove_schedule
-    After update 
-    Of timeForScheduleUpdate 
-    on DeliveryRider
+Drop trigger if exists update_restaurant_rating_trigger_insert on reviews;
+Create trigger update_restaurant_rating_trigger_insert
+    After insert
+    on reviews
     For each row
-When (NEW.timeForScheduleUpdate > OLD.timeForScheduleUpdate)
-Execute procedure delete_old_schedule();
+Execute procedure update_restaurant_rating();
 
+Drop trigger if exists update_restaurant_rating_trigger_update on reviews;
+Create trigger update_restaurant_rating_trigger_update
+    After update of rating
+    on reviews
+    For each row
+Execute procedure update_restaurant_rating();
 
-Create or replace function  must_not_exceed_a_certain_hour() returns trigger as $$
-DECLARE
-	total INTEGER;
-
-BEGIN
-	SELECT totalWorkHours
-	INTO total
-FROM DeliveryRider dr
-WHERE dr.uid = new.uid;
-
-IF total > 48
-THEN
-RAISE EXCEPTION 'Sorry, total hours has exceeded 48 hours';
-
-	END IF;
-RETURN NEW;
-END;
-$$ language plpgsql;
-
-Drop trigger exceed_schedule_trigger on Works;
-Create trigger exceed_schedule_trigger
-AFTER insert 
-on Works 
-For each row
-Execute function must_not_exceed_a_certain_hour();
-
-BEGIN TRANSACTION;
-INSERT INTO WORKS(UID, DAYNO, STARTNO, ENDNO, HOURS) VALUES (57, 4, 14,16, 2);
-UPDATE DeliveryRider 
-SET totalWorkHours = totalWorkHours + (SELECT hours FROM Works w WHERE w.uid = DeliveryRider.uid)
-WHERE DeliveryRider.uid = 57;
-COMMIT;

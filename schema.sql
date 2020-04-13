@@ -35,6 +35,7 @@ minSpending DECIMAL,
 streetName VARCHAR(255), 
 unitNo VARCHAR(255), 
 postalCode BIGINT, 
+rating NUMERIC(2, 1),
 PRIMARY KEY(rid)
 );
 
@@ -107,7 +108,8 @@ CREATE TABLE Works (
 	startNo INTEGER NOT NULL,
 	endNo INTEGER NOT NULL,
 	hours INTEGER NOT NULL,
-	PRIMARY KEY(uid, dayNo, startNo, endNo),
+	timeStamp TIMESTAMP, 
+	PRIMARY KEY(uid, dayNo, startNo, endNo, timeStamp),
 	FOREIGN KEY(uid) REFERENCES DeliveryRider(uid) ON DELETE CASCADE,
 	FOREIGN KEY(dayNo,  startNo, endNo) REFERENCES Schedule(dayNo, startNo, endNo) ON DELETE CASCADE
 	);

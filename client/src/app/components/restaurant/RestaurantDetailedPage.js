@@ -4,10 +4,11 @@ import { connect, dispatch } from "react-redux";
 import RestaurantFoodList from "./RestaurantFoodList";
 import { RESET_FOOD_ITEMS } from "./restaurantUtils/restaurantConstants";
 import { retrievePromoCodes } from "./restaurantUtils/restaurantActions";
+import RestaurantPromoList from "./RestaurantPromoList";
 
 const mapStateToProps = (state, ownProps) => {
   const restaurantId = ownProps.match.params.id;
-  // console.log(restaurantId);
+  // console.log(restaurantId)
 
   let restaurant = {};
   if (state.restaurant.restaurants && state.restaurant.restaurants.length > 0) {
@@ -25,17 +26,10 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch, state) => {
   return {
     resetFoodItems: () => dispatch({ type: RESET_FOOD_ITEMS }),
-    retrievePromoCodes,
   };
 };
 
 class RestaurantDetailedPage extends Component {
-  async componentWillMount() {
-    console.log("**** componentdidmount");
-    const { retrievePromoCodes, restaurant } = this.props;
-    retrievePromoCodes(restaurant.rid);
-  }
-
   componentWillUnmount() {
     this.props.resetFoodItems();
   }
@@ -54,12 +48,18 @@ class RestaurantDetailedPage extends Component {
               <Icon name="food" />
               <Header.Content>Restaurant Details</Header.Content>
             </Header>
-            <Header.Subheader>Name: {restaurant.rname}</Header.Subheader>
             <Header.Subheader>
-              Address: {restaurant.streetname}, {restaurant.unitno}, Singapore{" "}
-              {restaurant.postalcode}
+              <b>Name:</b> {restaurant.rname}
+            </Header.Subheader>
+            <Header.Subheader>
+              <b>Address:</b> {restaurant.streetname}, {restaurant.unitno},
+              Singapore {restaurant.postalcode}
+            </Header.Subheader>
+            <Header.Subheader>
+              <b>Minimum Spending:</b> ${restaurant.minspending}
             </Header.Subheader>
           </Segment>
+          <RestaurantPromoList rid={restaurant.rid} />
         </Grid.Column>
       </Grid>
     );

@@ -2,7 +2,7 @@ import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
 import {
   fetchFoodItemsByRid,
-  postNewOrder
+  postNewOrder,
 } from "./restaurantUtils/restaurantActions";
 import {
   Segment,
@@ -11,20 +11,22 @@ import {
   Form,
   GridColumn,
   Button,
-  Input
+  Input,
 } from "semantic-ui-react";
 import RestaurantFoodListItem from "./RestaurantFoodListItem";
 import RestaurantOrderItem from "./RestaurantOrderItem";
+import { toastr } from "react-redux-toastr";
 
 const mapDispatchToProps = {
   fetchFoodItemsByRid,
-  postNewOrder
+  postNewOrder,
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     fooditems: state.restaurant.fooditems,
-    currentUser: state.auth.currentUser
+    currentUser: state.auth.currentUser,
+    promoCodes: state.restaurant.promoCodes,
   };
 };
 
@@ -41,7 +43,10 @@ class RestaurantFoodList extends Component {
     address: "",
     postalcode: "",
     rewardpoints: "",
-    addedFoodItems: []
+    addedFoodItems: [],
+    promocode: "",
+    promoApplied: false,
+    rpApplied: false,
   };
 
   onChange = (e, { name, value }) => {
@@ -52,26 +57,32 @@ class RestaurantFoodList extends Component {
     const { foodId, quantity } = this.state;
     let newItem = null;
     this.props.fooditems
-      .filter(e => e.fid == foodId)
-      .forEach(e => (newItem = { fooditem: e, quantity: quantity }));
+      .filter((e) => e.fid == foodId)
+      .forEach((e) => (newItem = { fooditem: e, quantity: quantity }));
     newItem &&
       this.setState({
         foodId: null,
         quantity: 0,
-        addedFoodItems: [...this.state.addedFoodItems, newItem]
+        addedFoodItems: [...this.state.addedFoodItems, newItem],
       });
   };
 
   handleCreateOrderCash = async () => {
-    const { postNewOrder } = this.props;
+    const { postNewOrder, restaurant } = this.props;
     let { addedFoodItems } = this.state;
     let totalPrice = 0;
     if (addedFoodItems.length != 0) {
       totalPrice = addedFoodItems
-        .map(addedFoodItem => {
+        .map((addedFoodItem) => {
           return addedFoodItem.quantity * addedFoodItem.fooditem.price;
         })
         .reduce((a, b) => a + b);
+    }
+
+    // checks if totalprice is more than minspending
+    if (totalPrice < restaurant.minspending) {
+      toastr.error("Error", "Does not meet minimum spending!");
+      return;
     }
     // console.log(totalPrice);
     addedFoodItems = {
@@ -82,24 +93,30 @@ class RestaurantFoodList extends Component {
       paymentMethod: "cash",
       address: this.state.address,
       postalcode: this.state.postalcode,
-      rewardpoints: this.state.rewardpoints
+      rewardpoints: this.state.rewardpoints,
     };
     await postNewOrder(addedFoodItems);
     this.setState({ addedFoodItems: [], address: "", postalcode: "" });
   };
 
   handleCreateOrderCC = async () => {
-    const { postNewOrder } = this.props;
-    let { addedFoodItems } = this.state;
+    const { postNewOrder, restaurant } = this.props;
+    let { addedFoodItems, promocode } = this.state;
     let totalPrice = 0;
     if (addedFoodItems.length != 0) {
       totalPrice = addedFoodItems
-        .map(addedFoodItem => {
+        .map((addedFoodItem) => {
           return addedFoodItem.quantity * addedFoodItem.fooditem.price;
         })
         .reduce((a, b) => a + b);
     }
     // console.log(totalPrice);
+
+    if (totalPrice < restaurant.minspending) {
+      toastr.error("Error", "Does not meet minimum spending!");
+      return;
+    }
+
     addedFoodItems = {
       addedFoodItems: addedFoodItems,
       totalPrice: totalPrice,
@@ -108,19 +125,109 @@ class RestaurantFoodList extends Component {
       paymentMethod: "credit card",
       address: this.state.address,
       postalcode: this.state.postalcode,
-      rewardpoints: this.state.rewardpoints
+      rewardpoints: this.state.rewardpoints,
+      promocode: this.state.promocode,
     };
     await postNewOrder(addedFoodItems);
     this.setState({ addedFoodItems: [], address: "" });
   };
 
+  handleApplyPromoCode = () => {
+    const { promocode, addedFoodItems } = this.state;
+    const { promoCodes } = this.props;
+    let promotion = null;
+    promoCodes.forEach((p) => {
+      if (p.promocode === promocode) {
+        promotion = p;
+      }
+    });
+    console.log(promotion);
+
+    let newItem = null;
+    // if free delivery promo
+    if (promotion.percentdiscount === null) {
+      newItem = {
+        fooditem: { fid: -1, fname: "Free Delivery", price: "-4.5" },
+        quantity: "1",
+      };
+    }
+    // if discount promo type
+    else {
+      let totalPrice = 0;
+      if (addedFoodItems.length != 0) {
+        totalPrice = addedFoodItems
+          .map((addedFoodItem) => {
+            return addedFoodItem.quantity * addedFoodItem.fooditem.price;
+          })
+          .reduce((a, b) => a + b);
+      }
+      const totalDiscount = (promotion.percentdiscount / 100) * totalPrice * -1;
+      newItem = {
+        fooditem: {
+          fid: -1,
+          fname: "Discount",
+          price: totalDiscount.toFixed(3).toString(),
+        },
+        quantity: "1",
+      };
+    }
+
+    this.setState({
+      addedFoodItems: [...addedFoodItems, newItem],
+      promoApplied: true,
+    });
+  };
+
+  handleUseRewardPoints = () => {
+    const { rewardpoints, addedFoodItems } = this.state;
+    console.log(rewardpoints);
+    let discount = (parseFloat(rewardpoints) / 100) * -1;
+
+    let totalPrice = 0;
+    if (addedFoodItems.length != 0) {
+      totalPrice = addedFoodItems
+        .map((addedFoodItem) => {
+          return addedFoodItem.quantity * addedFoodItem.fooditem.price;
+        })
+        .reduce((a, b) => a + b);
+    }
+
+    console.log(discount);
+    console.log(totalPrice);
+    if (discount * -1 > totalPrice) {
+      toastr.error("Oi", "Don't play punk ah");
+      return;
+    }
+
+    let newItem = {
+      fooditem: {
+        fid: -2,
+        fname: "Reward Points",
+        price: discount.toFixed(3).toString(),
+      },
+      quantity: "1",
+    };
+
+    this.setState({
+      addedFoodItems: [...addedFoodItems, newItem],
+      rpApplied: true,
+    });
+  };
+
   render() {
     const { fooditems } = this.props;
-    const { addedFoodItems, address, postalcode } = this.state;
+    const {
+      addedFoodItems,
+      address,
+      postalcode,
+      promocode,
+      promoApplied,
+      rpApplied,
+    } = this.state;
 
     {
       fooditems &&
-        fooditems.forEach(element => {
+        fooditems.forEach((element) => {
           element.quantity = 0;
         });
     }
@@ -165,7 +272,7 @@ class RestaurantFoodList extends Component {
                 </Grid>
               </Segment>
               {addedFoodItems &&
-                addedFoodItems.map(e => (
+                addedFoodItems.map((e) => (
                   <RestaurantOrderItem
                     key={e.fooditem.fid}
                     fooditem={e.fooditem}
@@ -181,13 +288,13 @@ class RestaurantFoodList extends Component {
                     <GridColumn width={2} textAlign="center">
                       $
                       {addedFoodItems
-                        .map(addedFoodItem => {
+                        .map((addedFoodItem) => {
                           return (
                             addedFoodItem.quantity *
                             addedFoodItem.fooditem.price
                           );
                         })
-                        .reduce((a, b) => a + b)}
+                        .reduce((a, b) => a + b).toFixed(2)}
                     </GridColumn>
                   </Grid.Row>
                   <Grid.Row>
@@ -204,29 +311,61 @@ class RestaurantFoodList extends Component {
                             name="postalcode"
                             onChange={this.onChange}
                           />
+                        </Form.Group>
+                      </Form>
+                    </Grid.Column>
+                  </Grid.Row>
+                  <Grid.Row>
+                    <Grid.Column>
+                      <Form onSubmit={this.handleUseRewardPoints}>
+                        <Form.Group inline>
                           <Form.Input
                             placeholder="Enter Reward Points"
                             name="rewardpoints"
                             onChange={this.onChange}
+                          />
+                          <Form.Button
+                            disabled={rpApplied}
+                            content="Use Reward Points"
                           />
                         </Form.Group>
                       </Form>
                     </Grid.Column>
                   </Grid.Row>
                   {address !== "" && postalcode !== "" && (
-                    <Grid.Row>
-                      <Grid.Column textAlign="center">
-                        <Button.Group>
-                          <Button onClick={this.handleCreateOrderCash}>
-                            Checkout (Cash)
-                          </Button>
-                          <Button.Or />
-                          <Button onClick={this.handleCreateOrderCC}>
-                            Checkout (CC)
-                          </Button>
-                        </Button.Group>
-                      </Grid.Column>
-                    </Grid.Row>
+                    <Fragment>
+                      <Grid.Row>
+                        <Grid.Column>
+                          <Form onSubmit={this.handleApplyPromoCode}>
+                            <Form.Group inline>
+                              <Form.Input
+                                placeholder="Enter Promo Code"
+                                name="promocode"
+                                value={promocode}
+                                onChange={this.onChange}
+                              />
+                              <Form.Button
+                                disabled={promoApplied}
+                                content="Apply"
+                              />
+                            </Form.Group>
+                          </Form>
+                        </Grid.Column>
+                      </Grid.Row>
+                      <Grid.Row>
+                        <Grid.Column textAlign="center">
+                          <Button.Group>
+                            <Button onClick={this.handleCreateOrderCash}>
+                              Checkout (Cash)
+                            </Button>
+                            <Button.Or />
+                            <Button onClick={this.handleCreateOrderCC}>
+                              Checkout (CC)
+                            </Button>
+                          </Button.Group>
+                        </Grid.Column>
+                      </Grid.Row>
+                    </Fragment>
                   )}
                 </Grid>
               </Segment>
@@ -254,7 +393,7 @@ class RestaurantFoodList extends Component {
             </Grid>
           </Segment>
           {fooditems &&
-            fooditems.map(fooditem => (
+            fooditems.map((fooditem) => (
               <RestaurantFoodListItem key={fooditem.fid} fooditem={fooditem} />
             ))}
         </Segment.Group>

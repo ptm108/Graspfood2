@@ -24,7 +24,7 @@ const RegisterForm = ({
   invalid,
   submitting
 }) => {
-  const [dr, setDr] = useState(0);
+  const [accessRight, setAccessRight] = useState(0);
 
   return (
     <div>
@@ -57,7 +57,7 @@ const RegisterForm = ({
               label="Customer"
               component={RadioInput}
               onChange={() => {
-                setDr(4);
+                setAccessRight(4);
               }}
             />
             <Field
@@ -67,7 +67,7 @@ const RegisterForm = ({
               label="DeliveryRider"
               component={RadioInput}
               onChange={() => {
-                setDr(3);
+                setAccessRight(3);
               }}
             />
             <Field
@@ -77,7 +77,7 @@ const RegisterForm = ({
               label="RestaurantStaff"
               component={RadioInput}
               onChange={() => {
-                setDr(1);
+                setAccessRight(1);
               }}
             />
             <Field
@@ -87,11 +87,11 @@ const RegisterForm = ({
               label="FDSStaff"
               component={RadioInput}
               onChange={() => {
-                setDr(2);
+                setAccessRight(2);
               }}
             />
           </Form.Group>
-          {dr === 3 && 
+          {accessRight === 3 && 
           <Form.Group inline>
           <label>Schedule Type: </label>
           <Field
@@ -107,6 +107,17 @@ const RegisterForm = ({
               value="fulltime"
               label="Full Time"
               component={RadioInput}
+            />
+          </Form.Group>}
+          {accessRight === 1 && 
+          <Form.Group inline>
+          <label>Restaurant Id:</label>
+          <Field
+              name="restaurantId"
+              type="text"
+              value="rid"
+              label="Restaurant Id"
+              component={TextInput}
             />
           </Form.Group>}
           <Button

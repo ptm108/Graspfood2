@@ -19,23 +19,6 @@ export const fetchRestaurants = () => {
   };
 };
 
-export const retrievePromoCodes = (rid) => {
-  console.log(rid);
-  return async (dispatch, getState) => {
-    await axios
-      .get("/api/get/getPromotions")
-      .then((res) => {
-        console.log(res);
-        if (res.data.rows) {
-          dispatch({ type: RETRIEVE_PROMO_CODES, payload: res.data.rows });
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-};
-
 export const fetchFoodItemsByRid = (restaurant) => {
   return async (dispatch, getState) => {
     await axios
@@ -65,5 +48,21 @@ export const postNewOrder = (order) => {
         toastr.error("Oops", res.data.msg);
       }
     });
+  };
+};
+
+export const retrievePromoCodes = (rid) => {
+  console.log(typeof rid);
+  return async (dispatch, getState) => {
+    await axios
+      .get("/api/get/retrievePromoCodes", { params: rid })
+      .then((res) => {
+        // console.log(res);
+        if (res.data.rows) {
+          // console.log(res.data.rows);
+          dispatch({ type: RETRIEVE_PROMO_CODES, payload: res.data.rows });
+          // return res.data.rows;
+        }
+      });
   };
 };

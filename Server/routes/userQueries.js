@@ -60,13 +60,23 @@ router.post("/api/post/registerUser", async (req, res, next) => {
 
     if (req.body.accessRight === "1") {
       console.log("inserting restaurant staff");
-      await client.query(
-        `INSERT into RestaurantStaff(uid, rsName) VALUES ($1, $2)`,
-        [retrievedUser.rows[0].uid, req.body.username],
-        (q_err, q_res) => {
-          if (q_err) console.log(q_err);
-        }
+      let response = await client.query(
+        `SELECT count(*) FROM Restaurant WHERE rid = $1`,
+        [req.body.restaurantId]
       );
+      let count = response.rows[0].count;
+      console.log(count);
+      if (count !== "0") {
+        await client.query(
+          `INSERT into RestaurantStaff(uid, rsName, rid) VALUES ($1, $2, $3)`,
+          [retrievedUser.rows[0].uid, req.body.username, req.body.restaurantId],
+          (q_err, q_res) => {
+            if (q_err) console.log(q_err);
+          }
+        );
+      } else {
+        throw "Restaurant does not exist!";
+      }
     }
     if (req.body.accessRight === "2") {
       console.log("inserting fds manager");
@@ -129,6 +139,7 @@ router.post("/api/post/registerUser", async (req, res, next) => {
     client.query("ROLLBACK", (q_err, q_res) => {
       console.log(q_res);
     });
+    res.json(error);
     console.log("rollbacked");
   }
 });
@@ -360,10 +371,13 @@ router.post("/api/post/postNewOrder", async (req, res, next) => {
     req.body.address,
     req.body.postalcode,
     parseInt(req.body.rewardpoints) || 0,
+    req.body.promocode,
+    4.5,
   ];
   const uid = req.body.uid;
   const rewardPointsUsed = parseInt(req.body.rewardpoints);
   const addedFoodItems = req.body.addedFoodItems;
+  const promocode = req.body.promocode;
   console.log(createNewOrderParams);
   // console.log(addedFoodItems);
 
@@ -372,18 +386,55 @@ router.post("/api/post/postNewOrder", async (req, res, next) => {
     console.log("begun");
 
     // get user reward points
-    const getUserRewardPoints = `SELECT c.rewardPoints from customer c where c.uid = $1`;
+    const getUserRewardPoints = `SELECT * from customer c where c.uid = $1`;
     const response2 = await client.query(getUserRewardPoints, [uid]);
     // console.log(response2);
     const currRewardPoints = response2.rows[0].rewardpoints;
+    const customer = response2.rows[0];
     console.log(currRewardPoints);
+    console.log(customer);
 
     if (rewardPointsUsed !== "" && rewardPointsUsed > currRewardPoints) {
       throw "Not enough points";
     }
 
+    let promotion = await client.query(
+      `SELECT * FROM Promotion WHERE promocode = $1`,
+      [promocode]
+    );
+    promotion = promotion.rows[0];
+    console.log(promotion);
+
+    if (promotion.customertype === "OLD CUSTOMER") {
+      let result = await client.query(
+        `SELECT count(*) FROM OrderPlaced 
+      WHERE uid = $1
+      AND timestamp > current_date - integer '90'`,
+        [uid]
+      );
+      let count = result.rows[0].count;
+      if (count > 0) {
+        throw "Promo Code does not apply!";
+      }
+    } else if (promotion.customertype === "NEW CUSTOMER") {
+      let result = await client.query(
+        `SELECT count(*) FROM OrderPlaced 
+      WHERE uid = $1`,
+        [uid]
+      );
+      let count = result.rows[0].count;
+      if (count > 0) {
+        throw "Promo Code does not apply!";
+      }
+    } else if (promotion.currcustomercount > promotion.maxcustomercount) {
+      throw "Promo code sold out!";
+    } else if (promotion.percentdiscount === null) {
+      createNewOrderParams.pop();
+      createNewOrderParams.push(0);
+    }
+
     // insert into orders placed
-    const createNewOrderQuery = `INSERT INTO OrderPlaced(uid, rid, totalPrice, paymentMethod, address, timestamp, deliveryFee, postalcode, rewardpointsused) VALUES ($1, $2, $3, $4, $5, NOW(), 4.50, $6, $7) RETURNING oid`;
+    const createNewOrderQuery = `INSERT INTO OrderPlaced(uid, rid, totalPrice, paymentMethod, address, timestamp, deliveryFee, postalcode, rewardpointsused, promocode) VALUES ($1, $2, $3, $4, $5, NOW(), $9, $6, $7, $8) RETURNING oid`;
     const response = await client.query(
       createNewOrderQuery,
       createNewOrderParams
@@ -392,16 +443,22 @@ router.post("/api/post/postNewOrder", async (req, res, next) => {
     const oid = response.rows[0].oid;
     const propagateContainsQuery = `INSERT INTO Contains(fid, oid, qty) VALUES ($1, $2, $3)`;
 
-    addedFoodItems.forEach(async (fooditem) => {
-      const containsParams = [fooditem.fooditem.fid, oid, fooditem.quantity];
-      // console.log(containsParams);
-      await client.query(propagateContainsQuery, containsParams);
-    });
+    addedFoodItems
+      .filter((f) => f.fooditem.fid > 0)
+      .forEach(async (fooditem) => {
+        const containsParams = [fooditem.fooditem.fid, oid, fooditem.quantity];
+        // console.log(containsParams);
+        await client.query(propagateContainsQuery, containsParams);
+      });
 
     const findAvailRiderQuery = `SELECT * FROM DeliveryRider dr WHERE dr.isIdle = true LIMIT 1`;
     const result = await client.query(findAvailRiderQuery, []);
     // console.log(response);
     const dr = result.rows[0];
+
+    if (result.rows.length === 0) {
+      throw "All our Riders are busy currently..";
+    }
 
     const insertIntoDeliversQuery = `INSERT INTO Delivers(oid, uid, riderLeaveForRestaurantTime) VALUES ($1, $2, NOW())`;
     const deliversParams = [oid, dr.uid];
@@ -483,12 +540,14 @@ router.get("/api/get/orderDetails", async (req, res, next) => {
   }
 });
 
-router.get("/api/get/getPromotions", (req, res, next) => {
-  const rid = [req.query.rid];
+router.get("/api/get/retrievePromoCodes", async (req, res, next) => {
+  console.log(req);
+  const rid = [req.query[0]];
   console.log(rid);
-  client.query(
+  await client.query(
     `SELECT * FROM Promotion 
   WHERE rid = $1
+  OR rid is null
   AND startDate < current_date
   AND endDate > current_date`,
     rid,
@@ -498,6 +557,89 @@ router.get("/api/get/getPromotions", (req, res, next) => {
         res.json(q_err);
       } else {
         // console.log(q_res);
+        res.json(q_res);
+      }
+    }
+  );
+});
+
+router.get("/api/get/getCurrentOrderByDrid", async (req, res, next) => {
+  // console.log(req);
+  const drid = [req.query[0]];
+  console.log(drid);
+
+  let response = await client.query(
+    `SELECT * FROM OrderPlaced op 
+  JOIN Delivers d 
+  ON op.oid = d.oid
+  JOIN DeliveryRider dr
+  ON dr.uid = d.uid
+  WHERE d.uid = $1
+  ORDER BY timestamp DESC
+  LIMIT 1`,
+    drid,
+    (q_err, q_res) => {
+      // console.log(q_res)
+      res.json(q_res.rows[0]);
+    }
+  );
+  // console.log(response.rows[0]);
+});
+
+router.put(
+  "/api/put/updateDeliversArriveRestaurant",
+  async (req, res, next) => {
+    const oid = [req.body.params];
+    console.log(oid);
+
+    client.query(
+      `UPDATE Delivers 
+    SET riderarriveatrestauranttime = current_timestamp
+    WHERE oid = $1`,
+      oid,
+      (q_err, q_res) => {
+        if (q_err) {
+          res.json(q_err);
+        } else {
+          res.json(q_res);
+        }
+      }
+    );
+  }
+);
+
+router.put("/api/put/updateDeliversLeftRestaurant", async (req, res, next) => {
+  const oid = [req.body.params];
+  console.log(oid);
+
+  client.query(
+    `UPDATE Delivers 
+  SET riderleaverestauranttime = current_timestamp
+  WHERE oid = $1`,
+    oid,
+    (q_err, q_res) => {
+      if (q_err) {
+        res.json(q_err);
+      } else {
+        res.json(q_res);
+      }
+    }
+  );
+});
+
+router.put("/api/put/updateDeliveredTime", async (req, res, next) => {
+  const oid = [req.body.params];
+  console.log(oid);
+
+  client.query(
+    `UPDATE Delivers 
+  SET riderdelivertime = current_timestamp
+  WHERE oid = $1`,
+    oid,
+    (q_err, q_res) => {
+      if (q_err) {
+        res.json(q_err);
+      } else {
         res.json(q_res);
       }
     }

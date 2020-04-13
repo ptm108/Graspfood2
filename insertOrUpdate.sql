@@ -695,6 +695,9 @@ where
 ALTER TABLE contacts
   ADD postalCode varchar(6) NOT NULl;
 
+ALTER TABLE restaurant
+  ADD rating NUMERIC(2,1) NOT NULl;
+
 update OrderPlaced
 set 
    postalCode = '234567'
@@ -761,6 +764,95 @@ update OrderPlaced set promocode = 'R%Discount2', totalPrice = 19.8 where oid = 
 update OrderPlaced set promocode = 'R%Discount3', totalPrice = 17 where oid = 43;
 update OrderPlaced set promocode = 'R%Discount4', totalPrice = 18.4 where oid = 30;
 
+update orderplaced set timeStamp = '2020-03-11 12:30:22' where oid = 25;
+update orderplaced set timeStamp = '2020-03-18 13:00:32' where oid = 26;
+update orderplaced set timeStamp = '2020-03-25 18:30:28' where oid = 27;
 
+update orderplaced set timeStamp = '2020-04-08 12:30:22' where oid = 48;
+update orderplaced set timeStamp = '2020-04-10 13:00:32' where oid = 49;
+update orderplaced set timeStamp = '2020-04-15 18:30:28' where oid = 50;
+update orderplaced set timeStamp = '2020-04-17 13:00:32' where oid = 51;
+
+insert into delivers
+(oid, uid, riderleaveforrestauranttime, riderarriveatrestauranttime, riderleaverestauranttime, riderdelivertime, deliveryfeecommission, deliveryservicerating) 
+values (50, 51, '2020-04-15 18:35:28', '2020-04-15 18:43:18', '2020-04-15 18:45:28', '2020-04-15 18:55:08', 3.6, 3);
+
+insert into delivers
+(oid, uid, riderleaveforrestauranttime, riderarriveatrestauranttime, riderleaverestauranttime, riderdelivertime, deliveryfeecommission, deliveryservicerating) 
+values (49, 51, '2020-04-10 13:04-10', '2020-04-10 13:08:32', '2020-04-10 13:10:32', '2020-04-10 13:15:42', 3.6, 5);
+
+insert into delivers
+(oid, uid, riderleaveforrestauranttime, riderarriveatrestauranttime, riderleaverestauranttime, riderdelivertime, deliveryfeecommission, deliveryservicerating) 
+values (48, 51, '2020-04-08 12:38:54', '2020-04-08 12:45:12', '2020-04-08 12:43:22', '2020-04-08 12:50:12', 3.6, 4);
+
+insert into delivers
+(oid, uid, riderleaveforrestauranttime, riderarriveatrestauranttime, riderleaverestauranttime, riderdelivertime, deliveryfeecommission, deliveryservicerating) 
+values (51, 51, '2020-04-17 13:04-10', '2020-04-17 13:08:32', '2020-04-17 13:10:32', '2020-04-17 13:15:42', 3.6, 5);
+
+
+update delivers set deliveryFeeCommission = 3.60;
+
+insert into delivers
+(oid, uid, riderleaveforrestauranttime, riderarriveatrestauranttime, riderleaverestauranttime, riderdelivertime, deliveryfeecommission, deliveryservicerating) 
+values (27, 51, '2020-03-25 18:35:28', '2020-03-25 18:43:18', '2020-03-25 18:45:28', '2020-03-25 18:55:08', 3.6, 3);
+
+insert into delivers
+(oid, uid, riderleaveforrestauranttime, riderarriveatrestauranttime, riderleaverestauranttime, riderdelivertime, deliveryfeecommission, deliveryservicerating) 
+values (26, 51, '2020-03-18 13:02:12', '2020-03-18 13:08:32', '2020-03-18 13:10:32', '2020-03-18 13:15:42', 3.6, 5);
+
+insert into delivers
+(oid, uid, riderleaveforrestauranttime, riderarriveatrestauranttime, riderleaverestauranttime, riderdelivertime, deliveryfeecommission, deliveryservicerating) 
+values (25, 51, '2020-03-11 12:38:54', '2020-03-11 12:45:12', '2020-03-11 12:43:22', '2020-03-11 12:50:12', 3.6, 4);
+
+
+  51, 2, 10, 13, 3, 2020-03-06 00:00:00
+  51, 2, 14, 16, 2, 2020-03-06 00:00:00
+  51, 1, 10, 13, 3, 2020-03-06 00:00:00
+  51, 1, 14, 16, 2, 2020-03-06 00:00:00
+  51, 7, 13, 14, 1, 2020-03-06 00:00:00
+  51, 7, 18, 22, 4, 2020-03-06 00:00:00
+
+  51, 2, 10, 13, 3, 2020-03-08
+  51, 2, 14, 16, 2, 2020-03-08 
+  51, 1, 10, 13, 3, 2020-03-08 
+  51, 1, 14, 16, 2, 2020-03-08 
+  51, 7, 13, 14, 1, 2020-03-08
+  51, 7, 18, 22, 4, 2020-03-08 
+
+insert into works(uid, dayno, startno, endno, hours, timestamp) 
+values
+(51, 2, 10, 13, 3, '2020-04-01'), 
+(51, 2, 14, 16, 2, '2020-04-01'), 
+(51, 1, 10, 13, 3, '2020-04-01'), 
+(51, 1, 14, 16, 2, '2020-04-01'), 
+(51, 7, 13, 14, 1, '2020-04-01'),
+(51, 7, 18, 22, 4, '2020-04-01');
+
+insert into works(uid, dayno, startno, endno, hours, timestamp) 
+values
+(51, 2, 10, 13, 3, '2020-04-08'), 
+(51, 2, 14, 16, 2, '2020-04-08'), 
+(51, 1, 10, 13, 3, '2020-04-08'), 
+(51, 1, 14, 16, 2, '2020-04-08'), 
+(51, 7, 13, 14, 1, '2020-04-08'),
+(51, 7, 18, 22, 4, '2020-04-08');
+
+insert into works(uid, dayno, startno, endno, hours, timestamp) 
+values
+(51, 2, 10, 13, 3, '2020-04-15'), 
+(51, 2, 14, 16, 2, '2020-04-15'), 
+(51, 1, 10, 13, 3, '2020-04-15'), 
+(51, 1, 14, 16, 2, '2020-04-15'), 
+(51, 7, 13, 14, 1, '2020-04-15'),
+(51, 7, 18, 22, 4, '2020-04-15');
+
+insert into works(uid, dayno, startno, endno, hours, timestamp) 
+values
+(51, 2, 10, 13, 3, '2020-04-22'), 
+(51, 2, 14, 16, 2, '2020-04-22'), 
+(51, 1, 10, 13, 3, '2020-04-22'), 
+(51, 1, 14, 16, 2, '2020-04-22'), 
+(51, 7, 13, 14, 1, '2020-04-22'),
+(51, 7, 18, 22, 4, '2020-04-22');
 
 
