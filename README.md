@@ -1,6 +1,6 @@
 # GraspFood
 
-GraspFood is a web application developed as part of NUS's CS2102 Database Systems module. GraspFood is built using React.js as the main frontend framework, Redux.js for state management, Express as our backend framework and Node.js as our server environment.
+GraspFood is a food delivery service web application developed as part of NUS's CS2102 Database Systems module. GraspFood is built using **React.js** as the main frontend framework, **Redux.js** for state management, **Express** as our backend framework and **Node.js** as our server environment. **Semantic UI React** is used to decorate our UI.  
 
 ## Team Members and Roles
 
