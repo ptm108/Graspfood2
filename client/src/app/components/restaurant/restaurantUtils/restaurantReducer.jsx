@@ -31,7 +31,8 @@ const fetchFoodItemsByRid = (state, payload) => {
 const resetFoodItems = (state, payload) => {
   return {
     ...state,
-    fooditems: null
+    fooditems: null,
+    promoCodes: null
   }
 }
 
@@ -43,7 +44,7 @@ const postNewOrder = (state, payload) => {
 };
 
 const retrievePromo = (state, payload) => {
-  console.log(payload);
+  // console.log(payload);
   return {
     ...state,
     promoCodes: payload
