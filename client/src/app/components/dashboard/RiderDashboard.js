@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from "react";
 import AccountNav from "../user/AccountNav";
-import { Grid, Header, Table } from "semantic-ui-react";
+import { Grid, Header, Table, Segment } from "semantic-ui-react";
 import { connect } from "react-redux";
 import {
   fetchRiderDetails,
@@ -156,200 +156,206 @@ class RiderDashboard extends Component {
       <Fragment>
         <Grid>
           <Grid.Column width={12}>
-            <h2>RiderDashboard</h2>
-            <Header>Summary Information</Header>
-            <Header>Rider: {userDetails && userDetails[0].drname}</Header>
-            <Header.Subheader>
-              Base Salary: $
-              {userDetails
-                ? userDetails[0].weeklybasesalary
+            <Segment>
+              <h2>RiderDashboard</h2>
+              <Header>Summary Information</Header>
+              <Header>Rider: {userDetails && userDetails[0].drname}</Header>
+              <Header.Subheader>
+                Base Salary: $
+                {userDetails
                   ? userDetails[0].weeklybasesalary
-                  : userDetails[0].monthlybasesalary
-                : 0}
-            </Header.Subheader>
-            <Header.Subheader>
-              Join Since:{" "}
-              {userDetails &&
-                new Date(userDetails[0].joindate).toLocaleDateString()}
-            </Header.Subheader>
-            <Header.Subheader>
-              Work Status:{" "}
-              {userDetails && userDetails[0].weeklybasesalary
-                ? "Part Time"
-                : "Full Time"}
-            </Header.Subheader>
+                    ? userDetails[0].weeklybasesalary
+                    : userDetails[0].monthlybasesalary
+                  : 0}
+              </Header.Subheader>
+              <Header.Subheader>
+                Join Since:{" "}
+                {userDetails &&
+                  new Date(userDetails[0].joindate).toLocaleDateString()}
+              </Header.Subheader>
+              <Header.Subheader>
+                Work Status:{" "}
+                {userDetails && userDetails[0].weeklybasesalary
+                  ? "Part Time"
+                  : "Full Time"}
+              </Header.Subheader>
 
-            <Header>March (Month)</Header>
-            <Table celled>
-              <Table.Header>
-                <Table.Row>
-                  <Table.HeaderCell>Total Hours Worked</Table.HeaderCell>
-                  <Table.HeaderCell>Total Number of Orders</Table.HeaderCell>
-                  <Table.HeaderCell>
-                    Total Salary (exlcuding base salary)
-                  </Table.HeaderCell>
-                </Table.Row>
-              </Table.Header>
+              <Header>March (Month)</Header>
+              <Table celled>
+                <Table.Header>
+                  <Table.Row>
+                    <Table.HeaderCell>Total Hours Worked</Table.HeaderCell>
+                    <Table.HeaderCell>Total Number of Orders</Table.HeaderCell>
+                    <Table.HeaderCell>
+                      Total Salary (exlcuding base salary)
+                    </Table.HeaderCell>
+                  </Table.Row>
+                </Table.Header>
 
-              <Table.Body>
-                <Table.Row>
-                  <Table.Cell>
-                    {userDetails && userDetails[0].weeklybasesalary
-                      ? this.calculateHoursWorkForPartTime(
-                          0,
-                          0,
-                          0,
-                          3,
-                          workHours
-                        )
-                      : this.calculateHoursWorkForFullTime(0, 3, workHours)}
-                  </Table.Cell>
-                  <Table.Cell>
-                    {deliverOrders &&
-                      deliverOrders
-                        .filter((order) => order.month === 3)
-                        .map((order) => parseInt(order.count))
-                        .reduce((a, b) => a + b, 0)}
-                  </Table.Cell>
-                  <Table.Cell>
-                    $
-                    {deliverOrders &&
-                      deliverOrders
-                        .filter((order) => order.month === 3)
-                        .map((order) => parseFloat(order.sum))
-                        .reduce((a, b) => a + b, 0)}
-                  </Table.Cell>
-                </Table.Row>
-              </Table.Body>
-            </Table>
+                <Table.Body>
+                  <Table.Row>
+                    <Table.Cell>
+                      {userDetails && userDetails[0].weeklybasesalary
+                        ? this.calculateHoursWorkForPartTime(
+                            0,
+                            0,
+                            0,
+                            3,
+                            workHours
+                          )
+                        : this.calculateHoursWorkForFullTime(0, 3, workHours)}
+                    </Table.Cell>
+                    <Table.Cell>
+                      {(deliverOrders &&
+                        deliverOrders
+                          .filter((order) => order.month === 3)
+                          .map((order) => parseInt(order.count))
+                          .reduce((a, b) => a + b, 0)) ||
+                        0}
+                    </Table.Cell>
+                    <Table.Cell>
+                      $
+                      {(deliverOrders &&
+                        deliverOrders
+                          .filter((order) => order.month === 3)
+                          .map((order) => parseFloat(order.sum))
+                          .reduce((a, b) => a + b, 0)) ||
+                        0}
+                    </Table.Cell>
+                  </Table.Row>
+                </Table.Body>
+              </Table>
 
-            <Header>March (Weekly)</Header>
-            <Table celled>
-              <Table.Header>
-                <Table.Row>
-                  <Table.HeaderCell>Week</Table.HeaderCell>
-                  <Table.HeaderCell>Total Hours Worked</Table.HeaderCell>
-                  <Table.HeaderCell>Total Number of Orders</Table.HeaderCell>
-                  <Table.HeaderCell>
-                    Total Salary (exlcuding base salary)
-                  </Table.HeaderCell>
-                </Table.Row>
-              </Table.Header>
+              <Header>March (Weekly)</Header>
+              <Table celled>
+                <Table.Header>
+                  <Table.Row>
+                    <Table.HeaderCell>Week</Table.HeaderCell>
+                    <Table.HeaderCell>Total Hours Worked</Table.HeaderCell>
+                    <Table.HeaderCell>Total Number of Orders</Table.HeaderCell>
+                    <Table.HeaderCell>
+                      Total Salary (exlcuding base salary)
+                    </Table.HeaderCell>
+                  </Table.Row>
+                </Table.Header>
 
-              <Table.Body>
-                {workHours &&
-                  workHours
-                    .filter((work) => work.month === 3)
-                    .map((work) => (
-                      <Fragment>
-                        <Table.Row>
-                          <Table.Cell>{work.week + 1}</Table.Cell>
-                          <Table.Cell>{work.sum}</Table.Cell>
-                          {deliverOrders &&
-                            deliverOrders
-                              .filter((order) => order.week === work.week + 1)
-                              .map((order) => (
-                                <Fragment>
-                                  <Table.Cell>
-                                    {order.count ? order.count : 0}
-                                  </Table.Cell>
-                                  <Table.Cell>
-                                    {order.sum ? order.sum : 0}
-                                  </Table.Cell>
-                                </Fragment>
-                              ))}
-                        </Table.Row>
-                      </Fragment>
-                    ))}
-              </Table.Body>
-            </Table>
+                <Table.Body>
+                  {workHours &&
+                    workHours
+                      .filter((work) => work.month === 3)
+                      .map((work) => (
+                        <Fragment>
+                          <Table.Row>
+                            <Table.Cell>{work.week + 1}</Table.Cell>
+                            <Table.Cell>{work.sum}</Table.Cell>
+                            {deliverOrders &&
+                              deliverOrders
+                                .filter((order) => order.week === work.week + 1)
+                                .map((order) => (
+                                  <Fragment>
+                                    <Table.Cell>
+                                      {order.count ? order.count : 0}
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                      {order.sum ? order.sum : 0}
+                                    </Table.Cell>
+                                  </Fragment>
+                                ))}
+                          </Table.Row>
+                        </Fragment>
+                      ))}
+                </Table.Body>
+              </Table>
 
-            <Header>April (Month)</Header>
-            <Table celled>
-              <Table.Header>
-                <Table.Row>
-                  <Table.HeaderCell>Total Hours Worked</Table.HeaderCell>
-                  <Table.HeaderCell>Total Number of Orders</Table.HeaderCell>
-                  <Table.HeaderCell>
-                    Total Salary (exlcuding base salary)
-                  </Table.HeaderCell>
-                </Table.Row>
-              </Table.Header>
+              <Header>April (Month)</Header>
+              <Table celled>
+                <Table.Header>
+                  <Table.Row>
+                    <Table.HeaderCell>Total Hours Worked</Table.HeaderCell>
+                    <Table.HeaderCell>Total Number of Orders</Table.HeaderCell>
+                    <Table.HeaderCell>
+                      Total Salary (exlcuding base salary)
+                    </Table.HeaderCell>
+                  </Table.Row>
+                </Table.Header>
 
-              <Table.Body>
-                <Table.Row>
-                  <Table.Cell>
-                    {userDetails && userDetails[0].weeklybasesalary
-                      ? this.calculateHoursWorkForPartTime(
-                          0,
-                          0,
-                          0,
-                          4,
-                          workHours
-                        )
-                      : this.calculateHoursWorkForFullTime(0, 4, workHours)}
-                  </Table.Cell>
-                  <Table.Cell>
-                    {deliverOrders &&
-                      deliverOrders
-                        .filter((order) => order.month === 4)
-                        .map((order) => parseInt(order.count))
-                        .reduce((a, b) => a + b, 0)}
-                  </Table.Cell>
-                  <Table.Cell>
-                    $
-                    {deliverOrders &&
-                      deliverOrders
-                        .filter((order) => order.month === 4)
-                        .map((order) => parseFloat(order.sum))
-                        .reduce((a, b) => a + b, 0)}
-                  </Table.Cell>
-                </Table.Row>
-              </Table.Body>
-            </Table>
+                <Table.Body>
+                  <Table.Row>
+                    <Table.Cell>
+                      {userDetails && userDetails[0].weeklybasesalary
+                        ? this.calculateHoursWorkForPartTime(
+                            0,
+                            0,
+                            0,
+                            4,
+                            workHours
+                          )
+                        : this.calculateHoursWorkForFullTime(0, 4, workHours)}
+                    </Table.Cell>
+                    <Table.Cell>
+                      {deliverOrders &&
+                        deliverOrders
+                          .filter((order) => order.month === 4)
+                          .map((order) => parseInt(order.count))
+                          .reduce((a, b) => a + b, 0)}
+                    </Table.Cell>
+                    <Table.Cell>
+                      $
+                      {(deliverOrders &&
+                        deliverOrders
+                          .filter((order) => order.month === 4)
+                          .map((order) => parseFloat(order.sum))
+                          .reduce((a, b) => a + b, 0)) ||
+                        0}
+                    </Table.Cell>
+                  </Table.Row>
+                </Table.Body>
+              </Table>
 
-            <Header>April (Weekly)</Header>
-            <Table celled>
-              <Table.Header>
-                <Table.Row>
-                  <Table.HeaderCell>Week</Table.HeaderCell>
-                  <Table.HeaderCell>Total Hours Worked</Table.HeaderCell>
-                  <Table.HeaderCell>Total Number of Orders</Table.HeaderCell>
-                  <Table.HeaderCell>
-                    Total Salary (exlcuding base salary)
-                  </Table.HeaderCell>
-                </Table.Row>
-              </Table.Header>
+              <Header>April (Weekly)</Header>
+              <Table celled>
+                <Table.Header>
+                  <Table.Row>
+                    <Table.HeaderCell>Week</Table.HeaderCell>
+                    <Table.HeaderCell>Total Hours Worked</Table.HeaderCell>
+                    <Table.HeaderCell>Total Number of Orders</Table.HeaderCell>
+                    <Table.HeaderCell>
+                      Total Salary (exlcuding base salary)
+                    </Table.HeaderCell>
+                  </Table.Row>
+                </Table.Header>
 
-              <Table.Body>
-                {workHours &&
-                  workHours
-                    .filter((work) => work.month === 4)
-                    .map((work) => (
-                      <Fragment>
-                        <Table.Row>
-                          <Table.Cell>{work.week}</Table.Cell>
-                          <Table.Cell>{work.sum}</Table.Cell>
-                          {deliverOrders &&
-                            deliverOrders
-                              .filter((order) => order.week === work.week)
-                              .map((order) => (
-                                <Fragment>
-                                  <Table.Cell>
-                                    {order.count ? order.count : 0}
-                                  </Table.Cell>
-                                  <Table.Cell>
-                                    {order.sum ? order.sum : 0}
-                                  </Table.Cell>
-                                </Fragment>
-                              ))}
-                        </Table.Row>
-                      </Fragment>
-                    ))}
-              </Table.Body>
-            </Table>
+                <Table.Body>
+                  {workHours &&
+                    workHours
+                      .filter((work) => work.month === 4)
+                      .map((work) => (
+                        <Fragment>
+                          <Table.Row>
+                            <Table.Cell>{work.week}</Table.Cell>
+                            <Table.Cell>{work.sum}</Table.Cell>
+                            {deliverOrders &&
+                              deliverOrders
+                                .filter((order) => order.week === work.week)
+                                .map((order) => (
+                                  <Fragment>
+                                    <Table.Cell>
+                                      {order.count ? order.count : 0}
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                      {order.sum ? order.sum : 0}
+                                    </Table.Cell>
+                                  </Fragment>
+                                ))}
+                          </Table.Row>
+                        </Fragment>
+                      ))}
+                </Table.Body>
+              </Table>
+            </Segment>
             <DRCurrentOrder />
           </Grid.Column>
+
           <Grid.Column width={4}>
             <AccountNav />
           </Grid.Column>

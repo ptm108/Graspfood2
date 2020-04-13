@@ -2,7 +2,11 @@ import React, { Component, Fragment } from "react";
 import { Segment, Header, Label, Button } from "semantic-ui-react";
 import { connect } from "react-redux";
 import { getOrderDetailsByDrid } from "../order/orderUtils/OrderActions";
-import { setArriveAtRestaurant, setLeftRestaurant, setDeliveredTime } from "./riderUtils/riderActions";
+import {
+  setArriveAtRestaurant,
+  setLeftRestaurant,
+  setDeliveredTime,
+} from "./riderUtils/riderActions";
 
 const mapStateToProps = (state) => ({
   currentUser: state.auth.currentUser,
@@ -13,7 +17,7 @@ const mapDispatchToProps = {
   getOrderDetailsByDrid,
   setArriveAtRestaurant,
   setLeftRestaurant,
-  setDeliveredTime
+  setDeliveredTime,
 };
 
 class DRCurrentOrder extends Component {
@@ -36,19 +40,19 @@ class DRCurrentOrder extends Component {
     const { setArriveAtRestaurant, currentOrder } = this.props;
     setArriveAtRestaurant(currentOrder.oid);
     this.setState({ deliveryStatus: "Arrived at restaurant" });
-  }
+  };
 
   handleLeftRestaurant = () => {
     const { setLeftRestaurant, currentOrder } = this.props;
     setLeftRestaurant(currentOrder.oid);
     this.setState({ deliveryStatus: "Delivering order" });
-  }
+  };
 
   handleDelivered = () => {
     const { setDeliveredTime, currentOrder } = this.props;
     setDeliveredTime(currentOrder.oid);
     this.setState({ deliveryStatus: "Order delivered" });
-  }
+  };
 
   state = {
     deliveryStatus: "",
@@ -66,7 +70,7 @@ class DRCurrentOrder extends Component {
         <Segment secondary>
           <Header as="h4">
             Your Current Status:{" "}
-            {currentOrder.isidle ? (
+            {currentOrder && currentOrder.isidle ? (
               <Label color="green" horizontal>
                 IDLE
               </Label>
@@ -77,7 +81,7 @@ class DRCurrentOrder extends Component {
             )}
           </Header>
         </Segment>
-        {!currentOrder.isidle && (
+        {currentOrder && !currentOrder.isidle && (
           <Fragment>
             <Segment>
               <b>Order Id:</b> {currentOrder.oid}

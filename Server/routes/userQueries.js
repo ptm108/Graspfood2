@@ -794,6 +794,22 @@ router.get("/api/get/allRiderDeliveriesInfo", (req, res, next) => {
   );
 });
 
+// fds info 4 (get all riders work hours)
+router.get("/api/get/allRiderWorkHours", (req, res, next) => {
+  client.query(
+    `SELECT uid, sum(hours), extract(month from timestamp) as month
+    FROM works group by uid, extract(month from timestamp) order by month`,
+    (q_err, q_res) => {
+      if (q_err) {
+        console.log(q_err);
+        return next(q_err);
+      }
+      console.log(q_res);
+      res.send(q_res);
+    }
+  );
+});
+
 // restaurantStaff info 1 (get restaurant details)
 router.get("/api/get/restaurantDetails", (req, res, next) => {
   const uid = [req.query.uid];
