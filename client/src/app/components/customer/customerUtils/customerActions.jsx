@@ -32,7 +32,7 @@ export const addCreditCard = values => {
       .post("/api/post/addCreditCard", values)
       .then(res => {
         //console.log(res.data);
-        if (res.data.length >= 0) {
+        if (res.data.status === "SUCCESS") {
           toastr.success("Credit Card added successfully!");
         } else {
           toastr.error("Oops! Something went wrong");

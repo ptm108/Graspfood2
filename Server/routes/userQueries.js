@@ -248,11 +248,17 @@ router.post("/api/post/addCreditCard", (req, res, next) => {
     creditcard,
     (q_err, q_res) => {
       if (q_err) {
-        console.log(q_err);
-        res.send(q_err.detail);
+        // console.log(q_err);
+        res.json({
+          status: "ERROR",
+          msg: q_err
+        })
       } else {
-        console.log(q_res);
-        res.json(creditcard);
+        // console.log(q_res);
+        res.json({
+          status: "SUCCESS",
+          msg: q_res
+        });
       }
     }
   );

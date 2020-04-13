@@ -39,9 +39,9 @@ class AccountPage extends Component {
             {accessRight === 4 && (
               <Segment>
                 <Header content="Customer Details" />
-                Customer Name: {userDetails && userDetails[0].cname}
+                Customer Name: {currentUser.cname}
                 <br />
-                Reward Points: {userDetails && userDetails[0].rewardpoints}
+                Reward Points: {currentUser.rewardpoints}
               </Segment>
             )}
             {accessRight === 4 && <ReviewPostings />}
@@ -50,11 +50,11 @@ class AccountPage extends Component {
             {accessRight === 3 && (
               <Fragment>
                 <Header>
-                  Rider Name: {userDetails && userDetails[0].drname}
+                  Rider Name: {currentUser.drname}
                 </Header>
                 <Header sub>
                   Rider Rating:{" "}
-                  {userDetails && userDetails[0].deliveryriderrating}
+                  {currentUser.deliveryriderrating}
                 </Header>
               </Fragment>
             )}
