@@ -60,13 +60,23 @@ router.post("/api/post/registerUser", async (req, res, next) => {
 
     if (req.body.accessRight === "1") {
       console.log("inserting restaurant staff");
-      await client.query(
-        `INSERT into RestaurantStaff(uid, rsName) VALUES ($1, $2)`,
-        [retrievedUser.rows[0].uid, req.body.username],
-        (q_err, q_res) => {
-          if (q_err) console.log(q_err);
-        }
+      let response = await client.query(
+        `SELECT count(*) FROM Restaurant WHERE rid = $1`,
+        [req.body.restaurantId]
       );
+      let count = response.rows[0].count;
+      console.log(count);
+      if (count !== "0") {
+        await client.query(
+          `INSERT into RestaurantStaff(uid, rsName, rid) VALUES ($1, $2, $3)`,
+          [retrievedUser.rows[0].uid, req.body.username, req.body.restaurantId],
+          (q_err, q_res) => {
+            if (q_err) console.log(q_err);
+          }
+        );
+      } else {
+        throw "Restaurant does not exist!";
+      }
     }
     if (req.body.accessRight === "2") {
       console.log("inserting fds manager");
@@ -129,6 +139,7 @@ router.post("/api/post/registerUser", async (req, res, next) => {
     client.query("ROLLBACK", (q_err, q_res) => {
       console.log(q_res);
     });
+    res.json(error);
     console.log("rollbacked");
   }
 });
@@ -429,11 +440,13 @@ router.post("/api/post/postNewOrder", async (req, res, next) => {
     const oid = response.rows[0].oid;
     const propagateContainsQuery = `INSERT INTO Contains(fid, oid, qty) VALUES ($1, $2, $3)`;
 
-    addedFoodItems.filter(f => f.fooditem.fid > 0).forEach(async (fooditem) => {
-      const containsParams = [fooditem.fooditem.fid, oid, fooditem.quantity];
-      // console.log(containsParams);
-      await client.query(propagateContainsQuery, containsParams);
-    });
+    addedFoodItems
+      .filter((f) => f.fooditem.fid > 0)
+      .forEach(async (fooditem) => {
+        const containsParams = [fooditem.fooditem.fid, oid, fooditem.quantity];
+        // console.log(containsParams);
+        await client.query(propagateContainsQuery, containsParams);
+      });
 
     const findAvailRiderQuery = `SELECT * FROM DeliveryRider dr WHERE dr.isIdle = true LIMIT 1`;
     const result = await client.query(findAvailRiderQuery, []);
@@ -441,7 +454,7 @@ router.post("/api/post/postNewOrder", async (req, res, next) => {
     const dr = result.rows[0];
 
     if (result.rows.length === 0) {
-      throw "All our Riders are busy currently.."
+      throw "All our Riders are busy currently..";
     }
 
     const insertIntoDeliversQuery = `INSERT INTO Delivers(oid, uid, riderLeaveForRestaurantTime) VALUES ($1, $2, NOW())`;

@@ -33,6 +33,7 @@ export const register = user => {
     await axios
       .post("/api/post/registerUser", user)
       .then(res => {
+        console.log(typeof res.data);
         if ((typeof res.data) !== "string") {
           let newUser = JSON.parse(res.config.data);
           toastr.success("Success!", "Welcome, " + newUser.username);
