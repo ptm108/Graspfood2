@@ -560,6 +560,89 @@ router.get("/api/get/retrievePromoCodes", async (req, res, next) => {
   );
 });
 
+router.get("/api/get/getCurrentOrderByDrid", async (req, res, next) => {
+  // console.log(req);
+  const drid = [req.query[0]];
+  console.log(drid);
+
+  let response = await client.query(
+    `SELECT * FROM OrderPlaced op 
+  JOIN Delivers d 
+  ON op.oid = d.oid
+  JOIN DeliveryRider dr
+  ON dr.uid = d.uid
+  WHERE d.uid = $1
+  ORDER BY timestamp DESC
+  LIMIT 1`,
+    drid,
+    (q_err, q_res) => {
+      // console.log(q_res)
+      res.json(q_res.rows[0]);
+    }
+  );
+  // console.log(response.rows[0]);
+});
+
+router.put(
+  "/api/put/updateDeliversArriveRestaurant",
+  async (req, res, next) => {
+    const oid = [req.body.params];
+    console.log(oid);
+
+    client.query(
+      `UPDATE Delivers 
+    SET riderarriveatrestauranttime = current_timestamp
+    WHERE oid = $1`,
+      oid,
+      (q_err, q_res) => {
+        if (q_err) {
+          res.json(q_err);
+        } else {
+          res.json(q_res);
+        }
+      }
+    );
+  }
+);
+
+router.put("/api/put/updateDeliversLeftRestaurant", async (req, res, next) => {
+  const oid = [req.body.params];
+  console.log(oid);
+
+  client.query(
+    `UPDATE Delivers 
+  SET riderleaverestauranttime = current_timestamp
+  WHERE oid = $1`,
+    oid,
+    (q_err, q_res) => {
+      if (q_err) {
+        res.json(q_err);
+      } else {
+        res.json(q_res);
+      }
+    }
+  );
+});
+
+router.put("/api/put/updateDeliveredTime", async (req, res, next) => {
+  const oid = [req.body.params];
+  console.log(oid);
+
+  client.query(
+    `UPDATE Delivers 
+  SET riderdelivertime = current_timestamp
+  WHERE oid = $1`,
+    oid,
+    (q_err, q_res) => {
+      if (q_err) {
+        res.json(q_err);
+      } else {
+        res.json(q_res);
+      }
+    }
+  );
+});
+
 /*
 
 

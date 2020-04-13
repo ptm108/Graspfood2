@@ -53,3 +53,36 @@ export const resetState = () => {
     dispatch({ type: RESET_STATE });
   };
 };
+
+export const setArriveAtRestaurant = (oid) => {
+  console.log(oid);
+  return async (dispatch, getState) => {
+    await axios
+      .put("/api/put/updateDeliversArriveRestaurant", { params: oid })
+      .then((res) => {
+        console.log(res);
+      });
+  };
+};
+
+export const setLeftRestaurant = (oid) => {
+  console.log(oid);
+  return async (dispatch, getState) => {
+    await axios
+      .put("/api/put/updateDeliversLeftRestaurant", { params: oid })
+      .then((res) => {
+        console.log(res);
+      });
+  };
+};
+
+export const setDeliveredTime = (oid) => {
+  console.log(oid);
+  return async (dispatch, getState) => {
+    await axios
+      .put("/api/put/updateDeliveredTime", { params: oid })
+      .then((res) => {
+        console.log(res);
+      });
+  };
+};

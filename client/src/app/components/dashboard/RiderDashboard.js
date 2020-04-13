@@ -7,6 +7,7 @@ import {
   fetchDeliverOrders,
   resetState,
 } from "../deliveryRider/riderUtils/riderActions";
+import DRCurrentOrder from "../deliveryRider/DRCurrentOrder";
 
 const mapStateToProps = (state) => ({
   currentUser: state.auth.currentUser,
@@ -119,6 +120,7 @@ class RiderDashboard extends Component {
                 </Table.Row>
               </Table.Body>
             </Table>
+            <DRCurrentOrder />
           </Grid.Column>
           <Grid.Column width={4}>
             <AccountNav />
