@@ -35,6 +35,7 @@ minSpending DECIMAL,
 streetName VARCHAR(255), 
 unitNo VARCHAR(255), 
 postalCode BIGINT, 
+rating NUMERIC(2, 1),
 PRIMARY KEY(rid)
 );
 
