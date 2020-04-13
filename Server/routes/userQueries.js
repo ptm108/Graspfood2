@@ -429,7 +429,7 @@ router.post("/api/post/postNewOrder", async (req, res, next) => {
     const oid = response.rows[0].oid;
     const propagateContainsQuery = `INSERT INTO Contains(fid, oid, qty) VALUES ($1, $2, $3)`;
 
-    addedFoodItems.filter(f => f.fooditem.fid !== -1).forEach(async (fooditem) => {
+    addedFoodItems.filter(f => f.fooditem.fid > 0).forEach(async (fooditem) => {
       const containsParams = [fooditem.fooditem.fid, oid, fooditem.quantity];
       // console.log(containsParams);
       await client.query(propagateContainsQuery, containsParams);
@@ -439,6 +439,10 @@ router.post("/api/post/postNewOrder", async (req, res, next) => {
     const result = await client.query(findAvailRiderQuery, []);
     // console.log(response);
     const dr = result.rows[0];
+
+    if (result.rows.length === 0) {
+      throw "All our Riders are busy currently.."
+    }
 
     const insertIntoDeliversQuery = `INSERT INTO Delivers(oid, uid, riderLeaveForRestaurantTime) VALUES ($1, $2, NOW())`;
     const deliversParams = [oid, dr.uid];

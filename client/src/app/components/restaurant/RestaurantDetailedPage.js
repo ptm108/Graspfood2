@@ -48,10 +48,15 @@ class RestaurantDetailedPage extends Component {
               <Icon name="food" />
               <Header.Content>Restaurant Details</Header.Content>
             </Header>
-            <Header.Subheader>Name: {restaurant.rname}</Header.Subheader>
             <Header.Subheader>
-              Address: {restaurant.streetname}, {restaurant.unitno}, Singapore{" "}
-              {restaurant.postalcode}
+              <b>Name:</b> {restaurant.rname}
+            </Header.Subheader>
+            <Header.Subheader>
+              <b>Address:</b> {restaurant.streetname}, {restaurant.unitno},
+              Singapore {restaurant.postalcode}
+            </Header.Subheader>
+            <Header.Subheader>
+              <b>Minimum Spending:</b> ${restaurant.minspending}
             </Header.Subheader>
           </Segment>
           <RestaurantPromoList rid={restaurant.rid} />
