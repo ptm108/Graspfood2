@@ -28,6 +28,7 @@ class OrderList extends Component {
 
   render() {
     const { orders } = this.props;
+    console.log(orders);
     return (
       <Fragment>
         <Segment>

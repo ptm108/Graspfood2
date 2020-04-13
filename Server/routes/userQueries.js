@@ -17,10 +17,10 @@ router.get("/api/get/loginUser", (req, res, next) => {
   // console.log(req.query);
   client.query(
     `SELECT * FROM Actor a
-    FULL OUTER JOIN Customer c ON a.uid = c.uid
-    FULL OUTER JOIN DeliveryRider dr ON a.uid = dr.uid 
-    FULL OUTER JOIN FDSManager fm ON a.uid = fm.uid
-    FULL OUTER JOIN RestaurantStaff rs ON a.uid = rs.uid
+    NATURAL LEFT JOIN Customer c 
+    NATURAL LEFT JOIN DeliveryRider dr
+    NATURAL LEFT JOIN FDSManager fm 
+    NATURAL LEFT JOIN RestaurantStaff rs 
     WHERE a.username = $1 
     AND a.password = $2`,
     creds,
@@ -186,8 +186,9 @@ router.put("/api/put/changePassword", (req, res, next) => {
 });
 
 router.get("/api/get/orderList", (req, res, next) => {
+  console.log("orderlist");
   const uid = [req.query[0]];
-  console.log(req.query);
+  // console.log(req);
   client.query(
     `SELECT * from orderplaced op where op.uid = $1 ORDER BY timestamp DESC LIMIT 10;`,
     uid,
@@ -292,27 +293,28 @@ router.post("/api/post/createFoodItem", (req, res, next) => {
     req.body.description,
     req.body.category,
     0,
-    parseInt(req.body.dailylimit) || 1000
-  ]
+    parseInt(req.body.dailylimit) || 1000,
+  ];
 
-  client.query(`INSERT INTO FoodItem (rid, fname, price, description, category, currentnumoforders, dailylimit)
-  VALUES($1, $2, $3, $4, $5, $6, $7)`, 
-  newFoodItemParams,
-  (q_err, q_res) => {
-    if (q_err) {
-      res.json({
-        status: "ERROR",
-        msg: q_err
-      })
-    } else {
-      res.json({
-        status: "SUCCESS",
-        msg: "Item created"
-      })
+  client.query(
+    `INSERT INTO FoodItem (rid, fname, price, description, category, currentnumoforders, dailylimit)
+  VALUES($1, $2, $3, $4, $5, $6, $7)`,
+    newFoodItemParams,
+    (q_err, q_res) => {
+      if (q_err) {
+        res.json({
+          status: "ERROR",
+          msg: q_err,
+        });
+      } else {
+        res.json({
+          status: "SUCCESS",
+          msg: "Item created",
+        });
+      }
     }
-  })
-
-})
+  );
+});
 
 router.get("/api/get/customerDetails", (req, res, next) => {
   console.log(req.query);
