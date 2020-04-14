@@ -322,11 +322,63 @@ router.post("/api/post/createFoodItem", (req, res, next) => {
   );
 });
 
+router.post("/api/post/createPromo", (req, res, next) => {
+  console.log(req.body);
+  const newPromoParams = [
+    req.body.rid,
+    parseFloat(req.body.minSpending) || 0,
+    parseInt(req.body.percentagediscount),
+    parseInt(req.body.maxcustomercount),
+    req.body.startdate,
+    req.body.enddate,
+    req.body.promocode
+  ];
+  console.log(newPromoParams)
+
+  client.query(
+    `INSERT INTO Promotion (rid, minspending, percentdiscount, maxcustomercount, startdate, enddate, promocode)
+  VALUES($1, $2, $3, $4, $5, $6, $7)`,
+    newPromoParams,
+    (q_err, q_res) => {
+      if (q_err) {
+        console.log(q_err)
+        res.json({
+          status: "ERROR",
+          msg: q_err,
+        });
+      } else {
+        res.json({
+          status: "SUCCESS",
+          msg: "Item created",
+        });
+      }
+    }
+  );
+});
+
 router.delete("/api/delete/deleteFoodItem", (req, res, next) => {
   console.log(req.query.fid);
   const fid = [req.query.fid];
   client.query(`DELETE FROM FoodItem WHERE fid = $1`,
   fid,
+  (q_err, q_res) => {
+    if (q_err) {
+      res.json({
+        status: "ERROR"
+      })
+    } else {
+      res.json({
+        status: "SUCCESS"
+      })
+    }
+  })
+})
+
+router.delete("/api/delete/deletePromo", (req, res, next) => {
+  console.log(req.query.pid);
+  const pid = [req.query.pid];
+  client.query(`DELETE FROM Promotion WHERE pid = $1`,
+  pid,
   (q_err, q_res) => {
     if (q_err) {
       res.json({
@@ -604,7 +656,7 @@ router.get("/api/get/orderDetails", async (req, res, next) => {
 });
 
 router.get("/api/get/retrievePromoCodes", async (req, res, next) => {
-  console.log(req);
+  // console.log(req);
   const rid = [req.query[0]];
   console.log(rid);
   await client.query(

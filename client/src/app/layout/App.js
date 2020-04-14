@@ -23,6 +23,7 @@ import FDSButton4 from "../components/fds/FDSButton4";
 import OrderDetailedPage from "../components/order/OrderDetailedPage";
 import RestaurantStaffButton1 from "../components/restaurantStaff/RestaurantStaffButton1";
 import RestaurantStaffButton2 from "../components/restaurantStaff/RestaurantStaffButton2";
+import RestaurantPromoAdmin from "../components/restaurantStaff/RestaurantPromoAdmin";
 
 class App extends Component {
   render() {
@@ -81,6 +82,7 @@ class App extends Component {
                     component={RestaurantDetailedPage}
                   />
                   <Route path="/order/:id" component={OrderDetailedPage} />
+                  <Route path="/restaurantAdmin/" component={RestaurantPromoAdmin}/>
                   <Route component={NotFound} />
                 </Switch>
               </Container>

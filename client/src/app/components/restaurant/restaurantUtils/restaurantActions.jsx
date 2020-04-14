@@ -102,3 +102,32 @@ export const deleteFoodItem = (fid) => {
       });
   };
 };
+
+export const createNewPromo = (promo) => {
+  console.log(promo);
+  return async (dispatch, getState) => {
+    await axios.post("/api/post/createPromo", promo).then((res) => {
+      console.log(res);
+      if (res.data.status === "SUCCESS") {
+        toastr.success("Yay", "Promo created");
+      } else {
+        toastr.error("Error", "Something went wrong");
+      }
+    });
+  };
+};
+
+export const deletePromo = (pid) => {
+  return async (dispatch, getState) => {
+    console.log(pid);
+    await axios
+      .delete("/api/delete/deletePromo", {params: {pid: pid}})
+      .then((res) => {
+        if (res.data.status === "SUCCESS") {
+          toastr.success("Success", "Promo Deleted")
+        } else {
+          toastr.error("Error", "Something went wrong")
+        }
+      });
+  };
+};

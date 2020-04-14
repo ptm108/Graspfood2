@@ -6,15 +6,15 @@ import { SIGN_OUT_USER } from "../auth/authConstants";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 
-const mapStateToProps = state => ({
-  currentUser: state.auth.currentUser
+const mapStateToProps = (state) => ({
+  currentUser: state.auth.currentUser,
 });
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
     signOut: () => {
       dispatch({ type: SIGN_OUT_USER });
-    }
+    },
   };
 };
 
@@ -33,6 +33,11 @@ const AccountNav = ({ signOut, history, currentUser }) => {
           {currentUser.accessright === 4 && (
             <Menu.Item as={NavLink} to="/creditcard">
               Add/Remove Credit Card
+            </Menu.Item>
+          )}
+          {currentUser.accessright === 1 && (
+            <Menu.Item as={NavLink} to="/restaurantAdmin">
+              Manage Restaurant Promos
             </Menu.Item>
           )}
           <Menu.Item>
