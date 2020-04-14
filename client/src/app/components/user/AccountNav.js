@@ -40,6 +40,11 @@ const AccountNav = ({ signOut, history, currentUser }) => {
               Manage Restaurant Promos
             </Menu.Item>
           )}
+          {currentUser.accessright === 3 && (
+            <Menu.Item as={NavLink} to="/drSchedule">
+              Manage Working Hours
+            </Menu.Item>
+          )}
           <Menu.Item>
             <Button fluid onClick={signOut} as={NavLink} to="/dashboard">
               Log Out

@@ -4,6 +4,7 @@ import {
   FETCH_DELIVERS,
   RESET_STATE,
   FETCH_WORK_HOURS,
+  GET_CURR_WEEK_HOURS,
 } from "./riderConstants";
 
 const initialState = {
@@ -44,9 +45,17 @@ const resetState = (state) => {
   };
 };
 
+const getCurrWeekHours = (state, payload) => {
+  return {
+    ...state,
+    hours: payload
+  };
+};
+
 export default createReducer(initialState, {
   [FETCH_USER_DETAILS]: fetchRiderDetails,
   [FETCH_DELIVERS]: fetchDelivers,
   [RESET_STATE]: resetState,
   [FETCH_WORK_HOURS]: fetchHours,
+  [GET_CURR_WEEK_HOURS]: getCurrWeekHours
 });

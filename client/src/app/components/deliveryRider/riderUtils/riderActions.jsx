@@ -5,6 +5,7 @@ import {
   FETCH_DELIVERS,
   RESET_STATE,
   FETCH_WORK_HOURS,
+  GET_CURR_WEEK_HOURS,
 } from "./riderConstants";
 
 export const fetchRiderDetails = (values) => {
@@ -83,6 +84,45 @@ export const setDeliveredTime = (oid) => {
       .put("/api/put/updateDeliveredTime", { params: oid })
       .then((res) => {
         console.log(res);
+      });
+  };
+};
+
+export const getDeliveryRiderSchedule = (uid) => {
+  return async (dispatch, getState) => {
+    await axios
+      .get("/api/get/getDRSchedule", { params: { uid: uid } })
+      .then((res) => {
+        dispatch({ type: GET_CURR_WEEK_HOURS, payload: res.data.rows });
+      });
+  };
+};
+
+export const addDeliveryRiderSchedule = (schedule) => {
+  return async (dispatch, getState) => {
+    await axios.post("/api/post/addDRSchedule", schedule).then((res) => {
+      console.log(res);
+      if (res.data.status === "SUCCESS") {
+        toastr.success("Success", "Schedule updated");
+      } else {
+        toastr.error("Error", "Conflict in schedule");
+      }
+    });
+  };
+};
+
+export const deleteDeliveryRiderSchedule = (schedule) => {
+  console.log(schedule);
+  return async (dispatch, getState) => {
+    await axios
+      .delete("/api/post/deleteDRSchedule", { params: schedule })
+      .then((res) => {
+        console.log(res);
+        if (res.data.status === "SUCCESS") {
+          toastr.success("Success", "Schedule updated");
+        } else {
+          toastr.error("Error", "Conflict in schedule");
+        }
       });
   };
 };

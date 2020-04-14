@@ -516,77 +516,84 @@ router.post("/api/post/postNewOrder", async (req, res, next) => {
     promotion = promotion.rows[0];
     console.log(promotion);
 
-    if (promotion.customertype === "OLD CUSTOMER") {
-      let result = await client.query(
-        `SELECT count(*) FROM OrderPlaced 
+    if (promotion) {
+      if (promotion.customertype === "OLD CUSTOMER") {
+        let result = await client.query(
+          `SELECT count(*) FROM OrderPlaced 
       WHERE uid = $1
       AND timestamp > current_date - integer '90'`,
-        [uid]
-      );
-      let count = result.rows[0].count;
-      if (count > 0) {
-        throw "Promo Code does not apply!";
-      }
-    } else if (promotion.customertype === "NEW CUSTOMER") {
-      let result = await client.query(
-        `SELECT count(*) FROM OrderPlaced 
+          [uid]
+        );
+        let count = result.rows[0].count;
+        if (count > 0) {
+          throw "Promo Code does not apply!";
+        }
+      } else if (promotion.customertype === "NEW CUSTOMER") {
+        let result = await client.query(
+          `SELECT count(*) FROM OrderPlaced 
       WHERE uid = $1`,
-        [uid]
-      );
-      let count = result.rows[0].count;
-      if (count > 0) {
-        throw "Promo Code does not apply!";
+          [uid]
+        );
+        let count = result.rows[0].count;
+        if (count > 0) {
+          throw "Promo Code does not apply!";
+        }
+      } else if (promotion.currcustomercount > promotion.maxcustomercount) {
+        throw "Promo code sold out!";
+      } else if (promotion.percentdiscount === null) {
+        createNewOrderParams.pop();
+        createNewOrderParams.push(0);
       }
-    } else if (promotion.currcustomercount > promotion.maxcustomercount) {
-      throw "Promo code sold out!";
-    } else if (promotion.percentdiscount === null) {
-      createNewOrderParams.pop();
-      createNewOrderParams.push(0);
     }
 
-    // insert into orders placed
-    const createNewOrderQuery = `INSERT INTO OrderPlaced(uid, rid, totalPrice, paymentMethod, address, timestamp, deliveryFee, postalcode, rewardpointsused, promocode) VALUES ($1, $2, $3, $4, $5, NOW(), $9, $6, $7, $8) RETURNING oid`;
-    const response = await client.query(
-      createNewOrderQuery,
-      createNewOrderParams
-    );
+    let response = await client.query(`SELECT NOW()`);
+    console.log(response);
 
-    const oid = response.rows[0].oid;
-    const propagateContainsQuery = `INSERT INTO Contains(fid, oid, qty) VALUES ($1, $2, $3)`;
+    throw "Testing...";
 
-    addedFoodItems
-      .filter((f) => f.fooditem.fid > 0)
-      .forEach(async (fooditem) => {
-        const containsParams = [fooditem.fooditem.fid, oid, fooditem.quantity];
-        // console.log(containsParams);
-        await client.query(propagateContainsQuery, containsParams);
-      });
+    // // insert into orders placed
+    // const createNewOrderQuery = `INSERT INTO OrderPlaced(uid, rid, totalPrice, paymentMethod, address, timestamp, deliveryFee, postalcode, rewardpointsused, promocode) VALUES ($1, $2, $3, $4, $5, NOW(), $9, $6, $7, $8) RETURNING oid`;
+    // const response = await client.query(
+    //   createNewOrderQuery,
+    //   createNewOrderParams
+    // );
 
-    const findAvailRiderQuery = `SELECT * FROM DeliveryRider dr WHERE dr.isIdle = true LIMIT 1`;
-    const result = await client.query(findAvailRiderQuery, []);
-    // console.log(response);
-    const dr = result.rows[0];
+    // const oid = response.rows[0].oid;
+    // const propagateContainsQuery = `INSERT INTO Contains(fid, oid, qty) VALUES ($1, $2, $3)`;
 
-    if (result.rows.length === 0) {
-      throw "All our Riders are busy currently..";
-    }
+    // addedFoodItems
+    //   .filter((f) => f.fooditem.fid > 0)
+    //   .forEach(async (fooditem) => {
+    //     const containsParams = [fooditem.fooditem.fid, oid, fooditem.quantity];
+    //     // console.log(containsParams);
+    //     await client.query(propagateContainsQuery, containsParams);
+    //   });
 
-    const insertIntoDeliversQuery = `INSERT INTO Delivers(oid, uid, riderLeaveForRestaurantTime) VALUES ($1, $2, NOW())`;
-    const deliversParams = [oid, dr.uid];
-    await client.query(insertIntoDeliversQuery, deliversParams);
+    // const findAvailRiderQuery = `SELECT * FROM DeliveryRider dr WHERE dr.isIdle = true LIMIT 1`;
+    // const result = await client.query(findAvailRiderQuery, []);
+    // // console.log(response);
+    // const dr = result.rows[0];
 
-    await client.query("COMMIT", (q_err, q_res) => {
-      if (q_res) {
-        res.json({
-          status: "SUCCESS",
-          dr: dr,
-          oid: oid,
-        });
-      } else {
-        res.json(q_err);
-      }
-    });
-    console.log("commited");
+    // if (result.rows.length === 0) {
+    //   throw "All our Riders are busy currently..";
+    // }
+
+    // const insertIntoDeliversQuery = `INSERT INTO Delivers(oid, uid, riderLeaveForRestaurantTime) VALUES ($1, $2, NOW())`;
+    // const deliversParams = [oid, dr.uid];
+    // await client.query(insertIntoDeliversQuery, deliversParams);
+
+    // await client.query("COMMIT", (q_err, q_res) => {
+    //   if (q_res) {
+    //     res.json({
+    //       status: "SUCCESS",
+    //       dr: dr,
+    //       oid: oid,
+    //     });
+    //   } else {
+    //     res.json(q_err);
+    //   }
+    // });
+    // console.log("commited");
   } catch (e) {
     await client.query("ROLLBACK", (q_err, q_res) => {
       res.json({
@@ -607,10 +614,13 @@ router.get("/api/get/orderDetails", async (req, res, next) => {
     await client.query("BEGIN");
 
     let response = await client.query(
-      `SELECT * FROM OrderPlaced WHERE oid = $1`,
+      `SELECT * FROM OrderPlaced op 
+      JOIN Delivers d ON op.oid = d.oid
+      WHERE op.oid = $1`,
       oid
     );
     const order = response.rows[0];
+    console.log(order);
 
     response = await client.query(
       `SELECT * FROM Contains c NATURAL JOIN Fooditem WHERE c.oid = $1`,
@@ -1010,6 +1020,103 @@ router.get("/api/get/promoDetails", (req, res, next) => {
       res.send(q_res);
     }
   );
+});
+
+/*
+
+
+WORKS TABLE Related!!
+
+
+*/
+
+router.get("/api/get/getDRSchedule", (req, res, next) => {
+  // console.log(req.query);
+  const uid = [req.query.uid];
+  console.log(uid);
+
+  client.query(
+    `SELECT * FROM Works 
+  WHERE uid = $1
+  AND extract(week from timestamp) = extract(week from NOW())`,
+    uid,
+    (q_err, q_res) => {
+      if (q_err) {
+        res.json(q_err);
+      } else {
+        res.json(q_res);
+      }
+    }
+  );
+});
+
+router.post("/api/post/addDRSchedule", async (req, res, next) => {
+  // console.log(req.body);
+  let newScheduleParams = [
+    req.body.uid,
+    parseInt(req.body.dayNo),
+    parseInt(req.body.startNo),
+    parseInt(req.body.endNo),
+    // parseInt(req.body.endNo) - parseInt(req.body.startNo),
+  ];
+  console.log(newScheduleParams);
+
+  let response = await client.query(
+    `SELECT * FROM Works 
+    WHERE $1 = uid
+    AND $2 = dayno
+    AND extract(week from timestamp) = extract(week from NOW())
+    AND (($3 <= endno AND $4 >= startno) OR ($3 <= endno AND $4 >= startno)) 
+    `,
+    newScheduleParams
+  );
+
+  if (response.rows.length > 0) {
+    res.json({
+      status: "ERROR",
+      msg: "Conflict",
+    });
+    return;
+  }
+
+  newScheduleParams = [
+    ...newScheduleParams,
+    parseInt(req.body.endNo) - parseInt(req.body.startNo),
+  ];
+  console.log(newScheduleParams);
+
+  client.query(
+    `INSERT INTO Works (uid, dayno, startno, endno, hours, timestamp)
+  VALUES ($1, $2, $3, $4, $5, NOW())`,
+    newScheduleParams,
+    (q_err, q_res) => {
+      if (q_err) {
+        res.json(q_err);
+      } else {
+        res.json({
+          status: "SUCCESS",
+        });
+      }
+    }
+  );
+});
+
+router.delete("/api/post/deleteDRSchedule", async (req, res, next) => {
+  // console.log(req.query);
+
+  const deleteParams = [
+    req.query.uid,
+    req.query.dayNo,
+    req.query.startNoDel,
+    req.query.endNoDel,
+  ];
+  console.log(deleteParams);
+
+  // client.query(`SELECT COUNT(*) FROM Works
+  // WHERE dayNo = $1,
+  // AND da
+  // GROUP BY `)
+
 });
 
 module.exports = router;

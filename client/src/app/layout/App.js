@@ -24,6 +24,7 @@ import OrderDetailedPage from "../components/order/OrderDetailedPage";
 import RestaurantStaffButton1 from "../components/restaurantStaff/RestaurantStaffButton1";
 import RestaurantStaffButton2 from "../components/restaurantStaff/RestaurantStaffButton2";
 import RestaurantPromoAdmin from "../components/restaurantStaff/RestaurantPromoAdmin";
+import DeliveryRiderSchedule from "../components/deliveryRider/DeliveryRiderSchedule";
 
 class App extends Component {
   render() {
@@ -83,6 +84,7 @@ class App extends Component {
                   />
                   <Route path="/order/:id" component={OrderDetailedPage} />
                   <Route path="/restaurantAdmin/" component={RestaurantPromoAdmin}/>
+                  <Route path="/drSchedule/" component={DeliveryRiderSchedule}/>
                   <Route component={NotFound} />
                 </Switch>
               </Container>
