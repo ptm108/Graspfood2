@@ -121,7 +121,9 @@ export const deleteDeliveryRiderSchedule = (schedule) => {
         if (res.data.status === "SUCCESS") {
           toastr.success("Success", "Schedule updated");
         } else {
-          toastr.error("Error", "Conflict in schedule");
+          
+          const msg = res.data.msg || "Conflict in schedule"
+          toastr.error("Error", msg);
         }
       });
   };

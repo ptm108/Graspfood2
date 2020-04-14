@@ -1094,20 +1094,35 @@ router.post("/api/post/addDRSchedule", async (req, res, next) => {
   ];
   console.log(newScheduleParams);
 
-  client.query(
-    `INSERT INTO Works (uid, dayno, startno, endno, hours, timestamp)
-  VALUES ($1, $2, $3, $4, $5, NOW())`,
-    newScheduleParams,
-    (q_err, q_res) => {
-      if (q_err) {
-        res.json(q_err);
-      } else {
-        res.json({
-          status: "SUCCESS",
-        });
+  try {
+    await client.query('BEGIN')
+    await client.query(
+      `INSERT INTO Works (uid, dayno, startno, endno, hours, timestamp)
+    VALUES ($1, $2, $3, $4, $5, NOW())`,
+      newScheduleParams,
+      (q_err, q_res) => {
+        if (q_err) {
+          throw q_err
+        } else {
+          res.json({
+            status: "SUCCESS",
+          });
+        }
       }
-    }
-  );
+    );
+    await client.query(`UPDATE DeliveryRider 
+    SET timeforscheduleupdate = NOW()
+    WHERE uid = $1`,
+    [req.body.uid])
+
+    await client.query('COMMIT')
+  } catch (error) {
+    await client.query('ROLLBACK');
+    res.json({
+      status: "Rolled back",
+      msg: error
+    })
+  }
 });
 
 router.delete("/api/post/deleteDRSchedule", async (req, res, next) => {

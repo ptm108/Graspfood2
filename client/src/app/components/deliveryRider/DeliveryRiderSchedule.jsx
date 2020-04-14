@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from "react";
-import { Grid, Header, Segment, Form, Select, Table } from "semantic-ui-react";
+import { Grid, Header, Segment, Form, Select, Table, Label } from "semantic-ui-react";
 import { connect } from "react-redux";
 import AccountNav from "../user/AccountNav";
 import {
@@ -116,8 +116,11 @@ class DeliveryRiderSchedule extends Component {
         day = e.text;
       });
 
-    const { hours } = this.props;
+    const { hours, currentUser } = this.props;
     // console.log(hours);
+
+    const d = new Date(currentUser.timeforscheduleupdate || currentUser.joindate);
+
     return (
       <Fragment>
         <Grid>
@@ -127,6 +130,7 @@ class DeliveryRiderSchedule extends Component {
                 <Header as="h3">Your Working Hours</Header>
               </Segment>
               <Segment>
+              <Label attached='top'>Last Updated: {d.getDate() + "/" + d.getMonth() + "/" + d.getFullYear()}</Label>
                 <Form.Field
                   inline
                   control={Select}
