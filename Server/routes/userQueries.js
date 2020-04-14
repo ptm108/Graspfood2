@@ -251,13 +251,13 @@ router.post("/api/post/addCreditCard", (req, res, next) => {
         // console.log(q_err);
         res.json({
           status: "ERROR",
-          msg: q_err
-        })
+          msg: q_err,
+        });
       } else {
         // console.log(q_res);
         res.json({
           status: "SUCCESS",
-          msg: q_res
+          msg: q_res,
         });
       }
     }
@@ -331,9 +331,9 @@ router.post("/api/post/createPromo", (req, res, next) => {
     parseInt(req.body.maxcustomercount),
     req.body.startdate,
     req.body.enddate,
-    req.body.promocode
+    req.body.promocode,
   ];
-  console.log(newPromoParams)
+  console.log(newPromoParams);
 
   client.query(
     `INSERT INTO Promotion (rid, minspending, percentdiscount, maxcustomercount, startdate, enddate, promocode)
@@ -341,7 +341,7 @@ router.post("/api/post/createPromo", (req, res, next) => {
     newPromoParams,
     (q_err, q_res) => {
       if (q_err) {
-        console.log(q_err)
+        console.log(q_err);
         res.json({
           status: "ERROR",
           msg: q_err,
@@ -359,38 +359,34 @@ router.post("/api/post/createPromo", (req, res, next) => {
 router.delete("/api/delete/deleteFoodItem", (req, res, next) => {
   console.log(req.query.fid);
   const fid = [req.query.fid];
-  client.query(`DELETE FROM FoodItem WHERE fid = $1`,
-  fid,
-  (q_err, q_res) => {
+  client.query(`DELETE FROM FoodItem WHERE fid = $1`, fid, (q_err, q_res) => {
     if (q_err) {
       res.json({
-        status: "ERROR"
-      })
+        status: "ERROR",
+      });
     } else {
       res.json({
-        status: "SUCCESS"
-      })
+        status: "SUCCESS",
+      });
     }
-  })
-})
+  });
+});
 
 router.delete("/api/delete/deletePromo", (req, res, next) => {
   console.log(req.query.pid);
   const pid = [req.query.pid];
-  client.query(`DELETE FROM Promotion WHERE pid = $1`,
-  pid,
-  (q_err, q_res) => {
+  client.query(`DELETE FROM Promotion WHERE pid = $1`, pid, (q_err, q_res) => {
     if (q_err) {
       res.json({
-        status: "ERROR"
-      })
+        status: "ERROR",
+      });
     } else {
       res.json({
-        status: "SUCCESS"
-      })
+        status: "SUCCESS",
+      });
     }
-  })
-})
+  });
+});
 
 router.get("/api/get/customerDetails", (req, res, next) => {
   console.log(req.query);
@@ -914,6 +910,23 @@ router.get("/api/get/allRiderWorkHours", (req, res, next) => {
   client.query(
     `SELECT uid, sum(hours), extract(month from timestamp) as month
     FROM works group by uid, extract(month from timestamp) order by month`,
+    (q_err, q_res) => {
+      if (q_err) {
+        console.log(q_err);
+        return next(q_err);
+      }
+      console.log(q_res);
+      res.send(q_res);
+    }
+  );
+});
+
+// fds infor 4 (get all riders' details eg. base salary)
+router.get("/api/get/allRiderDetails", (req, res, next) => {
+  client.query(
+    `WITH main AS (SELECT uid, monthlybasesalary, null as weeklybasesalary FROM fulltime
+    union SELECT uid, null as monthlybasesalary, weeklybasesalary FROM parttime)
+    SELECT * from main natural join deliveryrider`,
     (q_err, q_res) => {
       if (q_err) {
         console.log(q_err);
