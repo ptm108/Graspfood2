@@ -150,3 +150,38 @@ UPDATE DeliveryRider
 SET totalWorkHours = totalWorkHours + (SELECT hours FROM Works w WHERE w.uid = DeliveryRider.uid)
 WHERE DeliveryRider.uid = 57;
 COMMIT;
+
+
+CREATE OR REPLACE FUNCTION has_5_rider_per_hour(CURRDAY INTEGER, STARTHR INTEGER, ENDHR INTEGER)
+    RETURNS BOOLEAN as $$
+DECLARE
+    curr INTEGER := 0;
+    c INTEGER;
+    newstart INTEGER;
+    newend INTEGER;
+BEGIN 
+    LOOP
+        newstart := STARTHR + curr;
+        newend := newstart + 1;
+        EXIT WHEN newend > ENDHR;
+
+        SELECT COUNT(*) INTO c
+        FROM Works w
+        WHERE w.dayno = CURRDAY
+        AND w.startno <= STARTHR
+        AND w.endno >= ENDHR
+        AND EXTRACT(WEEK from w.timestamp) = EXTRACT(WEEK from NOW()); 
+        
+        IF (c <= 5) THEN
+            RETURN FALSE;
+        END IF;
+
+        curr := curr + 1;
+
+    END LOOP;
+
+    RETURN TRUE;
+END;
+$$ LANGUAGE plpgsql;
+
+

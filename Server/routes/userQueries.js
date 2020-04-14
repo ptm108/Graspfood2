@@ -1104,19 +1104,53 @@ router.post("/api/post/addDRSchedule", async (req, res, next) => {
 router.delete("/api/post/deleteDRSchedule", async (req, res, next) => {
   // console.log(req.query);
 
-  const deleteParams = [
-    req.query.uid,
-    req.query.dayNo,
-    req.query.startNoDel,
-    req.query.endNoDel,
+  let deleteParams = [
+    parseInt(req.query.dayNo),
+    parseInt(req.query.startNoDel),
+    parseInt(req.query.endNoDel),
   ];
   console.log(deleteParams);
 
-  // client.query(`SELECT COUNT(*) FROM Works
-  // WHERE dayNo = $1,
-  // AND da
-  // GROUP BY `)
+  let response = await client.query(
+    `SELECT has_5_rider_per_hour($1, $2, $3)`,
+    deleteParams
+  );
+  response = response.rows[0].has_5_rider_per_hour;
+  console.log(response);
 
+  if (!response) {
+    res.json({
+      status: "ERROR",
+      msg: "There is not enough riders",
+    });
+    return;
+  }
+
+  deleteParams = [...deleteParams, req.query.uid];
+  console.log(deleteParams);
+
+  await client.query(
+    `DELETE FROM Works 
+  WHERE dayno = $1
+  AND startno = $2
+  AND endno = $3
+  AND uid = $4
+  AND EXTRACT(week from timestamp) = EXTRACT(week from NOW())`,
+    deleteParams,
+    (q_err, q_res) => {
+      if (q_err) {
+        console.log(q_err);
+        res.json({
+          status: "ERROR",
+          msg: "Something went wrong",
+        });
+      } else {
+        res.json({
+          status: "SUCCESS",
+        });
+      }
+    }
+  );
 });
 
 module.exports = router;
