@@ -219,7 +219,8 @@ class RiderDashboard extends Component {
                         deliverOrders
                           .filter((order) => order.month === 3)
                           .map((order) => parseFloat(order.sum))
-                          .reduce((a, b) => a + b, 0)) ||
+                          .reduce((a, b) => a + b, 0)
+                          .toFixed(2)) ||
                         0}
                     </Table.Cell>
                   </Table.Row>
@@ -257,7 +258,7 @@ class RiderDashboard extends Component {
                                       {order.count ? order.count : 0}
                                     </Table.Cell>
                                     <Table.Cell>
-                                      {order.sum ? order.sum : 0}
+                                      ${order.sum ? order.sum : 0}
                                     </Table.Cell>
                                   </Fragment>
                                 ))}
@@ -305,7 +306,8 @@ class RiderDashboard extends Component {
                         deliverOrders
                           .filter((order) => order.month === 4)
                           .map((order) => parseFloat(order.sum))
-                          .reduce((a, b) => a + b, 0)) ||
+                          .reduce((a, b) => a + b, 0)
+                          .toFixed(2)) ||
                         0}
                     </Table.Cell>
                   </Table.Row>
@@ -343,7 +345,7 @@ class RiderDashboard extends Component {
                                       {order.count ? order.count : 0}
                                     </Table.Cell>
                                     <Table.Cell>
-                                      {order.sum ? order.sum : 0}
+                                      ${order.sum ? order.sum : 0}
                                     </Table.Cell>
                                   </Fragment>
                                 ))}
