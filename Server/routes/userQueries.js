@@ -546,54 +546,63 @@ router.post("/api/post/postNewOrder", async (req, res, next) => {
       }
     }
 
-    let response = await client.query(`SELECT NOW()`);
-    console.log(response);
+    const d = new Date();
+    // console.log(d.getHours());
+    if (d.getHours() < 10 || d.getHours() > 22) {
+      throw "FDS is closed...";
+    }
 
-    throw "Testing...";
+    // insert into orders placed
+    const createNewOrderQuery = `INSERT INTO OrderPlaced(uid, rid, totalPrice, paymentMethod, address, timestamp, deliveryFee, postalcode, rewardpointsused, promocode) VALUES ($1, $2, $3, $4, $5, NOW(), $9, $6, $7, $8) RETURNING oid`;
+    const response = await client.query(
+      createNewOrderQuery,
+      createNewOrderParams
+    );
 
-    // // insert into orders placed
-    // const createNewOrderQuery = `INSERT INTO OrderPlaced(uid, rid, totalPrice, paymentMethod, address, timestamp, deliveryFee, postalcode, rewardpointsused, promocode) VALUES ($1, $2, $3, $4, $5, NOW(), $9, $6, $7, $8) RETURNING oid`;
-    // const response = await client.query(
-    //   createNewOrderQuery,
-    //   createNewOrderParams
-    // );
+    const oid = response.rows[0].oid;
+    const propagateContainsQuery = `INSERT INTO Contains(fid, oid, qty) VALUES ($1, $2, $3)`;
 
-    // const oid = response.rows[0].oid;
-    // const propagateContainsQuery = `INSERT INTO Contains(fid, oid, qty) VALUES ($1, $2, $3)`;
+    addedFoodItems
+      .filter((f) => f.fooditem.fid > 0)
+      .forEach(async (fooditem) => {
+        const containsParams = [fooditem.fooditem.fid, oid, fooditem.quantity];
+        // console.log(containsParams);
+        await client.query(propagateContainsQuery, containsParams);
+      });
 
-    // addedFoodItems
-    //   .filter((f) => f.fooditem.fid > 0)
-    //   .forEach(async (fooditem) => {
-    //     const containsParams = [fooditem.fooditem.fid, oid, fooditem.quantity];
-    //     // console.log(containsParams);
-    //     await client.query(propagateContainsQuery, containsParams);
-    //   });
+    const findAvailRiderQuery = `SELECT * FROM DeliveryRider dr 
+    NATURAL JOIN Works w
+    WHERE dr.isIdle = true 
+    AND w.dayno = EXTRACT(DOW from NOW())
+    AND $1 < w.endno
+    AND $1 > w.startno
+    LIMIT 1`;
+    const result = await client.query(findAvailRiderQuery, [d.getHours()]);
+    console.log(result);
+    const dr = result.rows[0];
 
-    // const findAvailRiderQuery = `SELECT * FROM DeliveryRider dr WHERE dr.isIdle = true LIMIT 1`;
-    // const result = await client.query(findAvailRiderQuery, []);
-    // // console.log(response);
-    // const dr = result.rows[0];
+    // throw "Testing...";
 
-    // if (result.rows.length === 0) {
-    //   throw "All our Riders are busy currently..";
-    // }
+    if (result.rows.length === 0) {
+      throw "All our Riders are busy currently..";
+    }
 
-    // const insertIntoDeliversQuery = `INSERT INTO Delivers(oid, uid, riderLeaveForRestaurantTime) VALUES ($1, $2, NOW())`;
-    // const deliversParams = [oid, dr.uid];
-    // await client.query(insertIntoDeliversQuery, deliversParams);
+    const insertIntoDeliversQuery = `INSERT INTO Delivers(oid, uid, riderLeaveForRestaurantTime) VALUES ($1, $2, NOW())`;
+    const deliversParams = [oid, dr.uid];
+    await client.query(insertIntoDeliversQuery, deliversParams);
 
-    // await client.query("COMMIT", (q_err, q_res) => {
-    //   if (q_res) {
-    //     res.json({
-    //       status: "SUCCESS",
-    //       dr: dr,
-    //       oid: oid,
-    //     });
-    //   } else {
-    //     res.json(q_err);
-    //   }
-    // });
-    // console.log("commited");
+    await client.query("COMMIT", (q_err, q_res) => {
+      if (q_res) {
+        res.json({
+          status: "SUCCESS",
+          dr: dr,
+          oid: oid,
+        });
+      } else {
+        res.json(q_err);
+      }
+    });
+    console.log("commited");
   } catch (e) {
     await client.query("ROLLBACK", (q_err, q_res) => {
       res.json({
