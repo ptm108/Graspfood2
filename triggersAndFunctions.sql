@@ -185,3 +185,37 @@ END;
 $$ LANGUAGE plpgsql;
 
 
+CREATE OR REPLACE FUNCTION  must_work_five_days(RIDER INTEGER) RETURNS BOOLEAN AS $$
+DECLARE
+	counter INTEGER;
+	min INTEGER;
+	max INTEGER;
+	
+BEGIN
+	SELECT
+	count(distinct dayNo) into counter
+    FROM Schedule s
+	WHERE NOT EXISTS(SELECT 1 FROM Works w WHERE( w.uid = RIDER AND s.dayNo = w.dayNo));
+
+    SELECT distinct
+    min(dayNo) into min
+	FROM Schedule s
+	WHERE NOT EXISTS(SELECT 1 FROM Works w WHERE( w.uid = RIDER AND s.dayNo = w.dayNo));
+
+	SELECT distinct
+    max(dayNo) into max
+    FROM Schedule s
+	WHERE NOT EXISTS(SELECT 1 FROM Works w WHERE( w.uid = RIDER AND s.dayNo = w.dayNo));
+	
+	IF counter <>2 
+    THEN
+        RETURN FALSE;
+	END IF;
+	IF (max <> 6 AND min <> 0) AND (max - min <> 1)
+	THEN
+		RETURN FALSE;
+	END IF;
+
+	RETURN TRUE;
+END;
+$$ LANGUAGE PLPGSQL;
