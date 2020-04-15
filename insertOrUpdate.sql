@@ -618,6 +618,39 @@ INSERT INTO delivers (oid, uid, riderLeaveForRestaurantTime, riderArriveAtRestau
 VALUES
 (37, 125, '2020-04-11 11:13:00', '2020-04-11 11:20:00', '2020-04-11 11:23:00', '2020-04-11 11:30:00', 8);
 
+update delivers set riderDeliverTime = where ;
+update delivers set riderArriveAtRestaurantTime = '2020-04-13 06:55:31', riderLeaveRestaurantTime = '2020-04-13 07:00:03', riderDeliverTime = '2020-04-13 07:10:11' where oid = 58;
+update delivers set riderArriveAtRestaurantTime = '2020-04-13 06:15:31', riderLeaveRestaurantTime = '2020-04-13 06:17:03', riderDeliverTime = '2020-04-13 06:30:11' where oid = 56;
+update delivers set riderArriveAtRestaurantTime = '2020-04-13 06:20:31', riderLeaveRestaurantTime = '2020-04-13 06:25:03', riderDeliverTime = '2020-04-13 06:35:11' where oid = 57;
+update delivers set riderArriveAtRestaurantTime = '2020-04-07 15:50:21', riderLeaveRestaurantTime = '2020-04-07 15:53:56', riderDeliverTime = '2020-04-07 16:05:45' where oid = 28;
+update delivers set riderArriveAtRestaurantTime = '2020-04-15 08:25:21', riderLeaveRestaurantTime = '2020-04-15 08:30:56', riderDeliverTime = '2020-04-15 08:45:45' where oid = 63;
+update delivers set riderArriveAtRestaurantTime = '2020-04-07 15:50:21', riderLeaveRestaurantTime = '2020-04-07 15:52:56', riderDeliverTime = '2020-04-07 16:02:45' where oid = 29;
+update delivers set riderArriveAtRestaurantTime = '2020-04-08 01:40:21', riderLeaveRestaurantTime = '2020-04-08 01:45:56', riderDeliverTime = '2020-04-08 01:58:45' where oid = 30;
+update delivers set riderArriveAtRestaurantTime = '2020-04-08 02:05:21', riderLeaveRestaurantTime = '2020-04-08 02:10:56', riderDeliverTime = '2020-04-08 02:25:45' where oid = 31;
+update delivers set riderArriveAtRestaurantTime = '2020-04-08 02:10:21', riderLeaveRestaurantTime = '2020-04-08 02:13:56', riderDeliverTime = '2020-04-08 02:25:45' where oid = 32;
+update delivers set riderArriveAtRestaurantTime = '2020-04-08 09:55:21', riderLeaveRestaurantTime = '2020-04-08 10:00:56', riderDeliverTime = '2020-04-08 10:15:45' where oid = 38;
+update delivers set riderArriveAtRestaurantTime = '2020-04-08 14:39:21', riderLeaveRestaurantTime = '2020-04-08 14:42:56', riderDeliverTime = '2020-04-08 14:55:45' where oid = 39;
+update delivers set riderArriveAtRestaurantTime = '2020-04-08 15:03:21', riderLeaveRestaurantTime = '2020-04-08 15:07:56', riderDeliverTime = '2020-04-08 15:20:45' where oid = 40;
+update delivers set riderArriveAtRestaurantTime = '2020-04-10 12:59:21', riderLeaveRestaurantTime = '2020-04-10 13:10:56', riderDeliverTime = '2020-04-10 13:25:45' where oid = 42;
+
+update delivers set riderArriveAtRestaurantTime = '2020-04-10 13:09:21', riderLeaveRestaurantTime = '2020-04-10 13:13:56', riderDeliverTime = '2020-04-10 13:25:45' where oid = 43;
+update delivers set riderArriveAtRestaurantTime = '2020-04-09 15:10:21', riderLeaveRestaurantTime = '2020-04-09 15:17:56', riderDeliverTime = '2020-04-09 15:30:45' where oid = 41;
+update delivers set riderArriveAtRestaurantTime = '2020-04-12 16:10:21', riderLeaveRestaurantTime = '2020-04-12 16:12:56', riderDeliverTime = '2020-04-12 16:25:45' where oid = 44;
+update delivers set riderArriveAtRestaurantTime = '2020-04-12 16:14:21', riderLeaveRestaurantTime = '2020-04-12 16:16:56', riderDeliverTime = '2020-04-12 16:30:45' where oid = 45;
+update delivers set riderArriveAtRestaurantTime = '2020-04-13 03:48:21', riderLeaveRestaurantTime = '2020-04-13 03:50:56', riderDeliverTime = '2020-04-13 04:05:45' where oid = 46;
+update delivers set riderArriveAtRestaurantTime = '2020-04-13 03:55:21', riderLeaveRestaurantTime = '2020-04-13 03:54:56', riderDeliverTime = '2020-04-13 04:14:45' where oid = 47;
+update delivers set riderArriveAtRestaurantTime = '2020-04-13 04:16:21', riderLeaveRestaurantTime = '2020-04-13 04:20:56', riderDeliverTime = '2020-04-13 04:36:45' where oid = 48;
+update delivers set riderArriveAtRestaurantTime = '2020-04-13 04:10:21', riderLeaveRestaurantTime = '2020-04-13 04:12:56', riderDeliverTime = '2020-04-13 04:25:45' where oid = 49;
+update delivers set riderArriveAtRestaurantTime = '2020-04-13 04:17:21', riderLeaveRestaurantTime = '2020-04-13 04:20:56', riderDeliverTime = '2020-04-13 04:27:45' where oid = 50;
+update delivers set riderArriveAtRestaurantTime = '2020-04-13 04:50:21', riderLeaveRestaurantTime = '2020-04-13 04:53:56', riderDeliverTime = '2020-04-13 05:03:45' where oid = 53;
+update delivers set riderArriveAtRestaurantTime = '2020-04-13 05:10:21', riderLeaveRestaurantTime = '2020-04-13 05:14:56', riderDeliverTime = '2020-04-13 05:24:45' where oid = 54;
+
+2020-04-15 08:17
+2020-04-13 06:09:42
+2020-04-13 06:46:21
+VALUES
+(37, 125, '2020-04-11 11:13:00', '2020-04-11 11:20:00', '2020-04-11 11:23:00', '2020-04-11 11:30:00', 8);
+
 (1, 49, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 8, 4),
 (2, 54, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 6, 5),
 (3, 51, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 7, 4),
@@ -647,6 +680,8 @@ INSERT INTO contains (fid, oid, qty) values
 INSERT INTO Reviews (oid, uid, timeStamp, title, description, rating)
 VALUES
 (1, 62, CURRENT_TIMESTAMP, 'McDelivery', 'Food was good, food was hot, woohoo~', 5);
+
+INSERT INTO Reviews (oid, uid, timeStamp, title, description, rating) VALUES (42, 144, now(), 'not bad', 'Food was good', 5);
 
 INSERT INTO Reviews (oid, uid, timeStamp, title, description, rating)
 VALUES
@@ -821,12 +856,48 @@ values (25, 51, '2020-03-11 12:38:54', '2020-03-11 12:45:12', '2020-03-11 12:43:
 
 insert into works(uid, dayno, startno, endno, hours, timestamp) 
 values
+(51, 2, 10, 13, 3, '2020-03-01'), 
+(51, 2, 14, 16, 2, '2020-03-01'), 
+(51, 1, 10, 13, 3, '2020-03-01'), 
+(51, 1, 14, 16, 2, '2020-03-01'), 
+(51, 0, 13, 14, 1, '2020-03-01'),
+(51, 0, 18, 22, 4, '2020-03-01');
+
+insert into works(uid, dayno, startno, endno, hours, timestamp) 
+values
+(51, 2, 10, 13, 3, '2020-03-08'), 
+(51, 2, 14, 16, 2, '2020-03-08'), 
+(51, 1, 10, 13, 3, '2020-03-08'), 
+(51, 1, 14, 16, 2, '2020-03-08'), 
+(51, 0, 13, 14, 1, '2020-03-08'),
+(51, 0, 18, 22, 4, '2020-03-08');
+
+insert into works(uid, dayno, startno, endno, hours, timestamp) 
+values
+(51, 2, 10, 13, 3, '2020-03-15'), 
+(51, 2, 14, 16, 2, '2020-03-15'), 
+(51, 1, 10, 13, 3, '2020-03-15'), 
+(51, 1, 14, 16, 2, '2020-03-15'), 
+(51, 0, 13, 14, 1, '2020-03-15'),
+(51, 0, 18, 22, 4, '2020-03-15');
+
+insert into works(uid, dayno, startno, endno, hours, timestamp) 
+values
+(51, 2, 10, 13, 3, '2020-03-22'), 
+(51, 2, 14, 16, 2, '2020-03-22'), 
+(51, 1, 10, 13, 3, '2020-03-22'), 
+(51, 1, 14, 16, 2, '2020-03-22'), 
+(51, 0, 13, 14, 1, '2020-03-22'),
+(51, 0, 18, 22, 4, '2020-03-22');
+
+insert into works(uid, dayno, startno, endno, hours, timestamp) 
+values
 (51, 2, 10, 13, 3, '2020-04-01'), 
 (51, 2, 14, 16, 2, '2020-04-01'), 
 (51, 1, 10, 13, 3, '2020-04-01'), 
 (51, 1, 14, 16, 2, '2020-04-01'), 
-(51, 7, 13, 14, 1, '2020-04-01'),
-(51, 7, 18, 22, 4, '2020-04-01');
+(51, 0, 13, 14, 1, '2020-04-01'),
+(51, 0, 18, 22, 4, '2020-04-01');
 
 insert into works(uid, dayno, startno, endno, hours, timestamp) 
 values
@@ -834,8 +905,8 @@ values
 (51, 2, 14, 16, 2, '2020-04-08'), 
 (51, 1, 10, 13, 3, '2020-04-08'), 
 (51, 1, 14, 16, 2, '2020-04-08'), 
-(51, 7, 13, 14, 1, '2020-04-08'),
-(51, 7, 18, 22, 4, '2020-04-08');
+(51, 0, 13, 14, 1, '2020-04-08'),
+(51, 0, 18, 22, 4, '2020-04-08');
 
 insert into works(uid, dayno, startno, endno, hours, timestamp) 
 values
@@ -843,8 +914,8 @@ values
 (51, 2, 14, 16, 2, '2020-04-15'), 
 (51, 1, 10, 13, 3, '2020-04-15'), 
 (51, 1, 14, 16, 2, '2020-04-15'), 
-(51, 7, 13, 14, 1, '2020-04-15'),
-(51, 7, 18, 22, 4, '2020-04-15');
+(51, 0, 13, 14, 1, '2020-04-15'),
+(51, 0, 18, 22, 4, '2020-04-15');
 
 insert into works(uid, dayno, startno, endno, hours, timestamp) 
 values
