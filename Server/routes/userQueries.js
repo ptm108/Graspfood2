@@ -276,6 +276,22 @@ router.delete("/api/delete/deleteCreditCard", (req, res, next) => {
   });
 });
 
+router.get("/api/get/reviews", (req, res, next) => {
+  const uid = [req.query.uid];
+  client.query(
+    `select * from reviews where uid=$1 order by timestamp desc`,
+    uid,
+    (q_err, q_res) => {
+      if (q_err) {
+        console.log(q_err);
+        return next(q_err);
+      }
+      console.log(q_res);
+      res.send(q_res);
+    }
+  );
+});
+
 router.get("/api/get/fetchFoodItemsByRid", (req, res, next) => {
   // console.log(req.query);
   const rid = [req.query.rid];

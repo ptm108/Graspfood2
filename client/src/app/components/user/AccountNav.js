@@ -35,6 +35,11 @@ const AccountNav = ({ signOut, history, currentUser }) => {
               Add/Remove Credit Card
             </Menu.Item>
           )}
+          {currentUser.accessright === 4 && (
+            <Menu.Item as={NavLink} to="/reviewpostings">
+              View Review Postings
+            </Menu.Item>
+          )}
           {currentUser.accessright === 1 && (
             <Menu.Item as={NavLink} to="/restaurantAdmin">
               Manage Restaurant Promos
