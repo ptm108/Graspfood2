@@ -44,7 +44,7 @@ class DeliveryRiderSchedule extends Component {
     this.setState({ [name]: value });
   };
 
-  handleAddSchedule = () => {
+  handleAddSchedule = async () => {
     const {
       getDeliveryRiderSchedule,
       addDeliveryRiderSchedule,
@@ -70,11 +70,11 @@ class DeliveryRiderSchedule extends Component {
       return;
     }
 
-    addDeliveryRiderSchedule(newSchedule);
-    getDeliveryRiderSchedule(currentUser.uid);
+    await addDeliveryRiderSchedule(newSchedule);
+    await getDeliveryRiderSchedule(currentUser.uid);
   };
 
-  handleDeleteSchedule = () => {
+  handleDeleteSchedule = async () => {
     const {
       getDeliveryRiderSchedule,
       deleteDeliveryRiderSchedule,
@@ -93,7 +93,7 @@ class DeliveryRiderSchedule extends Component {
       return;
     }
 
-    deleteDeliveryRiderSchedule(newSchedule);
+    await deleteDeliveryRiderSchedule(newSchedule);
     getDeliveryRiderSchedule(currentUser.uid);
   };
 

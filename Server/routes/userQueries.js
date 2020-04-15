@@ -203,7 +203,7 @@ router.get("/api/get/orderList", (req, res, next) => {
 });
 
 router.get("/api/get/restaurantList", (req, res, next) => {
-  client.query(`SELECT * from restaurant;`, (q_err, q_res) => {
+  client.query(`SELECT * from restaurant ORDER BY rid;`, (q_err, q_res) => {
     if (q_err) {
       return next(q_err);
     }
@@ -574,8 +574,8 @@ router.post("/api/post/postNewOrder", async (req, res, next) => {
     NATURAL JOIN Works w
     WHERE dr.isIdle = true 
     AND w.dayno = EXTRACT(DOW from NOW())
-    AND $1 < w.endno
-    AND $1 > w.startno
+    AND $1 <= w.endno
+    AND $1 >= w.startno
     LIMIT 1`;
     const result = await client.query(findAvailRiderQuery, [d.getHours()]);
     console.log(result);
@@ -1110,10 +1110,10 @@ router.post("/api/post/addDRSchedule", async (req, res, next) => {
         }
       }
     );
-    await client.query(`UPDATE DeliveryRider 
-    SET timeforscheduleupdate = NOW()
-    WHERE uid = $1`,
-    [req.body.uid])
+    // await client.query(`UPDATE DeliveryRider 
+    // SET timeforscheduleupdate = NOW()
+    // WHERE uid = $1`,
+    // [req.body.uid])
 
     await client.query('COMMIT')
   } catch (error) {

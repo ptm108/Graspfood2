@@ -39,28 +39,31 @@ class DRCurrentOrder extends Component {
   handleArriveAtRestaurant = () => {
     const { setArriveAtRestaurant, currentOrder } = this.props;
     setArriveAtRestaurant(currentOrder.oid);
-    this.setState({ deliveryStatus: "Arrived at restaurant" });
+    this.setState({ deliveryStatus: "Arrived at restaurant", d1: true });
   };
 
   handleLeftRestaurant = () => {
     const { setLeftRestaurant, currentOrder } = this.props;
     setLeftRestaurant(currentOrder.oid);
-    this.setState({ deliveryStatus: "Delivering order" });
+    this.setState({ deliveryStatus: "Delivering order", d2: true });
   };
 
   handleDelivered = () => {
     const { setDeliveredTime, currentOrder } = this.props;
     setDeliveredTime(currentOrder.oid);
-    this.setState({ deliveryStatus: "Order delivered" });
+    this.setState({ deliveryStatus: "Order delivered", d3: true });
   };
 
   state = {
     deliveryStatus: "",
+    d1: this.props.currentOrder.riderarriveatrestauranttime !== null,
+    d2: this.props.currentOrder.riderleaverestauranttime !== null,
+    d3: this.props.currentOrder.riderdelivertime !== null, 
   };
 
   render() {
     const { currentOrder } = this.props;
-    const { deliveryStatus } = this.state;
+    const { deliveryStatus, d1, d2, d3 } = this.state;
 
     return (
       <Segment.Group>
@@ -93,17 +96,17 @@ class DRCurrentOrder extends Component {
               <Button
                 content="Arrived At Restaurant"
                 onClick={this.handleArriveAtRestaurant}
-                disabled={currentOrder.riderarriveatrestauranttime !== null}
+                disabled={d1}
               />
               <Button
                 content="Left Restaurant"
                 onClick={this.handleLeftRestaurant}
-                disabled={currentOrder.riderleaverestauranttime !== null}
+                disabled={d2}
               />
               <Button
                 content="Order Delivered"
                 onClick={this.handleDelivered}
-                disabled={currentOrder.riderdelivertime !== null}
+                disabled={d3}
               />
             </Button.Group>
           </Fragment>
