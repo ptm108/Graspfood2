@@ -72,7 +72,8 @@ class FDSButton1 extends Component {
                             parseFloat(order.deliveryfee)
                           );
                         })
-                        .reduce((a, b) => a + b, 0)}
+                        .reduce((a, b) => a + b, 0)
+                        .toFixed(2)}
                   </Table.Cell>
                 </Table.Row>
               </Table.Body>
@@ -122,7 +123,8 @@ class FDSButton1 extends Component {
                             parseFloat(order.deliveryfee)
                           );
                         })
-                        .reduce((a, b) => a + b, 0)}
+                        .reduce((a, b) => a + b, 0)
+                        .toFixed(2)}
                   </Table.Cell>
                 </Table.Row>
               </Table.Body>
@@ -172,7 +174,8 @@ class FDSButton1 extends Component {
                             parseFloat(order.deliveryfee)
                           );
                         })
-                        .reduce((a, b) => a + b, 0)}
+                        .reduce((a, b) => a + b, 0)
+                        .toFixed(2)}
                   </Table.Cell>
                 </Table.Row>
               </Table.Body>
@@ -222,7 +225,8 @@ class FDSButton1 extends Component {
                             parseFloat(order.deliveryfee)
                           );
                         })
-                        .reduce((a, b) => a + b, 0)}
+                        .reduce((a, b) => a + b, 0)
+                        .toFixed(2)}
                   </Table.Cell>
                 </Table.Row>
               </Table.Body>
