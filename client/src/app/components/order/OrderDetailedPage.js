@@ -106,23 +106,26 @@ class OrderDetailedPage extends Component {
     if (currOrder.riderarriveatrestauranttime === null) {
       status = "Rider left for restaurant at ";
       let d = new Date(currOrder.riderleaveforrestauranttime);
-      time = d.toDateString() + " " + d.toTimeString().substring(0,8);
-    }
-    else if (currOrder.riderleaverestauranttime === null) {
+      d.setHours(d.getHours() + 8);
+      time = d.toDateString() + " " + d.toTimeString().substring(0, 8);
+    } else if (currOrder.riderleaverestauranttime === null) {
       status = "Rider Arrived at Restaurant at ";
       let d = new Date(currOrder.riderarriveatrestauranttime);
-      time = d.toDateString() + " " + d.toTimeString().substring(0,8);
-    }
-    else if (currOrder.riderdelivertime === null) {
+
+      d.setHours(d.getHours() + 8);
+      time = d.toDateString() + " " + d.toTimeString().substring(0, 8);
+    } else if (currOrder.riderdelivertime === null) {
       status = "Rider left restaurant at ";
       let d = new Date(currOrder.riderleaverestauranttime);
-      time = d.toDateString() + " " + d.toTimeString().substring(0,8);
-    }
 
-    else if (currOrder.riderdelivertime !== null) {
+      d.setHours(d.getHours() + 8);
+      time = d.toDateString() + " " + d.toTimeString().substring(0, 8);
+    } else if (currOrder.riderdelivertime !== null) {
       status = "Order delivered at ";
       let d = new Date(currOrder.riderleaveforrestauranttime);
-      time = d.toDateString() + " " + d.toTimeString().substring(0,8);
+
+      d.setHours(d.getHours() + 8);
+      time = d.toDateString() + " " + d.toTimeString().substring(0, 8);
     }
 
     return (

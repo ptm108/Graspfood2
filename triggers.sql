@@ -169,7 +169,7 @@ BEGIN
         FROM Works w
         WHERE w.dayno = CURRDAY
         AND w.startno <= STARTHR
-        AND w.endno >= ENDHR
+        AND w.endno > ENDHR
         AND EXTRACT(WEEK from w.timestamp) = EXTRACT(WEEK from NOW()); 
         
         IF (c <= 5) THEN

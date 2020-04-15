@@ -26,9 +26,9 @@ class DRCurrentOrder extends Component {
     await getOrderDetailsByDrid(currentUser.uid);
     const { currentOrder } = this.props;
     if (currentOrder.riderarriveatrestauranttime === null) {
-      this.setState({ deliveryStatus: "Going to restaurant" });
+      this.setState({ deliveryStatus: "Going to restaurant", d1: false, d2: false, d3: false });
     } else if (currentOrder.riderleaverestauranttime === null) {
-      this.setState({ deliveryStatus: "Arrived at restaurant" });
+      this.setState({ deliveryStatus: "Arrived at restaurant", d1: false });
     } else if (currentOrder.riderdelivertime === null) {
       this.setState({ deliveryStatus: "Delivering order" });
     } else {
@@ -56,14 +56,15 @@ class DRCurrentOrder extends Component {
 
   state = {
     deliveryStatus: "",
-    d1: this.props.currentOrder.riderarriveatrestauranttime !== null,
-    d2: this.props.currentOrder.riderleaverestauranttime !== null,
-    d3: this.props.currentOrder.riderdelivertime !== null, 
+    d1: false,
+    d2: false,
+    d3: false, 
   };
 
   render() {
     const { currentOrder } = this.props;
     const { deliveryStatus, d1, d2, d3 } = this.state;
+    console.log(d1);
 
     return (
       <Segment.Group>
