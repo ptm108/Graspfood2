@@ -29,7 +29,7 @@ class ReviewPostings extends Component {
             <Card.Group itemsPerRow={3}>
               {reviews &&
                 reviews.map((review) => (
-                  <Card as={Link} to={`/order/${review.oid}`}>
+                  <Card as={Link} to={`/order/${review.oid}`} color="orange">
                     <Card.Content>
                       <Card.Header>Title: {review.title}</Card.Header>
                       <Card.Meta>Order ID: {review.oid}</Card.Meta>
