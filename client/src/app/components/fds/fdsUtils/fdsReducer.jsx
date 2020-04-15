@@ -7,6 +7,7 @@ import {
   FETCH_ALL_RIDERS_DELIVERIES_INFO,
   FETCH_RIDER_HOURS,
   FETCH_ALL_RIDER_DETAILS,
+  RESET_STATE,
 } from "../fdsUtils/fdsConstants";
 
 const initialState = {
@@ -68,6 +69,15 @@ export const allRiderDetails = (state, payload) => {
   };
 };
 
+export const resetState = (state, payload) => {
+  return {
+    ...state,
+    allRidersDeliveriesInfo: null,
+    workHours: null,
+    allRiderDetails: null,
+  };
+};
+
 export default createReducer(initialState, {
   [FETCH_ALL_CUSTOMERS]: fetchAllCustomers,
   [FETCH_ORDERS_BY_MONTH]: fetchOrdersByMonth,
@@ -76,4 +86,5 @@ export default createReducer(initialState, {
   [FETCH_ALL_RIDERS_DELIVERIES_INFO]: fetchAllRidersDeliveriesInfo,
   [FETCH_RIDER_HOURS]: fetchWorkHours,
   [FETCH_ALL_RIDER_DETAILS]: allRiderDetails,
+  [RESET_STATE]: resetState,
 });

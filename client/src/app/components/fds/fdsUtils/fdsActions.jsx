@@ -7,6 +7,7 @@ import {
   FETCH_ALL_RIDERS_DELIVERIES_INFO,
   FETCH_RIDER_HOURS,
   FETCH_ALL_RIDER_DETAILS,
+  RESET_STATE,
 } from "../fdsUtils/fdsConstants";
 
 export const fetchAllCustomers = () => {
@@ -99,5 +100,11 @@ export const fetchAllRiderDetails = () => {
         return res.data.rows;
       }
     });
+  };
+};
+
+export const resetState = () => {
+  return async (dispatch) => {
+    dispatch({ type: RESET_STATE });
   };
 };
