@@ -4,7 +4,7 @@ import {
   fetchOrderDetails,
   resetOrders,
   createReview,
-  putRiderReview
+  putRiderReview,
 } from "./orderUtils/OrderActions";
 import {
   Grid,
@@ -21,7 +21,7 @@ const mapDispatchToProps = {
   fetchOrderDetails,
   resetOrders,
   createReview,
-  putRiderReview
+  putRiderReview,
 };
 
 const mapStateToProps = (state, ownProps) => {
@@ -65,13 +65,13 @@ class OrderDetailedPage extends Component {
     await createReview(queryParams);
   };
 
-  handleRiderRating = async (e, {rating, maxRating}) => {
+  handleRiderRating = async (e, { rating, maxRating }) => {
     this.setState({ rating, maxRating });
     const { currOid, putRiderReview } = this.props;
 
     const queryParams = {
       oid: parseInt(currOid),
-      drRating: rating
+      drRating: rating,
     };
 
     console.log(queryParams);
@@ -99,6 +99,32 @@ class OrderDetailedPage extends Component {
     }
 
     const currentRestaurant = res && res[0];
+
+    let status = "";
+    let time = "";
+
+    if (currOrder.riderarriveatrestauranttime === null) {
+      status = "Rider left for restaurant at ";
+      let d = new Date(currOrder.riderleaveforrestauranttime);
+      time = d.toDateString() + " " + d.toTimeString().substring(0,8);
+    }
+    else if (currOrder.riderleaverestauranttime === null) {
+      status = "Rider Arrived at Restaurant at ";
+      let d = new Date(currOrder.riderarriveatrestauranttime);
+      time = d.toDateString() + " " + d.toTimeString().substring(0,8);
+    }
+    else if (currOrder.riderdelivertime === null) {
+      status = "Rider left restaurant at ";
+      let d = new Date(currOrder.riderleaverestauranttime);
+      time = d.toDateString() + " " + d.toTimeString().substring(0,8);
+    }
+
+    else if (currOrder.riderdelivertime !== null) {
+      status = "Order delivered at ";
+      let d = new Date(currOrder.riderleaveforrestauranttime);
+      time = d.toDateString() + " " + d.toTimeString().substring(0,8);
+    }
+
     return (
       <Grid>
         <Grid.Column width={10}>
@@ -114,6 +140,9 @@ class OrderDetailedPage extends Component {
             </Segment>
             <Segment>
               <b>Order Date:</b> {new Date(currOrder.timestamp).toDateString()}
+            </Segment>
+            <Segment>
+              <b>Order Status:</b> {status + time}
             </Segment>
           </Segment.Group>
           <Segment.Group>

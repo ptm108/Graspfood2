@@ -22,13 +22,12 @@ class RestaurantList extends Component {
     return (
       <Fragment>
         <Segment.Group>
-          <Segment color="grey">
+          <Segment inverted>
             <Header color="white" size="huge">
-              <Icon name="food" />
               <Header.Content>Restaurants:</Header.Content>
             </Header>
           </Segment>
-          <Segment>
+          <Segment attached>
             <Card.Group itemsPerRow={3}>
               {restaurants &&
                 restaurants.map(restaurant => (

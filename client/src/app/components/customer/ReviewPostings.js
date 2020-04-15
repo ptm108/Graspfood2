@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from "react";
-import { Grid, Header, Card, Rating } from "semantic-ui-react";
+import { Grid, Header, Card, Rating, Segment } from "semantic-ui-react";
 import AccountNav from "../user/AccountNav";
 import { connect } from "react-redux";
 import { fetchReviews } from "./customerUtils/customerActions";
@@ -25,32 +25,42 @@ class ReviewPostings extends Component {
       <Fragment>
         <Grid>
           <Grid.Column width={12}>
-            <Header>Review Postings</Header>
-            <Card.Group itemsPerRow={3}>
-              {reviews &&
-                reviews.map((review) => (
-                  <Card as={Link} to={`/order/${review.oid}`} color="orange">
-                    <Card.Content>
-                      <Card.Header>Title: {review.title}</Card.Header>
-                      <Card.Meta>Order ID: {review.oid}</Card.Meta>
-                      <Card.Meta>
-                        Review Date:{" "}
-                        {new Date(review.timestamp).toLocaleDateString()}
-                      </Card.Meta>
-                      <Card.Description>
-                        Description: {review.description}
-                      </Card.Description>
-                    </Card.Content>
-                    <Card.Content>
-                      <Rating
-                        defaultRating={review.rating}
-                        maxRating={5}
-                        disabled
-                      ></Rating>
-                    </Card.Content>
-                  </Card>
-                ))}
-            </Card.Group>
+            <Segment.Group>
+              <Segment inverted>
+                <Header>Review Postings</Header>
+              </Segment>
+              <Segment>
+                <Card.Group itemsPerRow={3}>
+                  {reviews &&
+                    reviews.map((review) => (
+                      <Card
+                        as={Link}
+                        to={`/order/${review.oid}`}
+                        color="orange"
+                      >
+                        <Card.Content>
+                          <Card.Header>Title: {review.title}</Card.Header>
+                          <Card.Meta>Order ID: {review.oid}</Card.Meta>
+                          <Card.Meta>
+                            Review Date:{" "}
+                            {new Date(review.timestamp).toLocaleDateString()}
+                          </Card.Meta>
+                          <Card.Description>
+                            Description: {review.description}
+                          </Card.Description>
+                        </Card.Content>
+                        <Card.Content>
+                          <Rating
+                            defaultRating={review.rating}
+                            maxRating={5}
+                            disabled
+                          ></Rating>
+                        </Card.Content>
+                      </Card>
+                    ))}
+                </Card.Group>
+              </Segment>
+            </Segment.Group>
           </Grid.Column>
           <Grid.Column width={4}>
             <AccountNav />

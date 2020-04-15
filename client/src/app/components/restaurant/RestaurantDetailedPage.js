@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from "react";
-import { Segment, Grid, Icon, Header, Container } from "semantic-ui-react";
+import { Segment, Grid, Icon, Header, Container, Rating } from "semantic-ui-react";
 import { connect, dispatch } from "react-redux";
 import RestaurantFoodList from "./RestaurantFoodList";
 import { RESET_FOOD_ITEMS } from "./restaurantUtils/restaurantConstants";
@@ -57,6 +57,14 @@ class RestaurantDetailedPage extends Component {
             </Header.Subheader>
             <Header.Subheader>
               <b>Minimum Spending:</b> ${restaurant.minspending}
+            </Header.Subheader>
+            <Header.Subheader>
+              <b>Rating:</b>{" "}
+              <Rating
+                defaultRating={restaurant.rating}
+                maxRating={5}
+                disabled
+              />
             </Header.Subheader>
           </Segment>
           <RestaurantPromoList rid={restaurant.rid} />
