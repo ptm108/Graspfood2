@@ -5,21 +5,29 @@ import { toastr } from "react-redux-toastr";
 
 // login actions for staff, customer, delivery rider, restaurant manager
 
-export const login = creds => {
+export const login = (creds) => {
   return async (dispatch, getState) => {
     //console.log(creds)
     await axios
       .get("/api/get/loginUser", { params: creds })
-      .then(res => {
+      .then((res) => {
         if (res.data.rows) {
           console.log(res.data.rows);
           dispatch({ type: LOGIN_USER, payload: res.data.rows[0] });
-          toastr.success("Success", "Logged in as " + creds.username);
+          const newUser = res.data.rows[0];
+          toastr.success(
+            "Success",
+            "Logged in as " + newUser.cname ||
+              newUser.drname ||
+              newUser.fdsmname ||
+              newUser.rsname || 
+              "user"
+          );
         }
       })
-      .catch(error => {
+      .catch((error) => {
         throw new SubmissionError({
-          _error: error.message
+          _error: error.message,
         });
       });
   };
@@ -27,23 +35,30 @@ export const login = creds => {
 
 // register account account details
 
-export const register = user => {
+export const register = (user) => {
   return async (dispatch, getState) => {
     console.log(user);
     await axios
       .post("/api/post/registerUser", user)
-      .then(res => {
+      .then((res) => {
         console.log(typeof res.data);
-        if ((typeof res.data) !== "string") {
+        if (typeof res.data !== "string") {
           let newUser = JSON.parse(res.config.data);
-          toastr.success("Success!", "Welcome, " + newUser.username);
+          toastr.success(
+            "Success!",
+            "Welcome, " + newUser.cname ||
+              newUser.drname ||
+              newUser.fdsmname ||
+              newUser.rsname ||
+              "user"
+          );
         } else {
           toastr.error("Oops", res.data);
         }
 
         console.log(res);
       })
-      .catch(error => {
+      .catch((error) => {
         console.log(error);
         toastr.error("Error", error.message);
       });
@@ -52,26 +67,26 @@ export const register = user => {
 
 // update profiles
 
-export const updateProfile = user => {
+export const updateProfile = (user) => {
   return async (dispatch, getState) => {
     await axios
       .get("/api/get/updateUser", user)
-      .then(data => {
+      .then((data) => {
         console.log(data);
         dispatch(reset("account"));
       })
-      .catch(error => {
+      .catch((error) => {
         throw new SubmissionError({
-          _error: error.message
+          _error: error.message,
         });
       });
   };
 };
 
-export const changePassword = user => {
+export const changePassword = (user) => {
   console.log(user);
-  return async dispatch => {
-    await axios.put("/api/put/changePassword", user).then(res => {
+  return async (dispatch) => {
+    await axios.put("/api/put/changePassword", user).then((res) => {
       console.log(res.data);
       if (res.data.rowCount == 1) {
         toastr.success("Password has been changed successfully!");
