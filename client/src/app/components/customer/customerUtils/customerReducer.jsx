@@ -2,25 +2,27 @@ import { createReducer } from "../../../reduxstore/reducerUtil";
 import {
   FETCH_USER_CREDITCARD,
   RESET_CREDITCARD,
-  FETCH_USER_DETAILS
+  FETCH_USER_DETAILS,
+  FETCH_REVIEWS,
 } from "../customerUtils/customerConstants";
 
 const initialState = {
   creditCard: null,
-  userDetails: null
+  userDetails: null,
+  reviews: null,
 };
 
 const fetchCreditCard = (state, payload) => {
   console.log(payload);
   return {
-    creditCard: payload
+    creditCard: payload,
   };
 };
 
-const resetCreditCard = state => {
+const resetCreditCard = (state) => {
   return {
     ...state,
-    creditCard: null
+    creditCard: null,
   };
 };
 
@@ -28,12 +30,21 @@ const fetchCustomerDetails = (state, payload) => {
   console.log(payload);
   return {
     ...state,
-    userDetails: payload
+    userDetails: payload,
+  };
+};
+
+const fetchReviews = (state, payload) => {
+  //console.log(payload);
+  return {
+    ...state,
+    reviews: payload,
   };
 };
 
 export default createReducer(initialState, {
   [FETCH_USER_CREDITCARD]: fetchCreditCard,
   [RESET_CREDITCARD]: resetCreditCard,
-  [FETCH_USER_DETAILS]: fetchCustomerDetails
+  [FETCH_USER_DETAILS]: fetchCustomerDetails,
+  [FETCH_REVIEWS]: fetchReviews,
 });

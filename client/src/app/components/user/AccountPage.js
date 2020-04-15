@@ -44,17 +44,14 @@ class AccountPage extends Component {
                 Reward Points: {currentUser.rewardpoints}
               </Segment>
             )}
-            {accessRight === 4 && <ReviewPostings />}
+            {/* {accessRight === 4 && <ReviewPostings />} */}
             {accessRight === 4 && <OrderList />}
 
             {accessRight === 3 && (
               <Fragment>
-                <Header>
-                  Rider Name: {currentUser.drname}
-                </Header>
+                <Header>Rider Name: {currentUser.drname}</Header>
                 <Header sub>
-                  Rider Rating:{" "}
-                  {currentUser.deliveryriderrating}
+                  Rider Rating: {currentUser.deliveryriderrating}
                 </Header>
               </Fragment>
             )}
