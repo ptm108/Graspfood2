@@ -156,6 +156,7 @@ class RiderDashboard extends Component {
       <Fragment>
         <Grid>
           <Grid.Column width={12}>
+            <DRCurrentOrder />
             <Segment>
               <h2>RiderDashboard</h2>
               <Header>Summary Information</Header>
@@ -355,7 +356,6 @@ class RiderDashboard extends Component {
                 </Table.Body>
               </Table>
             </Segment>
-            <DRCurrentOrder />
           </Grid.Column>
 
           <Grid.Column width={4}>

@@ -1,11 +1,19 @@
 import React, { Component, Fragment } from "react";
-import { Grid, Header, Segment, Form, Select, Table, Label } from "semantic-ui-react";
+import {
+  Grid,
+  Header,
+  Segment,
+  Form,
+  Select,
+  Table,
+  Label,
+} from "semantic-ui-react";
 import { connect } from "react-redux";
 import AccountNav from "../user/AccountNav";
 import {
   getDeliveryRiderSchedule,
   addDeliveryRiderSchedule,
-  deleteDeliveryRiderSchedule
+  deleteDeliveryRiderSchedule,
 } from "./riderUtils/riderActions";
 import { toastr } from "react-redux-toastr";
 
@@ -22,7 +30,7 @@ const options = [
 const mapDispatchToProps = {
   getDeliveryRiderSchedule,
   addDeliveryRiderSchedule,
-  deleteDeliveryRiderSchedule
+  deleteDeliveryRiderSchedule,
 };
 
 const mapStateToProps = (state) => ({
@@ -79,6 +87,7 @@ class DeliveryRiderSchedule extends Component {
       getDeliveryRiderSchedule,
       deleteDeliveryRiderSchedule,
       currentUser,
+      hours
     } = this.props;
 
     const newSchedule = {
@@ -90,6 +99,17 @@ class DeliveryRiderSchedule extends Component {
 
     if (parseInt(newSchedule.endNoDel) <= parseInt(newSchedule.startNoDel)) {
       toastr.error("Hello", "Your time slot not valid");
+      return;
+    }
+
+    if (
+      hours.filter(
+        (h) =>
+          h.startno === parseInt(newSchedule.startNoDel) &&
+          h.endno === parseInt(newSchedule.endNoDel)
+      ).length === 0
+    ) {
+      toastr.error("Error", "Time slot no found");
       return;
     }
 
@@ -119,7 +139,9 @@ class DeliveryRiderSchedule extends Component {
     const { hours, currentUser } = this.props;
     // console.log(hours);
 
-    const d = new Date(currentUser.timeforscheduleupdate || currentUser.joindate);
+    const d = new Date(
+      currentUser.timeforscheduleupdate || currentUser.joindate
+    );
 
     return (
       <Fragment>
@@ -130,7 +152,10 @@ class DeliveryRiderSchedule extends Component {
                 <Header as="h3">Your Working Hours</Header>
               </Segment>
               <Segment>
-              <Label attached='top'>Last Updated: {d.getDate() + "/" + d.getMonth() + "/" + d.getFullYear()}</Label>
+                <Label attached="top">
+                  Last Updated:{" "}
+                  {d.getDate() + "/" + d.getMonth() + "/" + d.getFullYear()}
+                </Label>
                 <Form.Field
                   inline
                   control={Select}
@@ -155,7 +180,7 @@ class DeliveryRiderSchedule extends Component {
                       {hours
                         .filter((h) => h.dayno === parseInt(dayNo))
                         .map((h) => (
-                          <Table.Row>
+                          <Table.Row key={h.startNo}>
                             <Table.Cell>{h.startno + ":00"}</Table.Cell>
                             <Table.Cell>{h.endno + ":00"}</Table.Cell>
                             <Table.Cell>{h.hours}</Table.Cell>

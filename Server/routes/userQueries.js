@@ -1110,10 +1110,10 @@ router.post("/api/post/addDRSchedule", async (req, res, next) => {
         }
       }
     );
-    // await client.query(`UPDATE DeliveryRider 
-    // SET timeforscheduleupdate = NOW()
-    // WHERE uid = $1`,
-    // [req.body.uid])
+    await client.query(`UPDATE DeliveryRider 
+    SET timeforscheduleupdate = NOW()
+    WHERE uid = $1`,
+    [req.body.uid])
 
     await client.query('COMMIT')
   } catch (error) {
