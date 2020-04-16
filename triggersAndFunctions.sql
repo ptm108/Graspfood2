@@ -22,9 +22,9 @@ Returns trigger as $$
 End;
 $$ LANGUAGE plpgsql ;
 
-Drop trigger if exists update_rider_state_trigger on contains;
+Drop trigger if exists update_rider_state_trigger on delivers;
 Create trigger update_rider_state_trigger
-    After insert
+    After insert 
     on delivers
     For each row
 Execute procedure Update_rider_state();
