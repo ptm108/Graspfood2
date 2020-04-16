@@ -569,7 +569,9 @@ router.post("/api/post/postNewOrder", async (req, res, next) => {
     }
 
     // insert into orders placed
-    const createNewOrderQuery = `INSERT INTO OrderPlaced(uid, rid, totalPrice, paymentMethod, address, timestamp, deliveryFee, postalcode, rewardpointsused, promocode) VALUES ($1, $2, $3, $4, $5, NOW(), $9, $6, $7, $8) RETURNING oid`;
+    const createNewOrderQuery = `INSERT INTO OrderPlaced(uid, rid, totalPrice, paymentMethod, address, timestamp, deliveryFee, postalcode, rewardpointsused, promocode) 
+    VALUES ($1, $2, $3, $4, $5, NOW() + interval '8 hours', $9, $6, $7, $8) 
+    RETURNING oid`;
     const response = await client.query(
       createNewOrderQuery,
       createNewOrderParams
@@ -603,8 +605,8 @@ router.post("/api/post/postNewOrder", async (req, res, next) => {
       throw "All our Riders are busy currently..";
     }
 
-    const insertIntoDeliversQuery = `INSERT INTO Delivers(oid, uid, riderLeaveForRestaurantTime) VALUES ($1, $2, NOW())`;
-    const deliversParams = [oid, dr.uid];
+    const insertIntoDeliversQuery = `INSERT INTO Delivers(oid, uid, deliveryfeecommission, riderLeaveForRestaurantTime) VALUES ($1, $2, $3, NOW() + interval '8 hours')`;
+    const deliversParams = [oid, dr.uid, req.body.totalPrice * 0.05];
     await client.query(insertIntoDeliversQuery, deliversParams);
 
     await client.query("COMMIT", (q_err, q_res) => {
@@ -740,7 +742,7 @@ router.put(
 
     client.query(
       `UPDATE Delivers 
-    SET riderarriveatrestauranttime = current_timestamp
+    SET riderarriveatrestauranttime = NOW() + interval '8 hours'
     WHERE oid = $1`,
       oid,
       (q_err, q_res) => {
@@ -760,7 +762,7 @@ router.put("/api/put/updateDeliversLeftRestaurant", async (req, res, next) => {
 
   client.query(
     `UPDATE Delivers 
-  SET riderleaverestauranttime = current_timestamp
+  SET riderleaverestauranttime = NOW() + interval '8 hours'
   WHERE oid = $1`,
     oid,
     (q_err, q_res) => {
@@ -779,7 +781,7 @@ router.put("/api/put/updateDeliveredTime", async (req, res, next) => {
 
   client.query(
     `UPDATE Delivers 
-  SET riderdelivertime = current_timestamp
+  SET riderdelivertime = NOW() + interval '8 hours'
   WHERE oid = $1`,
     oid,
     (q_err, q_res) => {
@@ -812,7 +814,7 @@ router.post("/api/post/createReview", (req, res, next) => {
 
   client.query(
     `INSERT INTO Reviews(oid, uid, title, description, rating, timestamp) 
-          VALUES ($1, $2, $3, $4, $5, NOW()) 
+          VALUES ($1, $2, $3, $4, $5, NOW() + interval '8 hours') 
           ON CONFLICT (oid, uid) DO 
           UPDATE SET 
           title = $3,
@@ -1114,7 +1116,7 @@ router.post("/api/post/addDRSchedule", async (req, res, next) => {
     await client.query('BEGIN')
     await client.query(
       `INSERT INTO Works (uid, dayno, startno, endno, hours, timestamp)
-    VALUES ($1, $2, $3, $4, $5, NOW())`,
+    VALUES ($1, $2, $3, $4, $5, NOW() + interval '8 hours')`,
       newScheduleParams,
       (q_err, q_res) => {
         if (q_err) {
@@ -1127,7 +1129,7 @@ router.post("/api/post/addDRSchedule", async (req, res, next) => {
       }
     );
     await client.query(`UPDATE DeliveryRider 
-    SET timeforscheduleupdate = NOW()
+    SET timeforscheduleupdate = NOW() + interval '8 hours'
     WHERE uid = $1`,
     [req.body.uid])
 
@@ -1175,7 +1177,7 @@ router.delete("/api/post/deleteDRSchedule", async (req, res, next) => {
   AND startno = $2
   AND endno = $3
   AND uid = $4
-  AND EXTRACT(week from timestamp) = EXTRACT(week from NOW())`,
+  AND EXTRACT(week from timestamp) = EXTRACT(week from NOW() + interval '8)`,
     deleteParams,
     (q_err, q_res) => {
       if (q_err) {
