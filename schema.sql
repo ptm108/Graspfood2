@@ -164,4 +164,8 @@ CREATE TABLE Reviews (
 	FOREIGN KEY(uid) REFERENCES Customer(uid) ON DELETE SET NULL
 );
 
-
+CREATE TABLE ActorType(
+      aid SERIAL, 
+      name TEXT, 
+      PRIMARY KEY(aid)
+);

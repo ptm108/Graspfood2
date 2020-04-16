@@ -929,8 +929,8 @@ router.get("/api/get/allRiderDeliveriesInfo", (req, res, next) => {
   client.query(
     `SELECT count(oid) as numorders, dr.uid, drname, sum(deliveryfeecommission) as fee, 
       avg(extract(minute from(riderdelivertime - riderleaveforrestauranttime))) as delivertime, count(deliveryservicerating) as numratings, 
-      avg(deliveryservicerating) as avgrating, extract(month from riderdelivertime) as month 
-      from delivers d right join deliveryrider dr on d.uid = dr.uid group by dr.uid, month`,
+      avg(deliveryservicerating) as avgrating, extract(month from riderleaveforrestauranttime) as month 
+      from delivers d right join deliveryrider dr on d.uid = dr.uid group by dr.uid, month order by drname, month`,
     (q_err, q_res) => {
       if (q_err) {
         console.log(q_err);
@@ -1113,14 +1113,14 @@ router.post("/api/post/addDRSchedule", async (req, res, next) => {
   console.log(newScheduleParams);
 
   try {
-    await client.query('BEGIN')
+    await client.query("BEGIN");
     await client.query(
       `INSERT INTO Works (uid, dayno, startno, endno, hours, timestamp)
     VALUES ($1, $2, $3, $4, $5, NOW() + interval '8 hours')`,
       newScheduleParams,
       (q_err, q_res) => {
         if (q_err) {
-          throw q_err
+          throw q_err;
         } else {
           res.json({
             status: "SUCCESS",
@@ -1131,15 +1131,16 @@ router.post("/api/post/addDRSchedule", async (req, res, next) => {
     await client.query(`UPDATE DeliveryRider 
     SET timeforscheduleupdate = NOW() + interval '8 hours'
     WHERE uid = $1`,
-    [req.body.uid])
+      [req.body.uid]
+    );
 
-    await client.query('COMMIT')
+    await client.query("COMMIT");
   } catch (error) {
-    await client.query('ROLLBACK');
+    await client.query("ROLLBACK");
     res.json({
       status: "Rolled back",
-      msg: error
-    })
+      msg: error,
+    });
   }
 });
 
