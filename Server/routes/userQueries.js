@@ -606,7 +606,10 @@ router.post("/api/post/postNewOrder", async (req, res, next) => {
     }
 
     const insertIntoDeliversQuery = `INSERT INTO Delivers(oid, uid, deliveryfeecommission, riderLeaveForRestaurantTime) VALUES ($1, $2, $3, NOW() + interval '8 hours')`;
-    const deliversParams = [oid, dr.uid, req.body.totalPrice * 0.05];
+    const deliversParams = [oid, dr.uid, (req.body.totalPrice * 0.05 + 3.60).toFixed(2)];
+    console.log(deliversParams)
+
+    // throw "testing..."
     await client.query(insertIntoDeliversQuery, deliversParams);
 
     await client.query("COMMIT", (q_err, q_res) => {
