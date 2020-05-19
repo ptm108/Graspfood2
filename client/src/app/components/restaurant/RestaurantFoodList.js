@@ -35,7 +35,7 @@ class RestaurantFoodList extends Component {
     const { restaurant, fetchFoodItemsByRid, postNewOrder } = this.props;
     await fetchFoodItemsByRid(restaurant);
     console.log(this.props.fooditems);
-  }
+  };
 
   state = {
     foodId: null,
