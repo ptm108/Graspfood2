@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
-import OrderListItem from "./OrderListItem";
+// import OrderListItem from "./OrderListItem";
 import { Header, Card, Segment } from "semantic-ui-react";
 import { fetchOrders, resetOrders } from "./orderUtils/OrderActions";
 
@@ -34,10 +34,10 @@ class OrderList extends Component {
         <Segment>
           <Header>Orders:</Header>
           <Card.Group itemsPerRow={3}>
-            {orders &&
+            {/* {orders &&
               orders.map(order => (
                 <OrderListItem key={order.oid} order={order} />
-              ))}
+              ))} */}
           </Card.Group>
         </Segment>
       </Fragment>
